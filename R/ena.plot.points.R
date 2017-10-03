@@ -1,0 +1,216 @@
+##
+#' @title Plot points on an ENAplot
+#'
+#' @description Plot all or a subset of the points of an ENAplot using the plotly plotting library
+#'
+#' @export
+#'
+#' @param enaplot \code{\link{ENAplot}} object to use for plotting
+#' @param points A dataframe of matrix where the first two column are X and Y coordinates
+#' @param point.size A data.frame or matrix where the first two column are X and Y coordinates of points to plot in a projected ENA space defined in ENAplot
+#' @param labels A character vector of point labels, length nrow(points); default: NULL
+#' @param confidence.interval A character determining markings to use for confidence intervals, choices: none, box, crosshair, default: none
+#' @param outlier.interval A character determining markings to use for outlier interval, choices: none, box, crosshair, default: none
+#' @param confidence.interval.values A matrix/dataframe where columns are CI x and y values for each point
+#' @param outlier.interval.values A matrix/dataframe where columns are OI x and y values for each point
+#' @param shape A character which determines the shape of point markers, choices:   square, triangle, diamond, circle, default: circle
+#' @param colors A character vector of the point marker colors; if one given it is used for all, otherwise must be same length as points; default: black
+#' @param label.offset numeric vector - x and y value to offset labels from the coordinates of the points
+#' @param label.group A character vector used to group the labels in the legend
+#' @param label.font.size An integer which determines the font size for point labels, default: enaplot$font.size
+#' @param label.font.color A character which determines the color of label font, default: enaplot$font.color
+#' @param label.font.family	A character which determines label font type, choices: Arial, Courier New, Times New Roman, default: enaplot$font.family
+#' @param show.legend Logical indicating whether to show the point labels in the in legend
+#' @param ... additional parameters addressed in inner function
+#'
+#' @keywords ENA, plot, points
+#'
+#' @seealso \code{\link{ena.plot}}, \code{\link{ENAplot}}, \code{\link{ena.plot.group}}
+#'
+#' @examples
+#' data(RS.data)
+#'
+#' codeNames = c('Data','Technical.Constraints','Performance.Parameters',
+#'   'Client.and.Consultant.Requests','Design.Reasoning','Collaboration');
+#'
+#' accum = ena.accumulate.data(
+#'   units = RS.data[,c("UserName","Condition")],
+#'   conversation = RS.data[,c("Condition","GroupName")],
+#'   metadata = RS.data[,c("CONFIDENCE.Change","CONFIDENCE.Pre","CONFIDENCE.Post")],
+#'   codes = RS.data[,codeNames],
+#'   window.size.back = 4
+#' )
+#'
+#' set = ena.make.set(
+#'   enadata = accum,
+#'   rotation.by = ena.rotate.by.mean,
+#'   rotation.params = list(
+#'       accum$metadata$Condition=="FirstGame",
+#'       accum$metadata$Condition=="SecondGame"
+#'   )
+#' )
+#'
+#' plot = ena.plot(set)
+#'
+#' group1.points = set$points.rotated[set$enadata$units$Condition == "FirstGame",]
+#' group2.points = set$points.rotated[set$enadata$units$Condition == "SecondGame",]
+#' plot = ena.plot.points(plot, points = group1.points);
+#' plot = ena.plot.points(plot, points = group2.points);
+#' print(plot);
+#'
+#' @return \code{\link{ENAplot}} The ENAplot provided to the function, with its plot updated to include the new points.
+##
+ena.plot.points = function(
+  enaplot,
+
+  points = NULL,    #vector of unit names or row indices
+  point.size = 5,
+  labels = NULL, #unique(enaplot$enaset$enadata$unit.names),
+  label.offset = NULL,
+  label.group = "Points",
+
+  label.font.size = NULL, #enaplot$get("font.size"),
+  label.font.color = NULL, #enaplot$get("font.color"),
+  label.font.family = NULL, #enaplot$get("font.family"),
+
+  shape = c("circle", "square", "triangle-up", "diamond"),
+  colors = default.colors[1], # c("blue"), #rep(I("black"), nrow(points)),
+
+  confidence.interval.values = NULL,
+  confidence.interval = c("none", "crosshairs", "box"),
+
+  outlier.interval.values = NULL,
+  outlier.interval = c("none", "crosshairs", "box"),
+  show.legend = T,
+  ...
+) {
+  ###
+  # Parameter Checking and Cleaning
+  ###
+    env = environment();
+    for(n in c("font.size", "font.color", "font.family")){
+      if(is.null(get(paste0("label.",n))))
+        env[[paste0("label.",n)]] = enaplot$get(n);
+    }
+
+    if(is.null(points)) {
+      stop("Must provide points to plot.")
+    }
+    if(is(points, "numeric")){
+      points = matrix(points);
+      dim(points) = c(1,nrow(points))
+    }
+    if(!is.character(label.font.family)) {
+      label.font.family = enaplot$get("font.family");
+    }
+
+    confidence.interval = match.arg(confidence.interval);
+    outlier.interval = match.arg(outlier.interval);
+    shape = match.arg(shape);
+
+    if(grepl("^c", confidence.interval) && grepl("^c", outlier.interval)) {
+      print("Confidence Interval and Outlier Interval cannot both be crosshair");
+      print("Plotting Outlier Interval as box");
+      outlier.interval = "box";
+    }
+
+    points.layout = data.table::data.table(points);
+    colnames(points.layout) = paste0("X", rep(1:ncol(points.layout)));
+
+    if(length(colors) == 1)
+      colors = rep(colors, nrow(points.layout))
+    if(is.null(labels))
+      show.legend = F
+  ###
+  # END: Parameter Checking and Cleaning
+  ###
+
+  ###
+  # Set error value for CI|OI crosshair on plot
+  ###
+    error = list(x = list(visible=F, type="data"), y = list(visible=F, type="data"));
+    int.values = NULL;
+    if(grepl("^c", confidence.interval) && !is.null(confidence.interval.values)) {
+      int.values = confidence.interval.values;
+    } else if(grepl("^c", outlier.interval) && !is.null(outlier.interval.values)) {
+      int.values = outlier.interval.values;
+    }
+    error$x$array = int.values[1];
+    error$y$array = int.values[2];
+  ###
+  # END: Set error value for crosshair on plot
+  ###
+
+  ###
+  # Set box value for CI|OI box on plot
+  ###
+    box.values = NULL;
+    if(grepl("^b", confidence.interval) && !is.null(confidence.interval.values)) {
+      box.values = confidence.interval.values;
+      box.label = "Conf. Int.";
+    }
+    if(grepl("^b", outlier.interval) && !is.null(outlier.interval.values)) {
+      box.values = outlier.interval.values;
+      box.label = "Outlier Int.";
+    }
+  ###
+  # END: Set box value for CI|OI box on plot
+  ###
+
+  ###
+  # Plot
+  ###
+    for(m in 1:nrow(points.layout)) {
+      enaplot$plot = plotly::add_trace(
+        p = enaplot$plot,
+        data = points.layout[m,],
+        type ="scatter",
+        x = ~X1, y = ~X2,
+        mode = "markers+text",
+        marker = list(
+          symbol = shape,
+          color = colors[m],
+          size = point.size
+        ),
+        error_x = error$x, error_y = error$y,
+        showlegend = show.legend,
+        # legendgroup = ifelse(!is.null(box.label), labels[1], NULL),
+        name = labels[m],
+        text = labels[m],
+        textfont = list(
+          family = label.font.family,
+          size = label.font.size,
+          color = label.font.color
+        ),
+        textposition = "top right",
+        hoverinfo = "text+x+y"
+      )
+    }
+
+    if(!is.null(box.values)) {
+      box.values = data.frame(
+        X1 = c(points[1]-box.values[1],points[1]+box.values[1],points[1]+box.values[1],points[1]-box.values[1],points[1]-box.values[1]),
+        X2 = c(points[2]-box.values[2],points[2]-box.values[2],points[2]+box.values[2],points[2]+box.values[2],points[2]-box.values[2])
+      )
+      enaplot$plot = plotly::add_trace(
+        p = enaplot$plot,
+        data = box.values,
+        type = "scatter",
+        x = ~X1, y = ~X2,
+        mode = "lines",
+        line = list(
+          width = 1,
+          color = colors[1],
+          dash = "dash"
+        ),
+        # "legendgroup" = labels[1],
+        showlegend = show.legend,
+        name = box.label
+      )
+    }
+  ###
+  # END: Plot
+  ###
+
+  return(enaplot);
+}

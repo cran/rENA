@@ -1,0 +1,145 @@
+##
+#' @title Plot of ENA trajectories
+#'
+#' @description Function used to plot trajectories
+#'
+#' @export
+#'
+#' @param enaplot \code{\link{ENAplot}} object to use for plotting
+#' @param points dataframe of matrix - first two column are X and Y coordinates, each row is a point in a trajectory
+#' @param by vector used to subset points into individual trajectories, length nrow(points)
+#' @param names character vector - labels for each trajectory of points, length length(unique(by))
+#' @param labels character vector - point labels, length nrow(points)
+#' @param labels.show A character choice: Always, Hover, Both.  Default: Both
+#' @param confidence.interval A character that determines which confidence interval type to use, choices: none, box, crosshair, default: none
+#' @param outlier.interval A character that determines which outlier interval type to use, choices: none, box, crosshair, default: none
+#' @param confidence.interval.values A matrix/dataframe where columns are CI x and y values for each point
+#' @param outlier.interval.values A matrix/dataframe where columns are OI x and y values for each point
+#' @param colors A character, determines marker color, default: enaplot\$color
+#' @param shape A character which determines the shape of markers, choices: square, triangle, diamond, circle, default: circle
+#' @param label.offset A numeric vector of an x and y value to offset labels from the coordinates of the points
+#' @param label.font.size An integer which determines the font size for labels, default: enaplot\$font.size
+#' @param label.font.color A character which determines the color of label font, default: enaplot\$font.color
+#' @param label.font.family A character which determines font type, choices: Arial, Courier New, Times New Roman, default: enaplot\$font.family
+#' @param default.hidden A logical indicating if the trajectories should start hidden (click on the legend to show them) Default: FALSE
+#' @keywords ENA, plot, trajectory
+#'
+#' @seealso \code{\link{ena.plot}}
+#'
+#' @examples
+#' data(RS.data)
+#'
+#' codeNames = c('Data','Technical.Constraints','Performance.Parameters',
+#'   'Client.and.Consultant.Requests','Design.Reasoning','Collaboration');
+#'
+#' accum = ena.accumulate.data(
+#'   units = RS.data[,c("UserName","Condition")],
+#'   conversation = RS.data[,c("GroupName","ActivityNumber")],
+#'   metadata = RS.data[,c("CONFIDENCE.Change","CONFIDENCE.Pre","CONFIDENCE.Post","C.Change")],
+#'   codes = RS.data[,codeNames],
+#'   window.size.back = 4,
+#'   model = "A"
+#' );
+#'
+#' set = ena.make.set(accum);
+#'
+#' unitNames = set$enadata$units
+#'
+#' ### Subset rotated points and plot Condition 1 Group Mean
+#' first.game = unitNames$Condition == "FirstGame"
+#' first.game.points = set$points.rotated[first.game,]
+#'
+#' ### Subset rotated points and plot Condition 2 Group Mean
+#' second.game = unitNames$Condition == "SecondGame"
+#' second.game.points = set$points.rotated[second.game,]
+#'
+#' ### get mean network plots
+#' first.game.lineweights = set$line.weights[first.game,]
+#' first.game.mean = colMeans(first.game.lineweights)
+#'
+#' second.game.lineweights = set$line.weights[second.game,]
+#' second.game.mean = colMeans(second.game.lineweights)
+#'
+#' subtracted.network = first.game.mean - second.game.mean
+#'
+#' # Plot dimension 1 against ActivityNumber metadata
+#' dim.by.activity = cbind(
+#'     set$points.rotated[,1],
+#'     set$enadata$trajectories$step$ActivityNumber*.8/14-.4  #scale down to dimension 1
+#' )
+#'
+#' plot = ena.plot(set)
+#' plot = ena.plot.network(plot, network = subtracted.network, legend.name="Network")
+#' plot = ena.plot.trajectory(
+#'   plot,
+#'   points = dim.by.activity,
+#'   names = unique(set$enadata$units$UserName),
+#'   by = set$enadata$units$UserName
+#' );
+#' print(plot)
+#'
+#' @return The \code{\link{ENAplot}} provided to the function, with its plot updated to include the trajectories
+##
+
+ena.plot.trajectory = function(
+  enaplot,
+  points,
+  by = NULL,
+  labels = NULL, #unique(enaplot$enaset$enadata$units),
+  labels.show = c("Always","Hover","Both"),
+  names = NULL,
+  label.offset = NULL,
+  label.font.size = enaplot$get("font.size"),
+  label.font.color = enaplot$get("font.color"),
+  label.font.family = c("Arial", "Courier New", "Times New Roman"),
+  shape = c("circle", "square", "triangle-up", "diamond"),
+  colors = rep(I("black"), length(unique(by))),
+  confidence.interval = NULL,
+  confidence.interval.values = NULL,
+  outlier.interval = NULL,
+  outlier.interval.values = NULL,
+  default.hidden = F
+) {
+  if(!is.character(label.font.family)) {
+    label.font.size = enaplot$get("font.family");
+  }
+  labels.show = match.arg(labels.show);
+  shape = match.arg(shape);
+
+  if(is.null(by)) {
+    by = list(all = rep(T, nrow(points)));
+  }
+  if(!is(points, "data.table")) {
+    points = data.table::as.data.table(points);
+  }
+
+  mode="lines+markers";
+  hoverinfo = "x+y";
+  tbl = data.table::data.table(points);
+  if(!is.null(labels)) {
+    if(labels.show %in% c("Always","Both"))
+      mode=paste0(mode,"+text");
+    if(labels.show %in% c("Hover","Both"))
+      hoverinfo=paste0(hoverinfo,"+text");
+
+    tbl = data.table::data.table(points, labels = labels);
+  }
+  dfDT.trajs = tbl[,{ data.table::data.table(lines = list(.SD))  }, by=by]
+
+  for(x in 1:nrow(dfDT.trajs)) {
+    enaplot$plot = plotly::add_trace(
+      enaplot$plot,
+      data = dfDT.trajs[x,]$lines[[1]],
+      x = ~V1, y = ~V2,
+      name = names[x], #as.character(names[x]), #dfDT.trajs[x]$lines[[1]]$labels,
+      mode = mode,
+      text = dfDT.trajs[x,]$lines[[1]]$labels,
+      textposition = 'middle right',
+      hoverinfo = hoverinfo,
+      showlegend = T,
+      visible = ifelse(default.hidden, "legendonly", T)
+    );
+  }
+
+  return(enaplot);
+}
