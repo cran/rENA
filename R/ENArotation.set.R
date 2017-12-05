@@ -22,13 +22,15 @@ ENARotationSet = R6::R6Class("ENARotationSet",
     ### Constructor - documented in main class declaration
     #######
     initialize = function(
-      node.positions,
       rotation,
-      codes
+      codes,
+      node.positions,
+      eigenvalues = NULL
     ) {
       self$node.positions = node.positions;
       self$rotation = rotation;
       self$codes = codes;
+      self$eigenvalues = eigenvalues;
     },
 
     ####
@@ -36,7 +38,8 @@ ENARotationSet = R6::R6Class("ENARotationSet",
     ####
       rotation = NULL,
       node.positions = NULL,
-      codes = NULL
+      codes = NULL,
+      eigenvalues = NULL
     ####
     ## END: Public Properties
     ####

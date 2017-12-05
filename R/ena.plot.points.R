@@ -15,7 +15,7 @@
 #' @param outlier.interval.values A matrix/dataframe where columns are OI x and y values for each point
 #' @param shape A character which determines the shape of point markers, choices:   square, triangle, diamond, circle, default: circle
 #' @param colors A character vector of the point marker colors; if one given it is used for all, otherwise must be same length as points; default: black
-#' @param label.offset numeric vector - x and y value to offset labels from the coordinates of the points
+#' @param label.offset character: top left (default), top center, top right, middle left, middle center, middle right, bottom left, bottom center, bottom right
 #' @param label.group A character vector used to group the labels in the legend
 #' @param label.font.size An integer which determines the font size for point labels, default: enaplot$font.size
 #' @param label.font.color A character which determines the color of label font, default: enaplot$font.color
@@ -66,14 +66,14 @@ ena.plot.points = function(
   points = NULL,    #vector of unit names or row indices
   point.size = 5,
   labels = NULL, #unique(enaplot$enaset$enadata$unit.names),
-  label.offset = NULL,
+  label.offset = "top left",
   label.group = "Points",
 
   label.font.size = NULL, #enaplot$get("font.size"),
   label.font.color = NULL, #enaplot$get("font.color"),
   label.font.family = NULL, #enaplot$get("font.family"),
 
-  shape = c("circle", "square", "triangle-up", "diamond"),
+  shape = "circle",
   colors = default.colors[1], # c("blue"), #rep(I("black"), nrow(points)),
 
   confidence.interval.values = NULL,
@@ -100,13 +100,27 @@ ena.plot.points = function(
       points = matrix(points);
       dim(points) = c(1,nrow(points))
     }
+    points.layout = data.table::data.table(points);
+
     if(!is.character(label.font.family)) {
       label.font.family = enaplot$get("font.family");
     }
 
     confidence.interval = match.arg(confidence.interval);
     outlier.interval = match.arg(outlier.interval);
-    shape = match.arg(shape);
+
+    # shape = match.arg(shape);
+    valid.shapes = c("circle", "square", "triangle-up", "diamond");
+    if(!all(shape %in% valid.shapes))
+      stop(sprintf( "Unrecognized shapes: %s", paste(unique(shape[!(shape %in% valid.shapes)]), collapse = ", ") ))
+    if(length(shape) == 1)
+      shape = rep(shape, nrow(points.layout))
+
+    valid.label.offsets = c("top left","top center","top right","middle left","middle center","middle right","bottom left","bottom center","bottom right");
+    if(!all(label.offset %in% valid.label.offsets))
+      stop(sprintf( "Unrecognized label.offsets: %s", paste(unique(label.offset[!(label.offset %in% valid.label.offsets)]), collapse = ", ") ))
+    if(length(label.offset) == 1)
+      label.offset = rep(label.offset, nrow(points.layout))
 
     if(grepl("^c", confidence.interval) && grepl("^c", outlier.interval)) {
       print("Confidence Interval and Outlier Interval cannot both be crosshair");
@@ -114,11 +128,12 @@ ena.plot.points = function(
       outlier.interval = "box";
     }
 
-    points.layout = data.table::data.table(points);
     colnames(points.layout) = paste0("X", rep(1:ncol(points.layout)));
 
     if(length(colors) == 1)
       colors = rep(colors, nrow(points.layout))
+    if(length(point.size) == 1)
+      point.size = rep(point.size, nrow(points.layout))
     if(is.null(labels))
       show.legend = F
   ###
@@ -128,7 +143,7 @@ ena.plot.points = function(
   ###
   # Set error value for CI|OI crosshair on plot
   ###
-    error = list(x = list(visible=F, type="data"), y = list(visible=F, type="data"));
+    error = list(x = list(visible=T, type="data"), y = list(visible=T, type="data"));
     int.values = NULL;
     if(grepl("^c", confidence.interval) && !is.null(confidence.interval.values)) {
       int.values = confidence.interval.values;
@@ -168,9 +183,9 @@ ena.plot.points = function(
         x = ~X1, y = ~X2,
         mode = "markers+text",
         marker = list(
-          symbol = shape,
+          symbol = shape[m],
           color = colors[m],
-          size = point.size
+          size = point.size[m]
         ),
         error_x = error$x, error_y = error$y,
         showlegend = show.legend,
@@ -182,7 +197,7 @@ ena.plot.points = function(
           size = label.font.size,
           color = label.font.color
         ),
-        textposition = "top right",
+        textposition = label.offset[m],
         hoverinfo = "text+x+y"
       )
     }

@@ -22,9 +22,7 @@ ena.svd <- function(enaset, ...) {
 
   ### used to be  enaset$data$centered$pca
   enaset$rotation.set = pcaResults$pca;
-  ### used to be enaset$data$centered$latent
-  enaset$variance = pcaResults$latent[enaset$get("dimensions")];
 
-  rotationSet = ENARotationSet$new(rotation = pcaResults$pca, codes = enaset$codes, node.positions = NULL)
+  rotationSet = ENARotationSet$new(rotation = pcaResults$pca, codes = enaset$codes, node.positions = NULL, eigenvalues = pcaResults$latent)
   return(rotationSet)
 }

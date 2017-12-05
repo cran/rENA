@@ -28,7 +28,7 @@ ena.plot.group(enaplot, points = NULL, method = "mean", labels = NULL,
 
 \item{outlier.interval}{A character that determines how outlier interval is displayed, choices: none, box, crosshair, default: none}
 
-\item{label.offset}{A numeric vector containing an x and y value to offset label for the group's point from the coordinates of the point}
+\item{label.offset}{character: top left (default), top center, top right, middle left, middle center, middle right, bottom left, bottom center, bottom right}
 
 \item{label.font.size}{An integer which determines the font size for label, default: enaplot\$font.size}
 

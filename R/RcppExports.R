@@ -77,12 +77,8 @@ remove_zero_rows_by_c <- function(toFilter, indices) {
     .Call('_rENA_remove_zero_rows_by_c', PACKAGE = 'rENA', toFilter, indices)
 }
 
-linderoth_pos <- function(adjMats, t) {
-    .Call('_rENA_linderoth_pos', PACKAGE = 'rENA', adjMats, t)
-}
-
-linderoth_pos_es <- function(adjMats, t) {
-    .Call('_rENA_linderoth_pos_es', PACKAGE = 'rENA', adjMats, t)
+linderoth_pos_es <- function(adjMats, t, numDims) {
+    .Call('_rENA_linderoth_pos_es', PACKAGE = 'rENA', adjMats, t, numDims)
 }
 
 merge_columns_c <- function(df, cols, sep = ".") {

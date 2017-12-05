@@ -180,7 +180,7 @@ accumulate.data <- function(enadata) {
       },
       by=units.by,
       .SDcols=(codedTriNames)
-      ];
+    ];
 
     dfDT.summed.units$ENA_UNIT = merge_columns_c(dfDT.summed.units, units.by, sep=".");
 
@@ -197,7 +197,7 @@ accumulate.data <- function(enadata) {
       },
       by=c(units.by, trajectory.by),
       .SDcols=(codedTriNames)
-      ];
+    ];
     dfDT.summed.traj.by$ENA_UNIT = merge_columns_c(dfDT.summed.traj.by, units.by, sep=".");
     dfDT.summed.traj.by$TRAJ_UNIT = merge_columns_c(dfDT.summed.traj.by,trajectory.by, sep = ".");
 

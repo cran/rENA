@@ -105,7 +105,7 @@ inline asset_info compute_asset_info(const NumericMatrix& mat,
   asset_info res;
   res.sum = sum;
   res.sum2 = sum2;
-  res.stdev = sqrt((rend-rstart) * sum2 - pow(sum, 2));
+  res.stdev = std::sqrt( (rend-rstart) * sum2 - pow(sum, 2));
   return res;
 }
 
@@ -150,7 +150,7 @@ NumericMatrix sphere_norm_c(DataFrame dfM) {
     // Calculate the length of the vector ro  w
     NumericVector squared = Rcpp::pow(m.row(p),2);
     double squaredSum = Rcpp::sum(squared);
-    double root = sqrt(squaredSum);
+    double root = std::sqrt(squaredSum);
 
     if (root > 0) {
       output.row(p) = ( m.row(p) / root );
@@ -170,7 +170,7 @@ NumericMatrix dont_sphere_norm_c(DataFrame dfM) {
   for(int rowNum=0; rowNum < nrows; rowNum++) {
     NumericVector squared = Rcpp::pow(m.row(rowNum),2);
     double squaredSum = Rcpp::sum( squared );
-    double root = sqrt( squaredSum );
+    double root = std::sqrt( squaredSum );
 
     largestRowVectorLength = std::max(largestRowVectorLength, root);
   }
@@ -247,7 +247,7 @@ double getcor(
 
 // [[Rcpp::export]]
 int getN(arma::mat normed) {
-  return floor(0.5 + sqrt( 0.25 + 2 * normed.n_cols ));
+  return floor(0.5 + std::sqrt( 0.25 + 2 * normed.n_cols ));
 }
 
 // [[Rcpp::export]]

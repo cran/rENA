@@ -18,7 +18,6 @@ full.opt = function(w, t, node_names, return_all=F, dims = 1:6) {
   {
     # ::::::: solution check ::::::
     #   throw an error if the solutions aren't linearly dependent
-    browser();
     r_sq = lm_(x$x_all_iters[, x$iter_index[, 2] == dim])
     if(min(r_sq) < 0.9)
     {

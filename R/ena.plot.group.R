@@ -15,7 +15,7 @@
 #' @param shape A character, determines shape of the group's point, choices:  square, triangle, diamond, circle, default: square
 #' @param confidence.interval A character that determines how the confidence interval is displayed, choices: none, box, crosshair, default: none
 #' @param outlier.interval A character that determines how outlier interval is displayed, choices: none, box, crosshair, default: none
-#' @param label.offset A numeric vector containing an x and y value to offset label for the group's point from the coordinates of the point
+#' @param label.offset character: top left (default), top center, top right, middle left, middle center, middle right, bottom left, bottom center, bottom right
 #' @param label.font.size An integer which determines the font size for label, default: enaplot\$font.size
 #' @param label.font.color A character which determines the color of label, default: enaplot\$font.color
 #' @param label.font.family A character which determines font type, choices: Arial, Courier New, Times New Roman, default: enaplot\$font.family
@@ -95,7 +95,7 @@ ena.plot.group <- function(
   }
 
   ### problem if outlier and confidence intervals selected for crosshair
-  if(confidence.interval == "crosshair" && outlier.interval == "crosshair") {
+  if(confidence.interval == "crosshairs" && outlier.interval == "crosshairs") {
     print("Confidence Interval and Outlier Interval cannot both be crosshair");
     print("Plotting Outlier Interval as box");
     outlier.interval = "box";
@@ -112,7 +112,7 @@ ena.plot.group <- function(
       confidence.interval.values = t.test(points, conf.level = .95)$conf.int;
     }
     if(outlier.interval != "none") {
-      outlier.interval.values = c(IQR(points[,2]), IQR(points[,2])) * 1.5;
+      outlier.interval.values = c(IQR(points[,1]), IQR(points[,2])) * 1.5;
     }
 
     if(is.null(method) || method == "mean") {

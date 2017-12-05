@@ -18,6 +18,7 @@
 #' @field rotation.set - An \code{\link{ENARotationSet}} object
 #' @field correlation - A data frame of spearman and pearson correlations for each dimension specified
 #' @field variance - A vector of variance accounted for by each dimension specified
+#' @field centroids - A matrix of the calculated centroid positions
 #' @field function.call - The string representation of function called
 #' @field function.params - A list of all parameters sent to function call
 #'
@@ -70,7 +71,8 @@ ENAset = R6::R6Class("ENAset",
 
       self$rotation.set <- rotation.set;
 
-      self$function.call <- sys.call();
+      # self$function.call <- sys.call();
+      self$function.call <- sys.call(-1);
 
       self$function.params$norm.by <- norm.by;    #was sphere_norm
       #self$function.params$center.data <- center.data;
@@ -79,6 +81,7 @@ ENAset = R6::R6Class("ENAset",
       self$function.params$rotation.params <- rotation.params;
       self$function.params$endpoints.only <- endpoints.only;
 
+      private$args <- list(...);
     },
 
     ####
@@ -131,8 +134,9 @@ ENAset = R6::R6Class("ENAset",
 
     rotation.set = NULL,   ## new - ENARotation object
 
-    correlation = NULL,   #not formerly listed, comes from optimized node positions in egr.positions
+    correlations = NULL,   #not formerly listed, comes from optimized node positions in egr.positions
     variance = NULL,     #was self$data$centered$latent
+    centroids = NULL,
 
     function.call = NULL,     #new - string reping function call
     function.params = list(   #list containing parameters function was called with
@@ -313,11 +317,19 @@ ENAset = R6::R6Class("ENAset",
       args = list(...);
       fields = NULL;
       to.print = list();
-      if(is.null(args$fields)) {
-        fields = Filter(function(f) { (class(self[[f]]) != "function") }, names(get(class(self))$public_fields))
-      } else {
+
+      if (!is.null(args$fields)) {
         fields = args$fields
+      } else if(!is.null(private$args$fields)) {
+        fields = private$args$fields
+      } else {
+        #fields = Filter(function(f) { (class(self[[f]]) != "function") }, names(get(class(self))$public_fields))
+        fields = Filter(function(f) {
+          cls = class(self[[f]]);
+          !is(self[[f]], "function") && !is.null(self[[f]])
+        }, names(get(class(self))$public_fields))
       }
+
       for(field in fields) {
         if(grepl("\\$", field)) {
           parts = Filter(function(f) { f!="" }, strsplit(field,"\\$")[[1]])
@@ -336,6 +348,7 @@ ENAset = R6::R6Class("ENAset",
     ####
 
     #new
+    args = NULL,
     data.original = NULL,
     optim = NULL,
 
@@ -454,9 +467,17 @@ ENAset = R6::R6Class("ENAset",
       if(!is.null(self$function.params$rotation.by)) {
         self$rotation.set = do.call(self$function.params$rotation.by, list(self, self$function.params$rotation.params))
       }
+      # browser()
+      # if(!is.null(self$rotation.set$eigenvalues)) {
+      #   self$variance = (self$rotation.set$eigenvalues/sum(self$rotation.set$eigenvalues))[1:private$dimensions,]
+      # }
+      # y = prcomp(self$points.normed.centered)
+
+      # variance.of.original.data = var(self$points.normed.centered)
+      # diagonal.of.variance.of.original.data = as.vector(diag(variance.of.original.data))
 
 
-      ###OLD ROTATION
+      ##OLD ROTATION
       # if(private$rotate.means == T) {
       #   #for(group in names(private$rotate.means.by)) {
       #   self$line.weights.unrotated = self$line.weights;
@@ -491,17 +512,45 @@ ENAset = R6::R6Class("ENAset",
       ###
       # Generated the rotated points
       ###
-      self$points.rotated = self$points.normed.centered %*% self$rotation.set$rotation;
-      attr(self$points.rotated, opts$UNIT_NAMES) = attr(self$points.normed.centered, opts$UNIT_NAMES);
+        self$points.rotated = self$points.normed.centered %*% self$rotation.set$rotation;
+        attr(self$points.rotated, opts$UNIT_NAMES) = attr(self$points.normed.centered, opts$UNIT_NAMES);
+      ###
+
+      ###
+      # Variance
+      ###
+        variance.of.rotated.data = var(self$points.rotated)
+        diagonal.of.variance.of.rotated.data = as.vector(diag(variance.of.rotated.data))
+        self$variance = diagonal.of.variance.of.rotated.data/sum(diagonal.of.variance.of.rotated.data)
       ###
 
       ###
       # Remove zero rows from centered data
       ###
-      self$points.rotated.non.zero = remove_zero_rows_by_c(self$points.rotated, indices=self$line.weights);
+        self$points.rotated.non.zero = remove_zero_rows_by_c(self$points.rotated, indices=self$line.weights);
       ###
 
-      self = self$function.params$node.position.method(self);
+      ###
+      # Calculate node positions
+        self = self$function.params$node.position.method(self);
+      ###
+
+      ###
+      # Calculate the correlations
+      ###
+      pComb = combn(nrow(self$points.rotated),2)
+      point1 = pComb[1,]
+      point2 = pComb[2,]
+
+      svdDiff = matrix(self$points.rotated[point1,] - self$points.rotated[point2,], ncol=private$dimensions)
+      optDiff = matrix(self$centroids[point1,] - self$centroids[point2,], ncol=private$dimensions)
+
+      self$correlations = as.data.frame(mapply(function(method) {
+        lapply(1:private$dimensions, function(dim) {
+          cor(as.numeric(svdDiff[,dim]), as.numeric(optDiff[,dim]), method=method)
+        });
+      }, c("pearson","spearman")))
+
 
       return(self);
     }

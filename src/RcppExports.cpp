@@ -245,27 +245,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// linderoth_pos
-Rcpp::List linderoth_pos(Eigen::MatrixXd adjMats, Eigen::MatrixXd t);
-RcppExport SEXP _rENA_linderoth_pos(SEXP adjMatsSEXP, SEXP tSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type adjMats(adjMatsSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type t(tSEXP);
-    rcpp_result_gen = Rcpp::wrap(linderoth_pos(adjMats, t));
-    return rcpp_result_gen;
-END_RCPP
-}
 // linderoth_pos_es
-Rcpp::List linderoth_pos_es(Eigen::MatrixXd adjMats, Eigen::MatrixXd t);
-RcppExport SEXP _rENA_linderoth_pos_es(SEXP adjMatsSEXP, SEXP tSEXP) {
+Rcpp::List linderoth_pos_es(Eigen::MatrixXd adjMats, Eigen::MatrixXd t, int numDims);
+RcppExport SEXP _rENA_linderoth_pos_es(SEXP adjMatsSEXP, SEXP tSEXP, SEXP numDimsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Eigen::MatrixXd >::type adjMats(adjMatsSEXP);
     Rcpp::traits::input_parameter< Eigen::MatrixXd >::type t(tSEXP);
-    rcpp_result_gen = Rcpp::wrap(linderoth_pos_es(adjMats, t));
+    Rcpp::traits::input_parameter< int >::type numDims(numDimsSEXP);
+    rcpp_result_gen = Rcpp::wrap(linderoth_pos_es(adjMats, t, numDims));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -464,8 +453,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rENA_soln_calc_c", (DL_FUNC) &_rENA_soln_calc_c, 5},
     {"_rENA_remove_zero_rows_c", (DL_FUNC) &_rENA_remove_zero_rows_c, 1},
     {"_rENA_remove_zero_rows_by_c", (DL_FUNC) &_rENA_remove_zero_rows_by_c, 2},
-    {"_rENA_linderoth_pos", (DL_FUNC) &_rENA_linderoth_pos, 2},
-    {"_rENA_linderoth_pos_es", (DL_FUNC) &_rENA_linderoth_pos_es, 2},
+    {"_rENA_linderoth_pos_es", (DL_FUNC) &_rENA_linderoth_pos_es, 3},
     {"_rENA_merge_columns_c", (DL_FUNC) &_rENA_merge_columns_c, 3},
     {"_rENA_rows_to_co_occurrences", (DL_FUNC) &_rENA_rows_to_co_occurrences, 2},
     {"_rENA_ref_window_df", (DL_FUNC) &_rENA_ref_window_df, 5},

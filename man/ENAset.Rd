@@ -34,6 +34,8 @@ ENAset R6class
 
 \item{\code{variance}}{- A vector of variance accounted for by each dimension specified}
 
+\item{\code{centroids}}{- A matrix of the calculated centroid positions}
+
 \item{\code{function.call}}{- The string representation of function called}
 
 \item{\code{function.params}}{- A list of all parameters sent to function call}

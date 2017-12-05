@@ -50,6 +50,7 @@ ena.accumulate.data.file <- function(
   file,
 
   units.used = NULL,   #subset of actual unit values to use for accumulation - all used if not specified
+  conversations.used = NULL,
 
   units.by,    #unit columns to merge on to create ENA_UNIT --- MUST BE SUPPLIED
   conversations.by,    #conversation columns to accumulate by --- MUST BE SUPPLIED

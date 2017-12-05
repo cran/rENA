@@ -48,7 +48,7 @@ VectorXd compute_difference_correlations(MatrixXd c, MatrixXd t) {
       }
     }
 
-    corr = numerator / (sqrt(dlen)*sqrt(clen));
+    corr = numerator / (std::sqrt(dlen) * std::sqrt(clen));
     corrs[i] = corr;
   }
 
@@ -65,18 +65,19 @@ double component_norm(MatrixXd w, VectorXd t, VectorXd x) {
     norm += ckMtk * ckMtk;
   }
 
-  return(sqrt(norm));
+  return(std::sqrt(norm));
 }
 
 // @title Multiobjective, Component by Component, with Ellipsoidal Scaling
 // @description [TBD]
 // @param adjMats [TBD]
 // @param t [TBD]
+// @param numDims [TBD]
 // [[Rcpp::export]]
-Rcpp::List linderoth_pos_es(Eigen::MatrixXd adjMats, Eigen::MatrixXd t) { // = R_NilValue ) {
+Rcpp::List linderoth_pos_es(Eigen::MatrixXd adjMats, Eigen::MatrixXd t, int numDims) { // = R_NilValue ) {
   int upperTriSize = adjMats.cols();
-  int numNodes = ( pow(ceil(sqrt(2*upperTriSize)),2) ) - (2*upperTriSize);
-  int numDims = 2;
+  int numNodes = ( pow( ceil(std::sqrt(static_cast<double>(2*upperTriSize))),2) ) - (2*upperTriSize);
+  // int numDims = 2;
 
   MatrixXd weights = MatrixXd::Zero(adjMats.rows(), numNodes);
   for (int k = 0; k < adjMats.rows(); k++) {
@@ -185,7 +186,7 @@ Rcpp::List linderoth_pos_es(Eigen::MatrixXd adjMats, Eigen::MatrixXd t) { // = R
 
   return Rcpp::List::create(
     _("nodes") = X.transpose(),
-    _("correlations") = compute_difference_correlations(centroids, t),
+    //_("correlations") = compute_difference_correlations(centroids, t),
     _("centroids") = centroids,
     _("weights") = weights,
     _("points") = t
