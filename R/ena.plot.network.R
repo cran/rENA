@@ -9,6 +9,7 @@
 #'
 #' @param enaplot \code{\link{ENAplot}} object to use for plotting
 #' @param network dataframe or matrix containing the edge weights for the network graph; typically comes from ENAset$line.weights
+#' @param node.positions matrix containing the positiions of the nodes. Defaults to enaplot$enaset$node.positions
 #' @param colors A String or vector of colors for positive and negative line weights. E.g. red or c(pos= red, neg = blue), default: c(pos= red, neg = blue)
 #' @param show.all.nodes A Logical variable, default: true
 #' @param threshold A vector of numeric min/max values, default: (0,1). Edge weights below the min value will not be displayed; edge weights above the max value will be shown at the max value.
@@ -87,6 +88,7 @@
 ena.plot.network = function(
   enaplot = NULL,
   network = NULL,
+  node.positions = enaplot$enaset$node.positions,
   colors = c(pos="red", "blue"),
   show.all.nodes = T,
   threshold = 0.0,
@@ -105,16 +107,16 @@ ena.plot.network = function(
   legend.include.edges = F,
   ...
 ) {
-  if(choose(nrow(enaplot$enaset$node.positions), 2) != length(network)) {
-    stop(paste0("Network vector needs to be of length ", choose(nrow(enaplot$enaset$node.positions), 2)))
+  if(choose(nrow(node.positions), 2) != length(network)) {
+    stop(paste0("Network vector needs to be of length ", choose(nrow(node.positions), 2)))
   }
   args = list(...);
   network.edges.shapes = list();
 
-  nodes = data.frame(enaplot$enaset$node.positions);
+  nodes = data.frame(node.positions);
   nodes$weight = rep(0, nrow(nodes))
   nodes$color = "black";
-  node.rows = rownames(enaplot$enaset$node.positions);
+  node.rows = labels; #rownames(enaplot$enaset$node.positions);
 
   network.scaled = network;
   if(!is.null(args$scale.weights) && args$scale.weights == T) {
@@ -141,8 +143,8 @@ ena.plot.network = function(
 
   mat = enaplot$enaset$enadata$adjacency.matrix; #attr(enaplot$enaset$enadata$adjacency.vectors.raw,"adjacency.matrix");
   for (i in 1:ncol(mat)) {
-    v0 <- enaplot$enaset$node.positions[node.rows==mat[1,i], ];
-    v1 <- enaplot$enaset$node.positions[node.rows==mat[2,i], ];
+    v0 <- node.positions[node.rows==mat[1,i], ];
+    v1 <- node.positions[node.rows==mat[2,i], ];
     nodes[node.rows==mat[1,i],]$weight = nodes[node.rows==mat[1,i],]$weight + network.thickness[i];
     nodes[node.rows==mat[2,i],]$weight = nodes[node.rows==mat[2,i],]$weight + network.thickness[i];
 

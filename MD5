@@ -1,4 +1,4 @@
-48f3ede0a34b49877cc1b7c553cbba09 *DESCRIPTION
+6bc01093b42d07e98ff3eecd50b0f223 *DESCRIPTION
 3a66c128e15db21fbc4f00d019125dee *LICENSE
 5097b193a0b133e09b5d0768ed5ef419 *NAMESPACE
 694c242574575bc12a62fc4adee34aee *R/ENAdata.R
@@ -24,7 +24,7 @@ b7887e62b2d0b520d5c963d15c4c7b41 *R/ena.optimize.set.R
 1d05db1e803caad06666e4a3faf9b183 *R/ena.plot.R
 b0143cbcf641314aafb63d0f7fd1c0ac *R/ena.plot.group.R
 5e3bdf7cc124bd47a05aa90837020e6a *R/ena.plot.groups.R
-1e84d13b5d3276db6560cb5201e37a73 *R/ena.plot.network.R
+577df185ac8c12b702735170589bf03d *R/ena.plot.network.R
 581cde8a98945f6b208b71043c31160d *R/ena.plot.nodes.R
 0508de6d8430e36f9446a07678be922f *R/ena.plot.points.R
 7ef65c5f43bc4587f79f0d1d15b56596 *R/ena.plot.set.R
@@ -79,15 +79,15 @@ d56cddcb6027b3da9df3c288e9378475 *man/ena.conversation.Rd
 cbac15e0bb76762b318b3241d668088c *man/ena.make.set.Rd
 905a8f9b1741a8436080b8419154d265 *man/ena.plot.Rd
 044dbad0ecbbc778593790d1df8fabf1 *man/ena.plot.group.Rd
-9ab33e030bc09448e453adc74d880056 *man/ena.plot.network.Rd
+218a22795194ae04d70c2dce7dea591d *man/ena.plot.network.Rd
 77c4615ae30343c9be5d56c45592b7c6 *man/ena.plot.points.Rd
 8d70d44e565fb5833c9d9903a7b6ca84 *man/ena.plot.trajectory.Rd
 d7a5f7d608dd50e0d674d527b0570672 *man/ena.rotate.by.mean.Rd
 4d6843d5987a72a7fb79bf1e2000870a *man/ena.svd.Rd
 e174a8cc80936f744c4f171f72fa8826 *man/group.stats.Rd
 f8e3d0ca72e2b64110bbbfaa19b7f265 *man/rENA.Rd
-20dd5ded38ded252b7f964a138394ce4 *src/Makevars
-96c813e55cf05f81d9da43d168a6f969 *src/Makevars.win
+6f7a6eb8913f4714bfc8e604bf8f9668 *src/Makevars
+1f9d08db2bc587bbc9844f6a9fa69a4e *src/Makevars.win
 a9d13bc9c260ab045013401ec6a56194 *src/RcppExports.cpp
 12625256f09aaae3de6770a9e7fdd2f1 *src/dfvector_to_ut.cpp
 28eefe2078f1a9911db0f7a5e0b80e35 *src/ena.cpp
