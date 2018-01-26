@@ -78,7 +78,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // triIndices
-arma::uvec triIndices(int len, int row);
+arma::umat triIndices(int len, int row);
 RcppExport SEXP _rENA_triIndices(SEXP lenSEXP, SEXP rowSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -242,6 +242,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat >::type toFilter(toFilterSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type indices(indicesSEXP);
     rcpp_result_gen = Rcpp::wrap(remove_zero_rows_by_c(toFilter, indices));
+    return rcpp_result_gen;
+END_RCPP
+}
+// lws_lsq_positions
+Rcpp::List lws_lsq_positions(arma::mat adjMats, arma::mat t, int numDims);
+RcppExport SEXP _rENA_lws_lsq_positions(SEXP adjMatsSEXP, SEXP tSEXP, SEXP numDimsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type adjMats(adjMatsSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type t(tSEXP);
+    Rcpp::traits::input_parameter< int >::type numDims(numDimsSEXP);
+    rcpp_result_gen = Rcpp::wrap(lws_lsq_positions(adjMats, t, numDims));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -453,6 +466,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rENA_soln_calc_c", (DL_FUNC) &_rENA_soln_calc_c, 5},
     {"_rENA_remove_zero_rows_c", (DL_FUNC) &_rENA_remove_zero_rows_c, 1},
     {"_rENA_remove_zero_rows_by_c", (DL_FUNC) &_rENA_remove_zero_rows_by_c, 2},
+    {"_rENA_lws_lsq_positions", (DL_FUNC) &_rENA_lws_lsq_positions, 3},
     {"_rENA_linderoth_pos_es", (DL_FUNC) &_rENA_linderoth_pos_es, 3},
     {"_rENA_merge_columns_c", (DL_FUNC) &_rENA_merge_columns_c, 3},
     {"_rENA_rows_to_co_occurrences", (DL_FUNC) &_rENA_rows_to_co_occurrences, 2},

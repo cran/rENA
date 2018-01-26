@@ -206,26 +206,31 @@ Rcpp::NumericMatrix center_data_c(arma::mat values) {
 }
 
 // [[Rcpp::export]]
-arma::uvec triIndices(int len, int row = 0) {
+arma::umat triIndices(int len, int row = -1) {
   int vL = len;
   int vS = ( (vL * (vL + 1)) / 2) - vL ;
   int s = 0;
 
   arma::umat vR = arma::umat(2, vS, fill::zeros);
-  uvec vRone = uvec(vS);
+  arma::umat vRone = arma::umat(1, vS, fill::zeros);
   for( int i = 2; i <= vL; i++ ) {
     for (int j = 0; j < i-1; j++ ) {
+      vR(0, s) = j;
+      vR(1, s) = i-1;
       if(row == 0) {
-        vR(0, s) = j;
         vRone[s] = j;
-      } else {
-        vR(1, s) = i-1;
+      } else if (row == 1) {
         vRone[s] = i -1;
       }
       s++;
     }
   }
-  return vRone;
+
+  if(row == -1) {
+    return vR;
+  } else {
+    return vRone;
+  }
 }
 
 // [[Rcpp::export]]

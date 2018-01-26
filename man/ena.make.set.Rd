@@ -6,7 +6,7 @@
 \usage{
 ena.make.set(enadata, dimensions = 2, norm.by = sphere_norm_c,
   rotation.by = ena.svd, rotation.params = NULL, rotation.set = NULL,
-  endpoints.only = T, node.position.method = lws.positions.es, ...)
+  endpoints.only = T, node.position.method = lws.positions.sq, ...)
 }
 \arguments{
 \item{enadata}{\code{\link{ENAdata}} that will be used to generate an ENA model}

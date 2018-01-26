@@ -25,7 +25,7 @@ center_data_c <- function(values) {
     .Call('_rENA_center_data_c', PACKAGE = 'rENA', values)
 }
 
-triIndices <- function(len, row = 0L) {
+triIndices <- function(len, row = -1L) {
     .Call('_rENA_triIndices', PACKAGE = 'rENA', len, row)
 }
 
@@ -75,6 +75,10 @@ remove_zero_rows_c <- function(toFilter) {
 
 remove_zero_rows_by_c <- function(toFilter, indices) {
     .Call('_rENA_remove_zero_rows_by_c', PACKAGE = 'rENA', toFilter, indices)
+}
+
+lws_lsq_positions <- function(adjMats, t, numDims) {
+    .Call('_rENA_lws_lsq_positions', PACKAGE = 'rENA', adjMats, t, numDims)
 }
 
 linderoth_pos_es <- function(adjMats, t, numDims) {

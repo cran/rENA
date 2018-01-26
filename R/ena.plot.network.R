@@ -10,6 +10,7 @@
 #' @param enaplot \code{\link{ENAplot}} object to use for plotting
 #' @param network dataframe or matrix containing the edge weights for the network graph; typically comes from ENAset$line.weights
 #' @param node.positions matrix containing the positiions of the nodes. Defaults to enaplot$enaset$node.positions
+#' @param adjacency.key matrix containing the adjacency key for looking up the names and positions
 #' @param colors A String or vector of colors for positive and negative line weights. E.g. red or c(pos= red, neg = blue), default: c(pos= red, neg = blue)
 #' @param show.all.nodes A Logical variable, default: true
 #' @param threshold A vector of numeric min/max values, default: (0,1). Edge weights below the min value will not be displayed; edge weights above the max value will be shown at the max value.
@@ -26,6 +27,7 @@
 #' @param label.font.family A character which determines font type, choices: Arial, Courier New, Times New Roman, default: enaplot$font.family
 #' @param legend.name A character name to include in the legend. Not included in legend when NULL. Default: NULL
 #' @param legend.include.edges Logical value indicating if the edges should be included in the plot
+#' @param scale.weights Logical indicating to scale the supplied network
 #' @param ... Additional parameters
 #'
 #' @keywords ENA, plot, network, nodes, edges
@@ -89,22 +91,24 @@ ena.plot.network = function(
   enaplot = NULL,
   network = NULL,
   node.positions = enaplot$enaset$node.positions,
+  adjacency.key = namesToAdjacencyKey(rownames(node.positions)), #enaplot$enaset$enadata$adjacency.matrix,
   colors = c(pos="red", "blue"),
   show.all.nodes = T,
   threshold = 0.0,
   thin.lines.in.front = T,
   opacity = c(0.3,1),
   saturation = c(0.25,1),
-  thickness = c(0,1),
+  thickness = c(0.1,1),
   node.size = c(3,10),
   range = c(min(network), max(network)),
-  labels = rownames(enaplot$enaset$node.positions),
+  labels = rownames(node.positions),
   label.offset = NULL,
   label.font.size = enaplot$get("font.size"),
   label.font.color = enaplot$get("font.color"),
   label.font.family = enaplot$get("font.family"),
   legend.name = NULL,
   legend.include.edges = F,
+  scale.weights = T,
   ...
 ) {
   if(choose(nrow(node.positions), 2) != length(network)) {
@@ -116,18 +120,22 @@ ena.plot.network = function(
   nodes = data.frame(node.positions);
   nodes$weight = rep(0, nrow(nodes))
   nodes$color = "black";
-  node.rows = labels; #rownames(enaplot$enaset$node.positions);
+  node.rows = rownames(node.positions) #labels; #rownames(enaplot$enaset$node.positions);
 
   network.scaled = network;
+  network.thickness = network;
+  network.saturation = network;
+  network.opacity = network;
   if(!is.null(args$scale.weights) && args$scale.weights == T) {
     network.scaled = network * (1 / max(abs(network)));
+
+    network.thickness = scales::rescale(abs(network.scaled), thickness);
   }
+  network.saturation = scales::rescale(abs(network.scaled), saturation);
+  network.opacity = scales::rescale(abs(network.scaled), opacity);
 
   pos.inds = as.numeric(which(network.scaled >=0));
   neg.inds = as.numeric(which(network.scaled < 0));
-  network.opacity = scales::rescale(abs(network.scaled), opacity);
-  network.saturation = scales::rescale(abs(network.scaled), saturation);
-  network.thickness = scales::rescale(abs(network.scaled), thickness);
 
   colors.hsv = rgb2hsv(col2rgb(colors))
   if(ncol(colors.hsv) == 1) {
@@ -141,8 +149,8 @@ ena.plot.network = function(
     dim(colors.hsv) = c(3,2);
   }
 
-  mat = enaplot$enaset$enadata$adjacency.matrix; #attr(enaplot$enaset$enadata$adjacency.vectors.raw,"adjacency.matrix");
-  for (i in 1:ncol(mat)) {
+  mat = adjacency.key;
+  for (i in 1:length(network)) {
     v0 <- node.positions[node.rows==mat[1,i], ];
     v1 <- node.positions[node.rows==mat[2,i], ];
     nodes[node.rows==mat[1,i],]$weight = nodes[node.rows==mat[1,i],]$weight + network.thickness[i];
@@ -191,6 +199,7 @@ ena.plot.network = function(
     mode="markers"
   }
   nodes$weight = scales::rescale((nodes$weight * (1 / max(abs(nodes$weight)))), node.size) # * enaplot$get("multiplier"));
+
   enaplot$plot = plotly::add_trace(
     enaplot$plot,
     data = nodes,
@@ -201,9 +210,9 @@ ena.plot.network = function(
     marker = list(
       color = "#000000",
       size = abs(nodes$weight),
-      name = rownames(nodes)[i]
+      name = labels[i] #rownames(nodes)[i]
     ),
-    text = rownames(nodes),
+    text = labels, #rownames(nodes),
     legendgroup = legend.name,
     name = legend.name,
     hoverinfo = 'none'

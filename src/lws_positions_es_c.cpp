@@ -205,6 +205,6 @@ Rcpp::List linderoth_pos_es(Eigen::MatrixXd adjMats, Eigen::MatrixXd t, int numD
 #   trajectory.by = c("ActivityNumber"), trajectory.type = "accumulated"
 # );
 # df.set.lws = ena.make.set(df.accum, position.method = lws.positions)
-# out = linderoth_pos_es(df.set.lws$line.weights, df.set.lws$points.rotated)
+# out = linderoth_pos_es(gend$set$line.weights, gend$set$points.rotated, 2)
 # out = linderoth_pos_es(adjMatrix, rotMatrix)
 */

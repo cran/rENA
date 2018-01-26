@@ -63,7 +63,7 @@ ena.make.set <- function(
   rotation.params = NULL,
   rotation.set = NULL,
   endpoints.only = T,
-  node.position.method = lws.positions.es,
+  node.position.method = lws.positions.sq,
   ...
 
   # private properties of ENAset
