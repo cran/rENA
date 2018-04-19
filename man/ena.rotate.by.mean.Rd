@@ -22,4 +22,3 @@ the first dimension of the projected space passes through the means of two
 groups in a the original space. Subsequent dimensions of the projected space
 are computed using ena.svd
 }
-

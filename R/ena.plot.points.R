@@ -16,7 +16,7 @@
 #' @param shape A character which determines the shape of point markers, choices:   square, triangle, diamond, circle, default: circle
 #' @param colors A character vector of the point marker colors; if one given it is used for all, otherwise must be same length as points; default: black
 #' @param label.offset character: top left (default), top center, top right, middle left, middle center, middle right, bottom left, bottom center, bottom right
-#' @param label.group A character vector used to group the labels in the legend
+#' @param label.group A string used to group the labels in the legend. Items plotted with the same label.group will show/hide together when clicked within the legend.
 #' @param label.font.size An integer which determines the font size for point labels, default: enaplot$font.size
 #' @param label.font.color A character which determines the color of label font, default: enaplot$font.color
 #' @param label.font.family	A character which determines label font type, choices: Arial, Courier New, Times New Roman, default: enaplot$font.family
@@ -67,7 +67,7 @@ ena.plot.points = function(
   point.size = 5,
   labels = NULL, #unique(enaplot$enaset$enadata$unit.names),
   label.offset = "top left",
-  label.group = "Points",
+  label.group = NULL,
 
   label.font.size = NULL, #enaplot$get("font.size"),
   label.font.color = NULL, #enaplot$get("font.color"),
@@ -150,8 +150,8 @@ ena.plot.points = function(
     } else if(grepl("^c", outlier.interval) && !is.null(outlier.interval.values)) {
       int.values = outlier.interval.values;
     }
-    error$x$array = int.values[1];
-    error$y$array = int.values[2];
+    error$x$array = int.values[,1];
+    error$y$array = int.values[,2];
   ###
   # END: Set error value for crosshair on plot
   ###
@@ -175,6 +175,7 @@ ena.plot.points = function(
   ###
   # Plot
   ###
+    this.max = max(points.layout);
     for(m in 1:nrow(points.layout)) {
       enaplot$plot = plotly::add_trace(
         p = enaplot$plot,
@@ -189,6 +190,7 @@ ena.plot.points = function(
         ),
         error_x = error$x, error_y = error$y,
         showlegend = show.legend,
+        legendgroup = label.group,
         # legendgroup = ifelse(!is.null(box.label), labels[1], NULL),
         name = labels[m],
         text = labels[m],
@@ -203,13 +205,14 @@ ena.plot.points = function(
     }
 
     if(!is.null(box.values)) {
-      box.values = data.frame(
-        X1 = c(points[1]-box.values[1],points[1]+box.values[1],points[1]+box.values[1],points[1]-box.values[1],points[1]-box.values[1]),
-        X2 = c(points[2]-box.values[2],points[2]-box.values[2],points[2]+box.values[2],points[2]+box.values[2],points[2]-box.values[2])
+      boxv = data.frame(
+        X1 = c(box.values[1,1], box.values[2,1], box.values[2,1], box.values[1,1] ,box.values[1,1]),
+        X2 = c(box.values[1,2], box.values[1,2], box.values[2,2], box.values[2,2], box.values[1,2])
       )
+      this.max = max(boxv, this.max)
       enaplot$plot = plotly::add_trace(
         p = enaplot$plot,
-        data = box.values,
+        data = boxv,
         type = "scatter",
         x = ~X1, y = ~X2,
         mode = "lines",
@@ -222,6 +225,17 @@ ena.plot.points = function(
         showlegend = show.legend,
         name = box.label
       )
+    }
+
+    if(this.max*1.2 > max(enaplot$axes$y$range)) {
+      this.max = this.max * 1.2
+      enaplot$axes$x$range = c(-this.max, this.max)
+      enaplot$axes$y$range = c(-this.max, this.max)
+      enaplot$plot = plotly::layout(
+        enaplot$plot,
+        xaxis = enaplot$axes$x,
+        yaxis = enaplot$axes$y
+      );
     }
   ###
   # END: Plot

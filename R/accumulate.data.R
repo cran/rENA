@@ -99,12 +99,14 @@ accumulate.data <- function(enadata) {
     # First sum all lines by conversation and unit to get vectors of codes
     # occurring in the whole conversation for each unit
     ###
-    dfDT.conv.sum = dfDT_codes[, ena.group(.SD,method=sum), by=c(conversations.by),.SDcols=c(codes),with=T]
+    # dfDT.conv.sum = dfDT_codes[, ena.group(.SD,method=sum), by=c(conversations.by),.SDcols=c(codes),with=T]
+    dfDT.conv.sum = dfDT_codes[, lapply(.SD,sum), by=c(unique(conversations.by)),.SDcols=c(codes),with=T]
+    # dfDT.conv.sum = aggregate(dfDT_codes[,codes,with=F], by=dfDT_codes[,unique(conversations.by),with=F], FUN=sum)
     ###
     # Convert each units converstation sums into adjacency vectors
     ###
     dfDT.co.occurrences = dfDT.conv.sum[,{
-        ocs = data.table::as.data.table(rows_to_co_occurrences(.SD[,.SD,.SDcols=codes, with=T], binary));
+        ocs = data.table::as.data.table(rows_to_co_occurrences(.SD[,.SD,.SDcols=codes, with=T], binary = binary));
         data.table::data.table(.SD,ocs)
       },
       .SDcols=c(codes, conversations.by, trajectory.by, units.by),
@@ -166,8 +168,8 @@ accumulate.data <- function(enadata) {
   ###
   # Trajectory Checks
   ###
-  ## Not a Trajectory
 
+  ## Not a Trajectory
   if(is.null(trajectory.type)) {
     ###
     # Sum each unit found in dfDT.co.occurrences
@@ -175,7 +177,7 @@ accumulate.data <- function(enadata) {
     dfDT.summed.units = dfDT.co.occurrences[
       ENA_UNIT %in% units.used,
       {
-        sums = ref_window_sum(.SD);
+        sums = ref_window_sum(.SD, binary);
         data.frame(ENA_ROW_IDX=.GRP, sums)
       },
       by=units.by,
@@ -247,8 +249,11 @@ accumulate.data <- function(enadata) {
   #
   # TODO Most of this should be moved to a more prominent spot on ENAdata
   ###
-    codedRow1 = codes[triIndices(length(codes), 0)[,1]+1];
-    codedRow2 = codes[triIndices(length(codes), 1)[,1]+1];
+    adjRows = triIndices(length(codes)) + 1
+    codedRow1 = codes[adjRows[1, ]]
+    codedRow2 = codes[adjRows[2, ]]
+    # codedRow1 = codes[triIndices(length(codes), 0)[,1]+1];
+    # codedRow2 = codes[triIndices(length(codes), 1)[,1]+1];
     attr(dfDT.summed.units, "adjacency.matrix") = rbind(codedRow1, codedRow2);
     attr(dfDT.summed.units, "adjacency.codes") = codedTriNames;
     attr(dfDT.summed.units, opts$UNIT_NAMES) = dfDT.summed.units[,  .SD ,with=T,.SDcols=units.by]

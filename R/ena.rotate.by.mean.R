@@ -39,8 +39,8 @@ ena.rotate.by.mean = function(enaset, groups) {
 
     colOne.vals = deflated.data[vals[[1]],]; #deflated.data[colOne.rows,]
     colTwo.vals = deflated.data[vals[[2]],]; #deflated.data[colTwo.rows,]
-    colOne.means = colMeans(colOne.vals)
-    colTwo.means = colMeans(colTwo.vals)
+    colOne.means = colMeans(as.matrix(colOne.vals))
+    colTwo.means = colMeans(as.matrix(colTwo.vals))
     col.mean.diff = colOne.means - colTwo.means
 
     col.mean.diff.sq = col.mean.diff/sqrt(sum(col.mean.diff^2))
@@ -54,10 +54,11 @@ ena.rotate.by.mean = function(enaset, groups) {
   deflated.data.svd = orthogonal.svd(deflated.data, weights); #col.mean.diff.sq);
 
   colnames(deflated.data.svd) = c(
-     paste('V',as.character(1:ncol(deflated.data.svd)), sep='')
+    paste('MR',as.character(1:length(groups)), sep=''),
+    paste('SVD',as.character((length(groups)+1):(ncol(deflated.data.svd))), sep='')
   );
 
-  rotationSet = ENARotationSet$new(node.positions=NULL, rotation=deflated.data.svd[,1:2], codes=enaset$codes);
+  rotationSet = ENARotationSet$new(node.positions=NULL, rotation=deflated.data.svd, codes=enaset$codes);
   return(rotationSet);
 }
 

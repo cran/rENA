@@ -9,12 +9,7 @@
 #'
 #' @param enaset The \code{\link{ENAset}} that will be used to generate a plot
 #' @param title A character used for the title of the plot, default: ENA Plot
-#' @param dimensions A numeric vector determining the dimensions from the projected ENA space to include in the plot, default: c(1,2)
 #' @param dimension.labels A character vector containing labels for the axes, default: c(X, Y)
-#' @param dimension.show.variance A logical indicating whether to display values for variance accounted for by each dimension in the plot; default: T
-#' @param end.points A logical variable that determines whether to show only endpoints for trajectory models; default: F
-#' @param flip.axis.x	A logical that controls whether the x-axis is inverted before plotting, default: F
-#' @param flip.axis.y	A logical that controls whether the y-axis is inverted before plotting, default: F
 #' @param font.size An integer determining the font size for graph labels, default: 10
 #' @param font.color A character determining the color of label font, default: black
 #' @param font.family A character determining the font type, choices: Arial, Courier New, Times New Roman, default: Arial
@@ -57,14 +52,7 @@ ena.plot <- function(
 
   title = "ENA Plot",
 
-  dimensions = c(1,2),
   dimension.labels = c("X","Y"),
-  dimension.show.variance = T,
-
-  end.points = F,
-
-  flip.axis.x = F,
-  flip.axis.y = F,
 
   font.size = 10,
   font.color = "#000000",
@@ -77,12 +65,7 @@ ena.plot <- function(
 
   plot = ENAplot$new(enaset,
                      title,
-                     dimensions,
                      dimension.labels,
-                     dimension.show.variance,
-                     end.points,
-                     flip.axis.x,
-                     flip.axis.y,
                      font.size,
                      font.color,
                      font.family,

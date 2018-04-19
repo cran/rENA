@@ -15,4 +15,3 @@ Convert a vector of strings, representing names of a square matrix, to an adjace
 \details{
 Returns a matrix of 2 rows by choose(length(vector), 2) columns
 }
-

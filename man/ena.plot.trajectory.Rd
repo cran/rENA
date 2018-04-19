@@ -9,10 +9,8 @@ ena.plot.trajectory(enaplot, points, by = NULL, labels = NULL,
   label.offset = NULL, label.font.size = enaplot$get("font.size"),
   label.font.color = enaplot$get("font.color"),
   label.font.family = c("Arial", "Courier New", "Times New Roman"),
-  shape = c("circle", "square", "triangle-up", "diamond"),
-  colors = rep(I("black"), length(unique(by))), confidence.interval = NULL,
-  confidence.interval.values = NULL, outlier.interval = NULL,
-  outlier.interval.values = NULL, default.hidden = F)
+  shape = c("circle", "square", "triangle-up", "diamond"), colors = NULL,
+  default.hidden = F)
 }
 \arguments{
 \item{enaplot}{\code{\link{ENAplot}} object to use for plotting}
@@ -37,15 +35,10 @@ ena.plot.trajectory(enaplot, points, by = NULL, labels = NULL,
 
 \item{shape}{A character which determines the shape of markers, choices: square, triangle, diamond, circle, default: circle}
 
-\item{colors}{A character, determines marker color, default: enaplot\$color}
-
-\item{confidence.interval}{A character that determines which confidence interval type to use, choices: none, box, crosshair, default: none}
-
-\item{confidence.interval.values}{A matrix/dataframe where columns are CI x and y values for each point}
-
-\item{outlier.interval}{A character that determines which outlier interval type to use, choices: none, box, crosshair, default: none}
-
-\item{outlier.interval.values}{A matrix/dataframe where columns are OI x and y values for each point}
+\item{colors}{A character vector, that determines marker color, default NULL results in
+alternating random colors. If single color is supplied, it will be used for all
+trajectories, otherwise the length of the supplied color vector should be equal
+to the length of the supplied names (i.e a color for each trajectory being plotted)}
 
 \item{default.hidden}{A logical indicating if the trajectories should start hidden (click on the legend to show them) Default: FALSE}
 }
@@ -114,4 +107,3 @@ print(plot)
 \keyword{ENA,}
 \keyword{plot,}
 \keyword{trajectory}
-

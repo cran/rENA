@@ -5,12 +5,12 @@
 \title{Plot points on an ENAplot}
 \usage{
 ena.plot.points(enaplot, points = NULL, point.size = 5, labels = NULL,
-  label.offset = "top left", label.group = "Points",
-  label.font.size = NULL, label.font.color = NULL,
-  label.font.family = NULL, shape = "circle", colors = default.colors[1],
-  confidence.interval.values = NULL, confidence.interval = c("none",
-  "crosshairs", "box"), outlier.interval.values = NULL,
-  outlier.interval = c("none", "crosshairs", "box"), show.legend = T, ...)
+  label.offset = "top left", label.group = NULL, label.font.size = NULL,
+  label.font.color = NULL, label.font.family = NULL, shape = "circle",
+  colors = default.colors[1], confidence.interval.values = NULL,
+  confidence.interval = c("none", "crosshairs", "box"),
+  outlier.interval.values = NULL, outlier.interval = c("none", "crosshairs",
+  "box"), show.legend = T, ...)
 }
 \arguments{
 \item{enaplot}{\code{\link{ENAplot}} object to use for plotting}
@@ -23,7 +23,7 @@ ena.plot.points(enaplot, points = NULL, point.size = 5, labels = NULL,
 
 \item{label.offset}{character: top left (default), top center, top right, middle left, middle center, middle right, bottom left, bottom center, bottom right}
 
-\item{label.group}{A character vector used to group the labels in the legend}
+\item{label.group}{A string used to group the labels in the legend. Items plotted with the same label.group will show/hide together when clicked within the legend.}
 
 \item{label.font.size}{An integer which determines the font size for point labels, default: enaplot$font.size}
 
@@ -91,4 +91,3 @@ print(plot);
 \keyword{ENA,}
 \keyword{plot,}
 \keyword{points}
-

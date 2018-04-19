@@ -34,9 +34,9 @@
 #' @param model A character, choices: EndPoint (or E), AccumulatedTrajectory (or A), or SeparateTrajectory (or S); default: EndPoint. Determines the ENA model to be constructed
 #' @param weight.by (optional) A function to apply to values after accumulation
 #' @param mask (optional) A binary matrix of size ncol(codes) x ncol(codes). 0s in the mask matrix row i column j indicates that co-occurrence will not be modeled between code i and code j
-#' @param window A character, choices are Conversation (or C), MovingStanzaWindow (or MovingStanza, MSW, MS, S); default MovingStanzaWindow. Determines how stanzas are constructed, which defines how co-occurrences are modeled
-#' @param window.size.back A positive integer or character (INF or Infinite), default: 1. Determines, for each line in the data frame, the number of previous lines in a conversation to include in the stanza window, which defines how co-occurrences are modeled
-#' @param window.size.forward (optional) A positive integer, default: 1. Determines, for each line in the data frame, the number of subsequent lines in a conversation to include in the stanza window, which defines how co-occurrences are modeled
+#' @param window A character, choices are Conversation (or C), MovingStanzaWindow (MSW, MS); default MovingStanzaWindow. Determines how stanzas are constructed, which defines how co-occurrences are modeled
+#' @param window.size.back A positive integer, Inf, or character (INF or Infinite), default: 1. Determines, for each line in the data frame, the number of previous lines in a conversation to include in the stanza window, which defines how co-occurrences are modeled
+#' @param window.size.forward (optional) A positive integer, Inf, or character (INF or Infinite), default: 0. Determines, for each line in the data frame, the number of subsequent lines in a conversation to include in the stanza window, which defines how co-occurrences are modeled
 #' @param ... additional parameters addressed in inner function
 #'
 #' @keywords data, accumulate
@@ -70,7 +70,7 @@ ena.accumulate.data <- function(
   metadata = NULL,   #optional - df containing metadata
   model = c("EndPoint", "AccumulatedTrajectory", "SeparateTrajectory"),   #use match arg and list?
   weight.by = "binary",
-  window = c("Moving Stanza", "Conversation"),
+  window = c("MovingStanzaWindow", "Conversation"),
   window.size.back = 1,
   window.size.forward = 0,
   mask = NULL, #matrix (default - upper triangle of 1's)
@@ -89,6 +89,7 @@ ena.accumulate.data <- function(
     ### throw error
   }
 
+  ## DOOPT - inefficient cbinds
   df <- cbind(units, conversation);
   df <- cbind(df, codes);
 
@@ -97,16 +98,27 @@ ena.accumulate.data <- function(
     df <- cbind(df, metadata);
   }
 
+  model = match.arg(model)
+  window = match.arg(window)
+
   units.by = colnames(units);   #accumulating by all unit columns provided in units df
   conversations.by = colnames(conversation); #accumulating by all columns provided in conversation df
   if(identical(window, "Conversation")) {
     conversations.by = c(conversations.by, units.by);
     window.size.back = window;
+  } else if (identical(window, "MovingStanzaWindow")) {
+    # infCheck = c("Inf", "Infinite")
+    # if(any(window.size.back %in% infCheck)) {
+    if(grepl(pattern = "inf",x = window.size.back, ignore.case=T)) {
+      window.size.back = Inf
+    }
+    # if(any(window.size.forward %in% infCheck)) {
+    if(grepl(pattern = "inf",x = window.size.forward, ignore.case=T)) {
+      window.size.forward = Inf
+    }
   }
 
   units.used = NULL;   # when accumulating from data frames, all units are used
-
-  model = match.arg(model)
 
   data = ENAdata$new(
     file = df,

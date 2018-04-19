@@ -75,4 +75,3 @@ set.means.rotated = ena.make.set(
 \keyword{ENA,}
 \keyword{generate,}
 \keyword{set}
-

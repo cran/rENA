@@ -18,5 +18,5 @@ ENAset R6class
 
 \item{\code{plot}}{- The plotly object used for data visualization}
 }}
-\keyword{datasets}
 
+\keyword{datasets}

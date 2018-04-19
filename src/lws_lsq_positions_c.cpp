@@ -16,6 +16,8 @@ Rcpp::List lws_lsq_positions(arma::mat adjMats, arma::mat t, int numDims) { // =
   int upperTriSize = adjMats.n_cols;
   int numNodes = ( pow( ceil(std::sqrt(static_cast<double>(2*upperTriSize))),2) ) - (2*upperTriSize);
 
+  // Weighting matrix, putting half of each line.wieght onto the respective
+  // nodes.
   arma::mat weights = arma::mat(adjMats.n_rows, numNodes, fill::zeros);
   for (int k = 0; k < adjMats.n_rows; k++) {
     arma::rowvec currAdj = adjMats.row(k);
@@ -49,9 +51,6 @@ Rcpp::List lws_lsq_positions(arma::mat adjMats, arma::mat t, int numDims) { // =
     ssX.row(i) = arma::solve(ssA, ssb, solve_opts::equilibrate	).t();
   }
 
-  // Rcpp::Rcout << "4." << std::endl;
-  // arma::mat ssc1 = ssX * weights.t();
-  // arma::mat ssc = ssc1.t();
   arma::mat centroids = (ssX * weights.t()).t();
 
   return Rcpp::List::create(

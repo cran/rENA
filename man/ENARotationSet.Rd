@@ -12,4 +12,3 @@ ENARotationSet
 ENARotationSet R6class
 }
 \keyword{datasets}
-

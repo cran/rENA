@@ -4,28 +4,16 @@
 \alias{ena.plot}
 \title{Generate a plot of an ENAset}
 \usage{
-ena.plot(enaset, title = "ENA Plot", dimensions = c(1, 2),
-  dimension.labels = c("X", "Y"), dimension.show.variance = T,
-  end.points = F, flip.axis.x = F, flip.axis.y = F, font.size = 10,
-  font.color = "#000000", font.family = c("Arial", "Courier New",
-  "Times New Roman"), scale.to = c("network", "points"), ...)
+ena.plot(enaset, title = "ENA Plot", dimension.labels = c("X", "Y"),
+  font.size = 10, font.color = "#000000", font.family = c("Arial",
+  "Courier New", "Times New Roman"), scale.to = c("network", "points"), ...)
 }
 \arguments{
 \item{enaset}{The \code{\link{ENAset}} that will be used to generate a plot}
 
 \item{title}{A character used for the title of the plot, default: ENA Plot}
 
-\item{dimensions}{A numeric vector determining the dimensions from the projected ENA space to include in the plot, default: c(1,2)}
-
 \item{dimension.labels}{A character vector containing labels for the axes, default: c(X, Y)}
-
-\item{dimension.show.variance}{A logical indicating whether to display values for variance accounted for by each dimension in the plot; default: T}
-
-\item{end.points}{A logical variable that determines whether to show only endpoints for trajectory models; default: F}
-
-\item{flip.axis.x}{A logical that controls whether the x-axis is inverted before plotting, default: F}
-
-\item{flip.axis.y}{A logical that controls whether the y-axis is inverted before plotting, default: F}
 
 \item{font.size}{An integer determining the font size for graph labels, default: 10}
 
@@ -77,4 +65,3 @@ print(plot);
 \keyword{ENA,}
 \keyword{generate,}
 \keyword{plot}
-

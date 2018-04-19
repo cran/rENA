@@ -79,7 +79,7 @@ ena.plot.group <- function(
   shape = c("square", "triangle-up", "diamond", "circle"),
   confidence.interval = c("none", "crosshairs", "box"),
   outlier.interval = c("none", "crosshairs", "box"),
-  label.offset = NULL,
+  label.offset = "bottom right",
   label.font.size = NULL,
   label.font.color = NULL,
   label.font.family = NULL,
@@ -108,17 +108,23 @@ ena.plot.group <- function(
     (is(points, "data.frame") || is(points, "matrix")) &&
     nrow(points) > 1
   ){
-    if(confidence.interval != "none") {
-      confidence.interval.values = t.test(points, conf.level = .95)$conf.int;
-    }
-    if(outlier.interval != "none") {
-      outlier.interval.values = c(IQR(points[,1]), IQR(points[,2])) * 1.5;
-    }
-
     if(is.null(method) || method == "mean") {
+      if(confidence.interval != "none") {
+        confidence.interval.values = matrix(
+          c(as.vector(t.test(points[,1], conf.level = 0.95)$conf.int), as.vector(t.test(points[,2], conf.level = 0.95)$conf.int)),
+          ncol=2
+        );
+      }
+      if(outlier.interval != "none") {
+        outlier.interval.values = c(IQR(points[,1]), IQR(points[,2])) * 1.5;
+      }
+
       points = colMeans(points);
     } else {
-      points = do.call(method, args = list(points))
+      if(confidence.interval != "none") warning("Confidence Intervals can only be used when method=`mean`")
+      if(outlier.interval != "none") warning("Outlier Intervals can only be used when method=`mean`")
+
+      points = apply(points, 2, function(x) do.call(method, list(x)) )
     }
   }
 

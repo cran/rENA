@@ -11,11 +11,14 @@
 #' @param names character vector - labels for each trajectory of points, length length(unique(by))
 #' @param labels character vector - point labels, length nrow(points)
 #' @param labels.show A character choice: Always, Hover, Both.  Default: Both
-#' @param confidence.interval A character that determines which confidence interval type to use, choices: none, box, crosshair, default: none
-#' @param outlier.interval A character that determines which outlier interval type to use, choices: none, box, crosshair, default: none
-#' @param confidence.interval.values A matrix/dataframe where columns are CI x and y values for each point
-#' @param outlier.interval.values A matrix/dataframe where columns are OI x and y values for each point
-#' @param colors A character, determines marker color, default: enaplot\$color
+# @param confidence.interval A character that determines which confidence interval type to use, choices: none, box, crosshair, default: none
+# @param outlier.interval A character that determines which outlier interval type to use, choices: none, box, crosshair, default: none
+# @param confidence.interval.values A matrix/dataframe where columns are CI x and y values for each point
+# @param outlier.interval.values A matrix/dataframe where columns are OI x and y values for each point
+#' @param colors A character vector, that determines marker color, default NULL results in
+#' alternating random colors. If single color is supplied, it will be used for all
+#' trajectories, otherwise the length of the supplied color vector should be equal
+#' to the length of the supplied names (i.e a color for each trajectory being plotted)
 #' @param shape A character which determines the shape of markers, choices: square, triangle, diamond, circle, default: circle
 #' @param label.offset A numeric vector of an x and y value to offset labels from the coordinates of the points
 #' @param label.font.size An integer which determines the font size for labels, default: enaplot\$font.size
@@ -93,11 +96,11 @@ ena.plot.trajectory = function(
   label.font.color = enaplot$get("font.color"),
   label.font.family = c("Arial", "Courier New", "Times New Roman"),
   shape = c("circle", "square", "triangle-up", "diamond"),
-  colors = rep(I("black"), length(unique(by))),
-  confidence.interval = NULL,
-  confidence.interval.values = NULL,
-  outlier.interval = NULL,
-  outlier.interval.values = NULL,
+  colors = NULL,
+  #confidence.interval = NULL,
+  #confidence.interval.values = NULL,
+  #outlier.interval = NULL,
+  #outlier.interval.values = NULL,
   default.hidden = F
 ) {
   if(!is.character(label.font.family)) {
@@ -112,8 +115,10 @@ ena.plot.trajectory = function(
   if(!is(points, "data.table")) {
     points = data.table::as.data.table(points);
   }
+  if(length(colors) == 1)
+    colors = rep(colors, length(names))
 
-  mode="lines+markers";
+  mode="lines+markers+text";
   hoverinfo = "x+y";
   tbl = data.table::data.table(points);
   if(!is.null(labels)) {
@@ -126,6 +131,17 @@ ena.plot.trajectory = function(
   }
   dfDT.trajs = tbl[,{ data.table::data.table(lines = list(.SD))  }, by=by]
 
+
+  valid.label.offsets = c("top left","top center","top right","middle left","middle center","middle right","bottom left","bottom center","bottom right");
+  if(!all(label.offset %in% valid.label.offsets))
+    stop(sprintf( "Unrecognized label.offsets: %s", paste(unique(label.offset[!(label.offset %in% valid.label.offsets)]), collapse = ", ") ))
+  if(length(label.offset) == 1)
+    label.offset = rep(label.offset, nrow(dfDT.trajs))
+
+  if (!is.null(colors) && length(colors) > 1 && length(colors) != length(names)) {
+    stop("Length of the colors must be 1 or the same length as by")
+  }
+
   for(x in 1:nrow(dfDT.trajs)) {
     enaplot$plot = plotly::add_trace(
       enaplot$plot,
@@ -134,9 +150,22 @@ ena.plot.trajectory = function(
       name = names[x], #as.character(names[x]), #dfDT.trajs[x]$lines[[1]]$labels,
       mode = mode,
       text = dfDT.trajs[x,]$lines[[1]]$labels,
-      textposition = 'middle right',
+      # textposition = 'middle right',
+      textposition = label.offset[x],
       hoverinfo = hoverinfo,
       showlegend = T,
+      line = list (
+        color = if(!is.null(colors)) colors[x] else NULL
+      ),
+      marker = list (
+        symbol = shape
+        ,color = if(!is.null(colors)) colors[x] else NULL
+      ),
+      textfont = list (
+        family = label.font.family,
+        size = label.font.size,
+        color = label.font.color
+      ),
       visible = ifelse(default.hidden, "legendonly", T)
     );
   }

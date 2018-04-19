@@ -7,10 +7,10 @@
 ena.plot.network(enaplot = NULL, network = NULL,
   node.positions = enaplot$enaset$node.positions,
   adjacency.key = namesToAdjacencyKey(rownames(node.positions)),
-  colors = c(pos = "red", "blue"), show.all.nodes = T, threshold = 0,
+  colors = c(pos = "red", "blue"), show.all.nodes = T, threshold = c(0),
   thin.lines.in.front = T, opacity = c(0.3, 1), saturation = c(0.25, 1),
-  thickness = c(0.1, 1), node.size = c(3, 10), range = c(min(network),
-  max(network)), labels = rownames(node.positions), label.offset = NULL,
+  thickness = c(0.1, 1), node.size = c(3, 10),
+  labels = rownames(node.positions), label.offset = "middle right",
   label.font.size = enaplot$get("font.size"),
   label.font.color = enaplot$get("font.color"),
   label.font.family = enaplot$get("font.family"), legend.name = NULL,
@@ -29,7 +29,7 @@ ena.plot.network(enaplot = NULL, network = NULL,
 
 \item{show.all.nodes}{A Logical variable, default: true}
 
-\item{threshold}{A vector of numeric min/max values, default: (0,1). Edge weights below the min value will not be displayed; edge weights above the max value will be shown at the max value.}
+\item{threshold}{A vector of numeric min/max values, default: c(0,Inf) plotting . Edge weights below the min value will not be displayed; edge weights above the max value will be shown at the max value.}
 
 \item{thin.lines.in.front}{A logical, default: true}
 
@@ -41,11 +41,10 @@ ena.plot.network(enaplot = NULL, network = NULL,
 
 \item{node.size}{A lower and upper bound used for scaling the size of the nodes, default c(0, 20)}
 
-\item{range}{A vector of min/max values. Options are numeric, set.min,  set.max, plot.min, plot.max, default: (set.min, set.max). Determines the line weight that corresponds to the thinnest (min) and thickest (max) lines in the network graph}
-
 \item{labels}{A character vector of node labels, default: code names}
 
-\item{label.offset}{A numeric vector of an x and y value to offset labels from the coordinates of the points}
+\item{label.offset}{A character vector of representing the positional offset relative to the respective node. Defaults to "middle right" for all nodes. If a single values is provided, it is used for all positions, else the length of the
+provided label.offset must be equal to the length of the labels vector}
 
 \item{label.font.size}{An integer which determines the font size for graph labels, default: enaplot$font.size}
 
@@ -53,9 +52,9 @@ ena.plot.network(enaplot = NULL, network = NULL,
 
 \item{label.font.family}{A character which determines font type, choices: Arial, Courier New, Times New Roman, default: enaplot$font.family}
 
-\item{legend.name}{A character name to include in the legend. Not included in legend when NULL. Default: NULL}
+\item{legend.name}{A character name used in the plot legend. Not included in legend when NULL (Default), if legend.include.edges is TRUE will always be "Nodes"}
 
-\item{legend.include.edges}{Logical value indicating if the edges should be included in the plot}
+\item{legend.include.edges}{Logical value indicating if the edge names should be included in the plot legend. Forces legend.name to be "Nodes"}
 
 \item{scale.weights}{Logical indicating to scale the supplied network}
 
@@ -129,4 +128,3 @@ print(plot)
 \keyword{network,}
 \keyword{nodes,}
 \keyword{plot,}
-

@@ -13,20 +13,20 @@
 #' @param adjacency.key matrix containing the adjacency key for looking up the names and positions
 #' @param colors A String or vector of colors for positive and negative line weights. E.g. red or c(pos= red, neg = blue), default: c(pos= red, neg = blue)
 #' @param show.all.nodes A Logical variable, default: true
-#' @param threshold A vector of numeric min/max values, default: (0,1). Edge weights below the min value will not be displayed; edge weights above the max value will be shown at the max value.
+#' @param threshold A vector of numeric min/max values, default: c(0,Inf) plotting . Edge weights below the min value will not be displayed; edge weights above the max value will be shown at the max value.
 #' @param thin.lines.in.front A logical, default: true
 #' @param opacity A vector of numeric min/max values for opacity, default: (0.3,1)
 #' @param saturation A vector of numeric min/max values for saturation, default: (0.25, 1)
 #' @param thickness A vector of numeric min/max values for thickness, default: (0, 1)
 #' @param node.size A lower and upper bound used for scaling the size of the nodes, default c(0, 20)
-#' @param range  A vector of min/max values. Options are numeric, set.min,  set.max, plot.min, plot.max, default: (set.min, set.max). Determines the line weight that corresponds to the thinnest (min) and thickest (max) lines in the network graph
 #' @param labels A character vector of node labels, default: code names
-#' @param label.offset A numeric vector of an x and y value to offset labels from the coordinates of the points
+#' @param label.offset A character vector of representing the positional offset relative to the respective node. Defaults to "middle right" for all nodes. If a single values is provided, it is used for all positions, else the length of the
+#' provided label.offset must be equal to the length of the labels vector
 #' @param label.font.size An integer which determines the font size for graph labels, default: enaplot$font.size
 #' @param label.font.color A character which determines the color of label font, default: enaplot$font.color
 #' @param label.font.family A character which determines font type, choices: Arial, Courier New, Times New Roman, default: enaplot$font.family
-#' @param legend.name A character name to include in the legend. Not included in legend when NULL. Default: NULL
-#' @param legend.include.edges Logical value indicating if the edges should be included in the plot
+#' @param legend.name A character name used in the plot legend. Not included in legend when NULL (Default), if legend.include.edges is TRUE will always be "Nodes"
+#' @param legend.include.edges Logical value indicating if the edge names should be included in the plot legend. Forces legend.name to be "Nodes"
 #' @param scale.weights Logical indicating to scale the supplied network
 #' @param ... Additional parameters
 #'
@@ -94,15 +94,14 @@ ena.plot.network = function(
   adjacency.key = namesToAdjacencyKey(rownames(node.positions)), #enaplot$enaset$enadata$adjacency.matrix,
   colors = c(pos="red", "blue"),
   show.all.nodes = T,
-  threshold = 0.0,
+  threshold = c(0),
   thin.lines.in.front = T,
   opacity = c(0.3,1),
   saturation = c(0.25,1),
   thickness = c(0.1,1),
   node.size = c(3,10),
-  range = c(min(network), max(network)),
   labels = rownames(node.positions),
-  label.offset = NULL,
+  label.offset = "middle right",
   label.font.size = enaplot$get("font.size"),
   label.font.color = enaplot$get("font.color"),
   label.font.family = enaplot$get("font.family"),
@@ -122,15 +121,51 @@ ena.plot.network = function(
   nodes$color = "black";
   node.rows = rownames(node.positions) #labels; #rownames(enaplot$enaset$node.positions);
 
+  # Handle label parameters
+  if(length(label.offset) == 1) {
+    label.offset = rep(label.offset[1], length(labels))
+  }
+  if(length(label.offset) != length(labels)) {
+    stop("length(label.offset) must be equal to 1 or length(labels)")
+  }
+
+  # Handle legend parameters
+  if(legend.include.edges == T && !is.null(legend.name)) {
+    legend.name = "Nodes"
+  }
+
   network.scaled = network;
-  network.thickness = network;
-  network.saturation = network;
-  network.opacity = network;
+  if(!is.null(threshold)) {
+    multiplier.mask = ((network.scaled >= 0) * 1) - ((network.scaled < 0) * 1)
+    if(length(threshold) == 1) {
+      threshold[2] = Inf;
+    } else if(threshold[2] < threshold[1]) {
+      stop("Minimum threshold value must be less than the maximum value.");
+    }
+
+    if(threshold[1] > 0) {
+      # network.scaled = network.scaled[sizes > threshold[1]]
+      network.scaled[abs(network.scaled) < threshold[1]] = 0
+    }
+    if(threshold[2] < Inf && any(abs(network.scaled) > threshold[2]))  {
+      to.threshold = abs(network.scaled) > threshold[2]
+      network.scaled[to.threshold] = threshold[2]
+      network.scaled[to.threshold] = network.scaled[to.threshold] * multiplier.mask[to.threshold]
+    }
+  }
+  network.thickness = network.scaled;
+  network.saturation = network.scaled;
+  network.opacity = network.scaled;
+
+  network.to.keep = (network != 0) * 1
   if(!is.null(args$scale.weights) && args$scale.weights == T) {
     network.scaled = network * (1 / max(abs(network)));
 
     network.thickness = scales::rescale(abs(network.scaled), thickness);
   }
+  network.scaled = network.scaled * network.to.keep
+  network.thickness = network.thickness * network.to.keep
+
   network.saturation = scales::rescale(abs(network.scaled), saturation);
   network.opacity = scales::rescale(abs(network.scaled), opacity);
 
@@ -188,58 +223,77 @@ ena.plot.network = function(
   } else {
     network.edges.shapes = network.edges.shapes[order(sapply(network.edges.shapes, "[[", "size"))]
   }
-  if(threshold > 0) {
-    network.edges.shapes = network.edges.shapes[sapply(network.edges.shapes, "[[", "size") > threshold];
-  }
+
+  rows.to.keep = rep(T, nrow(nodes))
   if(show.all.nodes == F) {
-    nodes = nodes[rownames(nodes) %in% unique(as.character(sapply(network.edges.shapes, "[[", "nodes"))), ]
+    rows.to.keep = nodes$weight != 0
+    # nodes = nodes[rownames(nodes) %in% unique(as.character(sapply(network.edges.shapes, "[[", "nodes"))), ]
   }
+  nodes = nodes[rows.to.keep,];
   mode = "markers+text"
   if(!is.null(args$labels.hide) && args$labels.hide == T) {
     mode="markers"
   }
   nodes$weight = scales::rescale((nodes$weight * (1 / max(abs(nodes$weight)))), node.size) # * enaplot$get("multiplier"));
 
+  show.legend = !is.null(legend.name);
+  if(legend.include.edges) {
+    if(is.null(legend.name)) {
+      legend.name = "Nodes"
+    }
+    show.legend = T;
+  }
+
   enaplot$plot = plotly::add_trace(
     enaplot$plot,
+    type = "scatter",
     data = nodes,
     x = ~X1,
     y = ~X2,
     mode = mode,
-    textposition = 'middle right',
+    textposition = label.offset[rows.to.keep],
     marker = list(
       color = "#000000",
-      size = abs(nodes$weight),
-      name = labels[i] #rownames(nodes)[i]
+      size = abs(nodes$weight)
+      #,name = labels[i] #rownames(nodes)[i]
     ),
-    text = labels, #rownames(nodes),
+    textfont = list (
+      family = label.font.family,
+      size = label.font.size,
+      color = label.font.color
+    ),
+    text = labels[rows.to.keep], #rownames(nodes),
     legendgroup = legend.name,
     name = legend.name,
+    showlegend = show.legend,
     hoverinfo = 'none'
   );
 
-  for(n in 1:length(network.edges.shapes)) {
-    e = network.edges.shapes[[n]];
+  if(length(network.edges.shapes) > 0 ) {
+    for(n in 1:length(network.edges.shapes)) {
+      e = network.edges.shapes[[n]];
 
-    name = NULL;
-    show.legend = F;
-    if(!is.null(legend.name) && legend.include.edges) {
-      name = paste(e$nodes[1],e$nodes[2], sep=".");
-      show.legend = T;
+      name = NULL;
+      show.legend = F;
+      this.name = paste(e$nodes[1],e$nodes[2], sep=".")
+      if(legend.include.edges) {
+        name = this.name;
+        show.legend = T;
+      }
+
+      enaplot$plot = plotly::add_trace(
+        enaplot$plot,
+        type = "scatter",
+        mode = "lines",
+        data = data.frame(X1=c(e$x0,e$x1), X2=c(e$y0,e$y1)),
+        x = ~X1, y = ~X2,
+        line = e$line,
+        opacity = e$opacity,
+        legendgroup = if(legend.include.edges == T) this.name else legend.name,
+        showlegend = show.legend,
+        name = name
+      )
     }
-    enaplot$plot = plotly::add_trace(
-      enaplot$plot,
-      type = "scatter",
-      mode = "lines",
-      data = data.frame(X1=c(e$x0,e$x1), X2=c(e$y0,e$y1)),
-      x = ~X1, y = ~X2,
-      line = e$line,
-      opacity = e$opacity,
-      legendgroup = legend.name,
-      showlegend = show.legend,
-      name = name
-    )
   }
-
   enaplot
 }

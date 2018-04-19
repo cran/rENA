@@ -20,4 +20,3 @@ Calculate Conhen's d
 \details{
 [TBD]
 }
-

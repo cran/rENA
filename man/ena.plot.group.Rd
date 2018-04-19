@@ -7,9 +7,9 @@
 ena.plot.group(enaplot, points = NULL, method = "mean", labels = NULL,
   colors = "black", shape = c("square", "triangle-up", "diamond", "circle"),
   confidence.interval = c("none", "crosshairs", "box"),
-  outlier.interval = c("none", "crosshairs", "box"), label.offset = NULL,
-  label.font.size = NULL, label.font.color = NULL,
-  label.font.family = NULL, show.legend = T, ...)
+  outlier.interval = c("none", "crosshairs", "box"),
+  label.offset = "bottom right", label.font.size = NULL,
+  label.font.color = NULL, label.font.family = NULL, show.legend = T, ...)
 }
 \arguments{
 \item{enaplot}{\code{\link{ENAplot}} object to use for plotting}
@@ -97,4 +97,3 @@ print(plot);
 \keyword{ENA,}
 \keyword{group}
 \keyword{plot,}
-

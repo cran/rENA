@@ -65,66 +65,20 @@ ena.make.set <- function(
   endpoints.only = T,
   node.position.method = lws.positions.sq,
   ...
-
-  # private properties of ENAset
-  #dims=2,    #usein in egr.pos/optimization --- to be determined
-  #samples=3,   #usein in egr.pos -- make local to egr
-  #inPar=F,    #used in egr.pos-- make local to egr
-
-  ####
-  #sphere.norm=dont_sphere_norm_c,   #now called norm.by
-  #center.data=center_data_c,     ### made local in run - always center_data_c
-  #optim.method=do_optimization,  # - now local to ENAset, used by egr.position
-  #position.method=egr.positions, #-> node.position.method
-
-  ### what to do with these 2?
-  #check.unique.positions=F,
-  # set.seed = F,
-
-  ### leaving for now so testing can occur w/o errors
-  # rotate.means = F,
-  # rotate.means.by = NULL,
-  #
-
-  ### NO LONGER BEING INCLUDED
-  #output = c("class","json"),
-  #output.fields = NULL,
-
 ) {
   set = ENAset$new(
     enadata = enadata,
-
     dimensions = dimensions,
     rotation.by = rotation.by,
     rotation.params = rotation.params,
     rotation.set = rotation.set,
     norm.by = norm.by,
     node.position.method = node.position.method,
-
     endpoints.only = endpoints.only,
-
-    #### TO BE REMOVED
-    # set.seed = set.seed,
-    # rotate.means = rotate.means,
-    # rotate.means.by = rotate.means.by,
-    ####
-
     ...
-
   )$process();
+
   set$function.call = sys.call();
 
-  #output = match.arg(output);
-
-  # if(output == "json") {
-  #   output.class = get(class(set))
-  #
-  #   if(is.null(output.fields)) {
-  #     output.fields = names(output.class$public_fields)
-  #   }
-  #
-  #   r6.to.json(set, o.class = output.class, o.fields = output.fields)
-  # }
-  # else
   return(set)
 }

@@ -4,10 +4,12 @@
 \alias{ena.correlations}
 \title{Calculate the correlations}
 \usage{
-ena.correlations(enaset)
+ena.correlations(enaset, dims = c(1:2))
 }
 \arguments{
 \item{enaset}{ENAset to run correlations on}
+
+\item{dims}{The dimensions to calculate the correlations for. Default: c(1,2)}
 }
 \value{
 Matrix of 2 columns, one for each correlation method, with the corresponding
@@ -17,4 +19,3 @@ correlations per dimension as the rows.
 Calculate both Spearman and Pearson correlations for the
 provided ENAset
 }
-

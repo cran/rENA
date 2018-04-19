@@ -14,4 +14,3 @@ ena.svd(enaset, ...)
 \description{
 ENA method computing a dimensional reduction of points in an ENA set using SVD
 }
-

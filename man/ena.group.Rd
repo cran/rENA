@@ -2,16 +2,16 @@
 % Please edit documentation in R/ena.group.R
 \name{ena.group}
 \alias{ena.group}
-\title{Compute summary statistic for groupings of units using given  method (typically, mean)}
+\title{Compute summary statistic for groupings of units using given method (typically, mean)}
 \usage{
 ena.group(enaset = NULL, by = NULL, method = mean)
 }
 \arguments{
-\item{enaset}{An \code{\link{ENAset}} (optional)}
+\item{enaset}{An \code{\link{ENAset}} or a vector of values to group.}
 
 \item{by}{A vector of values the same length as units. Uses rotated points for group positions and normed data to get the group edge weights}
 
-\item{method}{A function that is used on grouped points. Default: mean()}
+\item{method}{A function that is used on grouped points. Default: mean().  If `enaset` is an ENAset, enaset$points.rotated will be groups using `mean` regardless of `method` provided}
 }
 \value{
 A list containing names, points, and edge weights for each of the unique groups formed by the function
@@ -44,4 +44,3 @@ means = ena.group(set, by=accum$metadata$Condition)
 \keyword{ENA,}
 \keyword{group}
 \keyword{set,}
-

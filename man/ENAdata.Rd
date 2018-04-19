@@ -36,5 +36,5 @@ ENAdata R6class
 
 \item{\code{function.params}}{A list of all parameters sent to function call}
 }}
-\keyword{datasets}
 
+\keyword{datasets}

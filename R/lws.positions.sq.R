@@ -18,14 +18,10 @@
 
 # Ellipsoidal scaling version
 lws.positions.sq <- function(enaset) {
-  # message("Running positions using the LWS method and ellipsoidal scaling.");
-  # positions = linderoth_pos_es(enaset$line.weights, enaset$points.rotated, enaset$get("dimensions"));
   positions = lws_lsq_positions(enaset$line.weights, enaset$points.rotated, enaset$get("dimensions"));
 
-  enaset$node.positions = positions$nodes;
-  rownames(enaset$node.positions) = enaset$enadata$codes;
+  node.positions = positions$nodes;
+  rownames(node.positions) = enaset$enadata$codes;
 
-  enaset$centroids = positions$centroids;
-
-  return(enaset);
+  return(list("node.positions" = node.positions, "centroids" = positions$centroids))
 }

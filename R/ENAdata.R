@@ -41,6 +41,8 @@ ENAdata = R6::R6Class("ENAdata", public = list(
     ...
   ) {
     self$function.call <- sys.call(-1);
+    self$function.params <- list();
+
     private$file <- file;
     self$units <- units;
     private$units.used <- units.used;
@@ -55,6 +57,17 @@ ENAdata = R6::R6Class("ENAdata", public = list(
       "back" = window.size.back,
       "forward" = window.size.forward
     );
+
+    for(p in c("units","units.used","units.by","conversations.by","codes","model","weight.by","window.size.back","window.size.forward","mask")) {
+      self$function.params[[p]] = get(p)
+    }
+
+    # self$function.params$units = units;
+    # self$function.params$units.used = units.used;
+    # self$function.params$units.by = private$units.by;
+    # self$function.params$conversations.by = private$conversations.by;
+    # self$function.params$window.size = private$window.size;
+
     #private$units.exclude <- units.exclude;
     self$model <- model;
 
@@ -253,6 +266,7 @@ ENAdata = R6::R6Class("ENAdata", public = list(
       }
 
       self$raw = df_DT;
+      ## DOOPT - merge_columns_c seems to be inefficient, alt?
       self$raw$ENA_UNIT = merge_columns_c(self$raw,private$units.by);
 
       self = accumulate.data(self);
