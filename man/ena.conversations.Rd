@@ -5,7 +5,7 @@
 \title{Find conversations by unit}
 \usage{
 ena.conversations(set, units, units.by = NULL, codes = NULL,
-  conversation.exclude = c())
+  conversation.by = NULL, window = 4, conversation.exclude = c())
 }
 \arguments{
 \item{set}{[TBD]}
@@ -15,6 +15,10 @@ ena.conversations(set, units, units.by = NULL, codes = NULL,
 \item{units.by}{[TBD]}
 
 \item{codes}{[TBD]}
+
+\item{conversation.by}{[TBD]}
+
+\item{window}{[TBD]}
 
 \item{conversation.exclude}{[TBD]}
 }
@@ -34,7 +38,7 @@ codeNames = c('Data','Technical.Constraints','Performance.Parameters',
               'Client.and.Consultant.Requests','Design.Reasoning',
               'Collaboration');
 
-accum = rENA::ena.accumulate.data(
+accum = ena.accumulate.data(
   units = RS.data[,c("Condition","UserName")],
   conversation = RS.data[,c("Condition","GroupName")],
   metadata = RS.data[,c("CONFIDENCE.Change","CONFIDENCE.Pre",
@@ -49,6 +53,10 @@ set = ena.make.set(
   rotation.params = list(accum$metadata$Condition=="FirstGame",
                          accum$metadata$Condition=="SecondGame")
 );
-ena.conversations(set, accum$unit.names[2], codes = set$enadata$codes)
+ena.conversations(set = RS.data,
+  units = c("FirstGame.steven z"), units.by=c("Condition","UserName"),
+  conversation.by = c("Condition","GroupName"),
+  codes=codeNames, window = 4
+)
 
 }

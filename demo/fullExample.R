@@ -13,21 +13,7 @@ accum = rENA::ena.accumulate.data(
 set = ena.make.set(
   enadata = accum,
   rotation.by = ena.rotate.by.mean,
-  rotation.params = list(accum$metadata$Condition=="FirstGame", accum$metadata$Condition=="SecondGame")
-);
-accum2 = ena.accumulate.data.file(
-  file = RS.data,
-  window.size.back = 4,
-  units.by = make.names(c("Condition","UserName")),
-  units.used= c('FirstGame.brandon l','FirstGame.steven z','FirstGame.connor f','FirstGame.amalia x','FirstGame.joseph k','FirstGame.mitchell h','FirstGame.robert z','FirstGame.amirah u','FirstGame.cameron k','FirstGame.fletcher l','FirstGame.joseph h','FirstGame.margaret n','FirstGame.amelia n','FirstGame.tiffany x','FirstGame.carl b','FirstGame.kevin g','FirstGame.akash v','FirstGame.alexander b','FirstGame.jordan l','FirstGame.peter h','FirstGame.arden f','FirstGame.jimmy i','FirstGame.peter','FirstGame.luis','FirstGame.christian x','FirstGame.devin','SecondGame.derek v','SecondGame.cormick u','SecondGame.christina b','SecondGame.nicholas n','SecondGame.keegan q','SecondGame.nicholas l','SecondGame.cameron i','SecondGame.daniel t','SecondGame.jackson p','SecondGame.samuel o','SecondGame.brandon f','SecondGame.casey f','SecondGame.shane t','SecondGame.luke u','SecondGame.abigail z','SecondGame.nathan d','SecondGame.justin y','SecondGame.brent p','SecondGame.madeline g','SecondGame.kiana k','SecondGame.ruzhen e','SecondGame.caitlyn y'),
-  model = "EndPoint",
-  conversations.by = make.names(c("Condition","GroupName")),
-  codes = make.names(codeNames)
-)
-set2 = rENA::ena.make.set(
-  enadata = accum
-  #,rotation.by = rENA:::ena.rotate.by.mean,
-  #rotation.params = list(accum$metadata$Condition=="FirstGame", accum$metadata$Condition=="SecondGame")
+  rotation.params = list(FirstGame=accum$metadata$Condition=="FirstGame", SecondGame=accum$metadata$Condition=="SecondGame")
 );
 
 unitNames = set$enadata$units

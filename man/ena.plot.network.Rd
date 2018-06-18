@@ -8,9 +8,10 @@ ena.plot.network(enaplot = NULL, network = NULL,
   node.positions = enaplot$enaset$node.positions,
   adjacency.key = namesToAdjacencyKey(rownames(node.positions)),
   colors = c(pos = "red", "blue"), show.all.nodes = T, threshold = c(0),
-  thin.lines.in.front = T, opacity = c(0.3, 1), saturation = c(0.25, 1),
-  thickness = c(0.1, 1), node.size = c(3, 10),
-  labels = rownames(node.positions), label.offset = "middle right",
+  thin.lines.in.front = T, thickness = c(min(abs(network)),
+  max(abs(network))), opacity = thickness, saturation = thickness,
+  scale.range = c(ifelse(min(network) == 0, 0, 0.1), 1), node.size = c(3,
+  10), labels = rownames(node.positions), label.offset = "middle right",
   label.font.size = enaplot$get("font.size"),
   label.font.color = enaplot$get("font.color"),
   label.font.family = enaplot$get("font.family"), legend.name = NULL,
@@ -33,18 +34,19 @@ ena.plot.network(enaplot = NULL, network = NULL,
 
 \item{thin.lines.in.front}{A logical, default: true}
 
-\item{opacity}{A vector of numeric min/max values for opacity, default: (0.3,1)}
+\item{thickness}{A vector of numeric min/max values for thickness, default:  c(min(abs(network)), max(abs(network)))}
 
-\item{saturation}{A vector of numeric min/max values for saturation, default: (0.25, 1)}
+\item{opacity}{A vector of numeric min/max values for opacity, default: thickness}
 
-\item{thickness}{A vector of numeric min/max values for thickness, default: (0, 1)}
+\item{saturation}{A vector of numeric min/max values for saturation, default: thickness}
+
+\item{scale.range}{A vector of numeric min/max to scale from, default: c(0.1,1) or if min(network) is 0, c(0,1)}
 
 \item{node.size}{A lower and upper bound used for scaling the size of the nodes, default c(0, 20)}
 
 \item{labels}{A character vector of node labels, default: code names}
 
-\item{label.offset}{A character vector of representing the positional offset relative to the respective node. Defaults to "middle right" for all nodes. If a single values is provided, it is used for all positions, else the length of the
-provided label.offset must be equal to the length of the labels vector}
+\item{label.offset}{A character vector of representing the positional offset relative to the respective node. Defaults to "middle right" for all nodes. If a single values is provided, it is used for all positions, else the length of the}
 
 \item{label.font.size}{An integer which determines the font size for graph labels, default: enaplot$font.size}
 
