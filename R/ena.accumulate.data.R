@@ -38,24 +38,11 @@
 #' @param window.size.back A positive integer, Inf, or character (INF or Infinite), default: 1. Determines, for each line in the data frame, the number of previous lines in a conversation to include in the stanza window, which defines how co-occurrences are modeled
 #' @param window.size.forward (optional) A positive integer, Inf, or character (INF or Infinite), default: 0. Determines, for each line in the data frame, the number of subsequent lines in a conversation to include in the stanza window, which defines how co-occurrences are modeled
 #' @param ... additional parameters addressed in inner function
+#' @param include.meta Locigal indicating if unit metadata should be attached to the resulting ENAdata object, default is TRUE
 #'
 #' @keywords data, accumulate
 #'
 #' @seealso \code{\link{ENAdata}}, \code{\link{ena.make.set}}
-#'
-#' @examples
-#' data(RS.data)
-#'
-#' codeNames = c('Data','Technical.Constraints','Performance.Parameters',
-#'   'Client.and.Consultant.Requests','Design.Reasoning','Collaboration');
-#'
-#' accum = ena.accumulate.data(
-#'   units = RS.data[,c("UserName","Condition")],
-#'   conversation = RS.data[,c("Condition","GroupName")],
-#'   metadata = RS.data[,c("CONFIDENCE.Change","CONFIDENCE.Pre","CONFIDENCE.Post")],
-#'   codes = RS.data[,codeNames],
-#'   window.size.back = 4
-#' )
 #'
 #' @return \code{\link{ENAdata}} object with data [adjacency (co-occurrence) vectors] accumulated from the provided data frames.
 #'
@@ -74,10 +61,7 @@ ena.accumulate.data <- function(
   window.size.back = 1,
   window.size.forward = 0,
   mask = NULL, #matrix (default - upper triangle of 1's)
-
-  ### PARAMS NOT IN SPECS
-  # output = c("class","json"),    #keep for now
-  # output.fields = NULL,       #keep for now
+  include.meta = T,
   ...
 ) {
 
@@ -122,21 +106,17 @@ ena.accumulate.data <- function(
 
   data = ENAdata$new(
     file = df,
-
     units = units,    #data frame of unit columns (including values)
     units.used = units.used,
-
     units.by = units.by,    # KEEP- automatically uses all units for accumulation from separate data frames
     conversations.by = conversations.by,    #column names of conversation df, automatically accumulating by all cols for accum from dfs
     codes = codes,
-
     window.size.back = window.size.back,
     window.size.forward = window.size.forward,
-
     weight.by = weight.by,
-
     model = model,
     mask = mask,
+    include.meta = include.meta,
     ...
   );
 

@@ -1,8 +1,6 @@
-data(RS.data)
 
-codeNames = c('Data','Technical.Constraints','Performance.Parameters','Client.and.Consultant.Requests','Design.Reasoning','Collaboration');
 
-accum = rENA::ena.accumulate.data(
+accum = ena.accumulate.data(
   units = RS.data[,c("Condition","UserName")],
   conversation = RS.data[,c("Condition","GroupName")],
   metadata = RS.data[,c("CONFIDENCE.Change","CONFIDENCE.Pre","CONFIDENCE.Post","C.Change")],

@@ -4,13 +4,14 @@
 \alias{ena.plot.points}
 \title{Plot points on an ENAplot}
 \usage{
-ena.plot.points(enaplot, points = NULL, point.size = 5, labels = NULL,
-  label.offset = "top left", label.group = NULL, label.font.size = NULL,
-  label.font.color = NULL, label.font.family = NULL, shape = "circle",
+ena.plot.points(enaplot, points = NULL, point.size = 5,
+  labels = NULL, label.offset = "top left", label.group = NULL,
+  label.font.size = NULL, label.font.color = NULL,
+  label.font.family = NULL, shape = "circle",
   colors = default.colors[1], confidence.interval.values = NULL,
   confidence.interval = c("none", "crosshairs", "box"),
-  outlier.interval.values = NULL, outlier.interval = c("none", "crosshairs",
-  "box"), show.legend = T, ...)
+  outlier.interval.values = NULL, outlier.interval = c("none",
+  "crosshairs", "box"), show.legend = T, ...)
 }
 \arguments{
 \item{enaplot}{\code{\link{ENAplot}} object to use for plotting}

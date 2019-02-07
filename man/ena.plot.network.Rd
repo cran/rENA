@@ -7,11 +7,13 @@
 ena.plot.network(enaplot = NULL, network = NULL,
   node.positions = enaplot$enaset$node.positions,
   adjacency.key = namesToAdjacencyKey(rownames(node.positions)),
-  colors = c(pos = "red", "blue"), show.all.nodes = T, threshold = c(0),
-  thin.lines.in.front = T, thickness = c(min(abs(network)),
-  max(abs(network))), opacity = thickness, saturation = thickness,
-  scale.range = c(ifelse(min(network) == 0, 0, 0.1), 1), node.size = c(3,
-  10), labels = rownames(node.positions), label.offset = "middle right",
+  colors = c(pos = "red", "blue"), edge_type = "line",
+  show.all.nodes = T, threshold = c(0), thin.lines.in.front = T,
+  thickness = c(min(abs(network)), max(abs(network))),
+  opacity = thickness, saturation = thickness,
+  scale.range = c(ifelse(min(network) == 0, 0, 0.1), 1),
+  node.size = c(3, 10), labels = rownames(node.positions),
+  label.offset = "middle right",
   label.font.size = enaplot$get("font.size"),
   label.font.color = enaplot$get("font.color"),
   label.font.family = enaplot$get("font.family"), legend.name = NULL,
@@ -27,6 +29,8 @@ ena.plot.network(enaplot = NULL, network = NULL,
 \item{adjacency.key}{matrix containing the adjacency key for looking up the names and positions}
 
 \item{colors}{A String or vector of colors for positive and negative line weights. E.g. red or c(pos= red, neg = blue), default: c(pos= red, neg = blue)}
+
+\item{edge_type}{A String representing the type of line to draw, either "line", "dash", or "dot"}
 
 \item{show.all.nodes}{A Logical variable, default: true}
 

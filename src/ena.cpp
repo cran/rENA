@@ -1,5 +1,4 @@
 // [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::depends(RcppParallel)]]
 
 #include <iostream>
 #include <vector>

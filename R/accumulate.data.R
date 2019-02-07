@@ -62,7 +62,9 @@ accumulate.data <- function(enadata) {
   # Create a column representing the ENA_UNIT as defined
   # by the the `units.by` parameter
   ###
-  dfDT_codes$ENA_UNIT = merge_columns_c(dfDT_codes, cols=units.by, sep=".");
+  if(!"ENA_UNIT" %in% colnames(dfDT_codes)) {
+    dfDT_codes$ENA_UNIT = merge_columns_c(dfDT_codes, cols=units.by, sep=".");
+  }
 
   ##
   # String vector of codesnames representing the names of the co-occurrences
@@ -70,6 +72,9 @@ accumulate.data <- function(enadata) {
   vL = length(codes);
   adjacency.length = ( (vL * (vL + 1)) / 2) - vL ;
   codedTriNames = paste("adjacency.code",rep(1:adjacency.length), sep=".");
+
+  initial_cols = c(units.by,codes)
+  just_codes = c(codes)
 
   ##
   # Accumulated windows appended to the end of each row
@@ -105,31 +110,46 @@ accumulate.data <- function(enadata) {
     ###
     # Convert each units converstation sums into adjacency vectors
     ###
+    # browser()
     dfDT.co.occurrences = dfDT.conv.sum[,{
         ocs = data.table::as.data.table(rows_to_co_occurrences(.SD[,.SD,.SDcols=codes, with=T], binary = binary));
-        data.table::data.table(.SD,ocs)
+        data.table::data.table(.SD,ocs, ENA_UNIT=merge_columns_c(.SD, cols = units.by, sep="."))
       },
-      .SDcols=c(codes, conversations.by, trajectory.by, units.by),
+      .SDcols=unique(c(codes, conversations.by, trajectory.by, units.by)),
       with=T
     ];
-
-    ### Generate the ENA_UNIT column
-    dfDT.co.occurrences$ENA_UNIT = merge_columns_c(dfDT.co.occurrences, cols=units.by, sep=".");
   } else {
     ## parallell: https://stackoverflow.com/questions/14759905/data-table-and-parallel-computing
     ### Calculate occurrences of code within the provided window
-    initial_cols = c(units.by,codes)
-    just_codes = c(codes)
-    dfDT.co.occurrences = dfDT_codes[,
-                               (codedTriNames) := ref_window_df(
-                                 .SD[,.SD, .SDcols=just_codes],
-                                 windowSize=window$back, windowForward=window$forward,
-                                 binary = binary, binaryStanzas = binaryStanzas
-                               ),
-                               by=conversations.by,
-                               .SDcols=initial_cols,
-                               with=T
-                            ];
+
+    # if(enadata$function.params$in.par == T) {
+    #   grainSize = ifelse(!is.null(enadata$function.params$grainSize), enadata$function.params$grainSize, 10);
+    #   dfDT.co.occurrences = dfDT_codes[,
+    #                            (codedTriNames) := try_one(
+    #                              .SD[,.SD, .SDcols=just_codes],
+    #                              window=window$back,
+    #                              binary = binary,
+    #                              grainSize = grainSize
+    #                            ),
+    #                            by=conversations.by,
+    #                            .SDcols=initial_cols,
+    #                            with=T
+    #                          ];
+    #
+    # } else {
+      dfDT.co.occurrences = dfDT_codes[,
+                             (codedTriNames) := ref_window_df(
+                               .SD[,.SD, .SDcols=just_codes],
+                               windowSize=window$back,
+                               windowForward=window$forward,
+                               binary = binary,
+                               binaryStanzas = binaryStanzas
+                             ),
+                             by=conversations.by,
+                             .SDcols=initial_cols,
+                             with=T
+                          ];
+    # }
     # dfDT.co.occurrences = dfDT_codes[,{
     #     ocs = ref_window_df(.SD, windowSize=window$back, windowForward=window$forward, binary = binary, binaryStanzas = binaryStanzas);
     #
@@ -176,17 +196,21 @@ accumulate.data <- function(enadata) {
     ###
     # Sum each unit found in dfDT.co.occurrences
     ###
-    dfDT.summed.units = dfDT.co.occurrences[
-      ENA_UNIT %in% units.used,
-      {
-        sums = ref_window_sum(.SD, binary);
-        data.frame(ENA_ROW_IDX=.GRP, sums)
-      },
-      by=units.by,
-      .SDcols=(codedTriNames)
-    ];
-
+    dfDT.summed.units = dfDT.co.occurrences[ENA_UNIT %in% units.used,lapply(.SD,sum),by=units.by,.SDcols=codedTriNames]
     dfDT.summed.units$ENA_UNIT = merge_columns_c(dfDT.summed.units, units.by, sep=".");
+
+    # dfDT.summed.units = dfDT.co.occurrences[
+    #   ENA_UNIT %in% units.used,
+    #   {
+    #     sums = ref_window_sum(.SD[,.SD,.SDcols=c(codedTriNames)],binary)
+    #     data.frame(ENA_ROW_IDX=.GRP,
+    #                ENA_UNIT=paste(.BY, collapse="."),
+    #                sums)
+    #   },
+    #   by=units.by,
+    #   .SDcols=c(units.by, codedTriNames)
+    # ];
+
 
     enadata$unit.names = dfDT.summed.units$ENA_UNIT;
   }

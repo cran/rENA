@@ -38,8 +38,10 @@ ENAdata = R6::R6Class("ENAdata", public = list(
     # units.selected = NULL,
     # units.exclude = c(),
     mask = NULL,
+    include.meta = T,
     ...
   ) {
+    args = list(...);
     self$function.call <- sys.call(-1);
     self$function.params <- list();
 
@@ -58,8 +60,15 @@ ENAdata = R6::R6Class("ENAdata", public = list(
       "forward" = window.size.forward
     );
 
-    for(p in c("units","units.used","units.by","conversations.by","codes","model","weight.by","window.size.back","window.size.forward","mask")) {
-      self$function.params[[p]] = get(p)
+    for(p in c("units","units.used","units.by",
+               "conversations.by","codes","model","weight.by","window.size.back",
+               "window.size.forward","mask","in.par","grainSize","include.meta")
+    ) {
+      if(exists(x = p)) {
+        self$function.params[[p]] = get(p)
+      } else if(!is.null(args[[p]])) {
+        self$function.params[[p]] = args[[p]]
+      }
     }
 
     # self$function.params$units = units;
@@ -189,14 +198,26 @@ ENAdata = R6::R6Class("ENAdata", public = list(
       },
 
       add.metadata = function(merge = F) {
+        # browser()
         ### get columns which arent in codes, units.by, or conversations.by
         metaAvail=colnames(self$raw)[-which(colnames(self$raw) %in% c(self$codes, private$units.by, private$conversations.by))];
-        ### delimit possible metadata to only columns with one value per unit
-        dfDT.meta.poss = self$raw[, { nc = lapply(.SD, function(x) length(unique(x))); }, by=c(private$units.by), .SDcols=c(metaAvail)][,,.SDcols=metaAvail];
-        metaAvail = colnames(dfDT.meta.poss)[rapply(dfDT.meta.poss, function(x) all(x == 1))]
-        metaAvail = metaAvail[metaAvail != "ENA_UNIT"];
+        metaAvail = metaAvail[which(metaAvail != "ENA_UNIT")]
 
-        raw.meta = self$raw[!duplicated(ENA_UNIT)][ENA_UNIT %in% unique(self$accumulated.adjacency.vectors$ENA_UNIT),c("ENA_UNIT",private$units.by,private$conversations.by, metaAvail),,with=F];
+        ### delimit possible metadata to only columns with one value per unit
+        # dfDT.meta.poss = self$raw[, {
+        #     nc = lapply(.SD, function(x) length(unique(x)));
+        #   },
+        #   by=c(private$units.by),
+        #   .SDcols=c(metaAvail)
+        # ][,,.SDcols=metaAvail];
+        # metaAvail = colnames(dfDT.meta.poss)[rapply(dfDT.meta.poss, function(x) all(x == 1))]
+        # raw.meta = self$raw[!duplicated(ENA_UNIT)][ENA_UNIT %in% unique(self$accumulated.adjacency.vectors$ENA_UNIT),c("ENA_UNIT",private$units.by,private$conversations.by, metaAvail),,with=F];
+
+        ## self$raw[,lapply(.SD, uniqueN),by=c(private$units.by),.SDcols=metaAvail][,c(metaAvail),with=F]
+
+
+        metaColsToUse = metaAvail[apply(self$raw[,lapply(.SD, uniqueN),by=c(private$units.by),.SDcols=metaAvail][,c(metaAvail),with=F], 2, function(x) all(x == 1))]
+        raw.meta = self$raw[!duplicated(ENA_UNIT)][ENA_UNIT %in% unique(self$accumulated.adjacency.vectors$ENA_UNIT),c("ENA_UNIT",private$units.by,metaColsToUse),with=F]
 
         df.to.return = NULL;
         if(merge == T) {
@@ -265,7 +286,7 @@ ENAdata = R6::R6Class("ENAdata", public = list(
         df_DT = data.table::as.data.table(df);
       }
 
-      self$raw = df_DT;
+      self$raw = data.table::copy(df_DT);
       ## DOOPT - merge_columns_c seems to be inefficient, alt?
       self$raw$ENA_UNIT = merge_columns_c(self$raw,private$units.by);
 
@@ -300,9 +321,16 @@ ENAdata = R6::R6Class("ENAdata", public = list(
         cols = colnames(self$adjacency.vectors)[grep("adjacency.code", colnames(self$adjacency.vectors))];
         # self$adjacency.vectors[, (cols) := lapply(.SD, private$weight.by), .SDcols = cols];
         # self$adjacency.vectors[, (cols) := lapply(.SD, private$weight.by), .SDcols = cols, by=c("ENA_ROW_IDX")];
-        self$adjacency.vectors = self$adjacency.vectors[,lapply(.SD, private$weight.by),.SDcols=cols,by=c("ENA_ROW_IDX")];
+        # browser()
+        # self$adjacency.vectors = self$adjacency.vectors[,lapply(.SD, private$weight.by),.SDcols=cols,by=c("ENA_ROW_IDX")];
+        self$adjacency.vectors = self$adjacency.vectors[,lapply(.SD, private$weight.by),.SDcols=cols,by=1:nrow(self$adjacency.vectors)]
       }
-      self$metadata = self$add.metadata(merge = F);
+
+      if( self$function.params$include.meta == T) {
+        self$metadata = self$add.metadata(merge = F);
+      } else {
+        self$metadata = data.frame();
+      }
 
       ### remove non-adjacency vector columns from adj.vecs
       ####### idea: if those cols are needed later - use adjacency.vectors.raw

@@ -48,30 +48,19 @@
 ##
 ena.accumulate.data.file <- function(
   file,
-
   units.used = NULL,   #subset of actual unit values to use for accumulation - all used if not specified
   conversations.used = NULL,
-
   units.by,    #unit columns to merge on to create ENA_UNIT --- MUST BE SUPPLIED
   conversations.by,    #conversation columns to accumulate by --- MUST BE SUPPLIED
-
   codes = NULL,
-
   model = c("EndPoint", "AccumulatedTrajectory", "SeparateTrajectory"),
-
   window = c("Moving Stanza", "Conversation"),
   window.size.back = 1,
   window.size.forward = 0,
-
   weight.by = "binary",
-
   binary.stanzas = F,
-
   mask = NULL,
-
-  ### PARAMS NOT IN SPECS
-  # output = c("class","json"),    #keep for now
-  # output.fields = NULL,       #keep for now
+  include.meta = T,
   ...
 ) {
   #print(file);
@@ -99,6 +88,7 @@ ena.accumulate.data.file <- function(
     weight.by = weight.by,
     model = model,
     mask = mask,
+    include.meta = include.meta,
     ...
   );
 

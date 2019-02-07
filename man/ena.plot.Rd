@@ -6,7 +6,8 @@
 \usage{
 ena.plot(enaset, title = "ENA Plot", dimension.labels = c("X", "Y"),
   font.size = 10, font.color = "#000000", font.family = c("Arial",
-  "Courier New", "Times New Roman"), scale.to = c("network", "points"), ...)
+  "Courier New", "Times New Roman"), scale.to = c("network", "points"),
+  ...)
 }
 \arguments{
 \item{enaset}{The \code{\link{ENAset}} that will be used to generate a plot}

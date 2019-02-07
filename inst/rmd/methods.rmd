@@ -24,9 +24,9 @@ output: rENA:::methods_report
 
 `r if(methods == T) paste0("ENA Methods")`
 
-`r if(methods == T) paste0("In this study, we applied Epistemic Network Analysis (Shaffer, 2017; Shaffer, Collier, & Ruis, 2016; Shaffer & Ruis, 2017) to our data using the ENA", if(tool=="rENA") "package for the statistical programming language R (version ", tool.version, ") (Marquart, Swiecki, et al., 2018)", if(tool=="webENA") "Web Tool (version ", tool.version, ") (Marquart, Hinojosa, Swiecki, & Shaffer, 2018)")`
+`r if(methods == T) paste0("In this study, we applied Epistemic Network Analysis (Shaffer, 2017; Shaffer, Collier, & Ruis, 2016; Shaffer & Ruis, 2017) to our data using the ENA", if(tool=="rENA") "package for the statistical programming language R (version ", tool.version, ") (Marquart, Swiecki, et al., 2018)", if(tool=="webENA") " Web Tool (version ", tool.version, ") (Marquart, Hinojosa, Swiecki, Eagan, & Shaffer, 2018)")`
 
-`r if(methods == T) paste0("We defined the units of analysis as all lines of data associated with a single value of", ub[1], if(length(ub) > 1)" subsetted by ", concatenate::cc_and(ub[2:length(ub)], oxford=T), ". For example, one unit consisted of all the lines associated with", concatenate::cc_and(apply(matrix(c(ub, as.matrix(u[1,])[1,]), nrow=2), 1, paste, collapse=" "), oxford=T),".")`
+`r if(methods == T) paste0("We defined the units of analysis as all lines of data associated with a single value of ", ub[1], if(length(ub) > 1)" subsetted by ", concatenate::cc_and(ub[2:length(ub)], oxford=T), ". For example, one unit consisted of all the lines associated with ", concatenate::cc_and(apply(matrix(c(ub, as.matrix(u[1,])[1,]), nrow=2), 1, paste, collapse=" "), oxford=T),".")`
 
 `r if(methods == T) paste0( if(identical(wb, "Conversation")) "The ENA algorithm constructs a network model for each unit of analysis, showing how the codes in all lines associated with that unit—within a given set of lines called a conversation—are connected to one another. The resulting networks are aggregated for all conversations for each unit of analysis in the model." else if(is.numeric(wb)) paste0("The ENA algorithm uses a moving window to construct a network model for each line in the data, showing how codes in the current line are connected to codes that occur within the recent temporal context (Siebert-Evenstone et al., 2017), defined as ", (if(!is.infinite(wb)){ paste0(wb," lines (each line plus the ",(wb-1)," previous lines)")} else {("all lines preceding the current line")}))," within a given conversation. The resulting networks are aggregated for all lines for each unit of analysis in the model. In this model, we aggregated networks using a ",if(identical('binary',wgt)){("binary")}else{("weighted")},(" summation in which the networks for a given"),(if(identical(wb, "Conversation")){(" conversation")}else{(" line")}),(" reflect"),(if(identical('binary',wgt)){(" the presence or absence of the co-occurrence")} else if(identical(wgt, 'product')){(" the product of the value")} else if(identical(wgt,'sqrt')){(" square root of the product")} else{ (" log of the product") }),(" of each pair of codes."))`
 
@@ -38,7 +38,7 @@ output: rENA:::methods_report
 
 `r if(methods == T && !is.null(comparison)) paste0("ENA can be used to compare units of analysis in terms of their plotted point positions, individual networks, mean plotted point positions, and mean networks, which average the connection weights across individual networks. Networks may also be compared using network difference graphs. These graphs are calculated by subtracting the weight of each connection in one network from the corresponding connections in another.")`
 
-`r if(methods == T && !is.null(comparison)) paste0("To test for differences we applied a ", if(comparison == "parametric") "two-sample t-test assuming unequal variance" else "Mann-Whitney test", " to the location of points in the projected ENA space for units in ", comparison.groups[1], " and ", comparison.groups[2], ".")`
+`r if(methods == T && !is.null(comparison) && !is.null(comparison.groups)) paste0("To test for differences we applied a ", if(comparison == "parametric") "two-sample t-test assuming unequal variance" else "Mann-Whitney test", " to the location of points in the projected ENA space for units in ", comparison.groups[1], " and ", comparison.groups[2], ".")`
 
 References
 
@@ -56,7 +56,7 @@ References
 
 `r if(theory == T) paste0("Linn, M. C., Eylon, B.-S., & Davis, E. A. (2004). The knowledge integration perspective on learning. In M. C. Linn, E. A. Davis, & P. Bell (Eds.), Internet environments for science education (pp. 29–46). Mahwah, NJ: Lawrence Erlbaum Associates.")`
 
-`r if(methods == T && tool=="webENA") paste0("Marquart, C. L., Hinojosa, C., Swiecki, Z., & Shaffer, D. W. (2018). Epistemic Network Analysis (Version ", tool.version, ") [Software]. Available from http://app.epistemicnetwork.org")``r if(methods == T && tool=="rENA") paste0("Marquart, C. L., Swiecki, Z., Collier, W., Eagan, B., Woodward, R., & Shaffer, D. W. (2018). rENA: Epistemic Network Analysis (Version ", tool.version, "). Retrieved from https://cran.r-project.org/web/packages/rENA/index.html")`
+`r if(methods == T && tool=="webENA") paste0("Marquart, C. L., Hinojosa, C., Swiecki, Z., Eagan, B., & Shaffer, D. W. (2018). Epistemic Network Analysis (Version ", tool.version, ") [Software]. Available from http://app.epistemicnetwork.org")``r if(methods == T && tool=="rENA") paste0("Marquart, C. L., Swiecki, Z., Collier, W., Eagan, B., Woodward, R., & Shaffer, D. W. (2018). rENA: Epistemic Network Analysis (Version ", tool.version, "). Retrieved from https://cran.r-project.org/web/packages/rENA/index.html")`
 
 `r if(theory == T) paste0("Ruis, A. R. (In press). “Trois Empreintes d’un Même Cachet”: Toward a Historical Definition of Nutrition. Viral Networks.")`
 

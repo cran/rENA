@@ -1,10 +1,12 @@
 //'
 // [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::depends(RcppParallel)]]
 
 #include <RcppArmadillo.h>
-#include <Rcpp.h>
 using namespace Rcpp;
 using namespace arma;
+// #include <RcppParallel.h>
+// using namespace RcppParallel;
 
 NumericMatrix toNumericMatrix_(DataFrame x) {
   int nRows=x.nrows();
@@ -30,7 +32,6 @@ arma::rowvec vector_to_ut(arma::mat v) {
   }
   return vR2;
 }
-
 NumericVector vector_to_ut2(NumericVector v) {
   int vL = v.size();
   int vS = ( (vL * (vL + 1)) / 2) - vL ;
@@ -93,9 +94,13 @@ DataFrame ref_window_df(
 
   arma::mat df_CoOccurred(dfRows, numCoOccurences, fill::zeros);
   arma::mat df_AsMatrix2(dfRows, dfCols, fill::zeros);
+  // NumericMatrix df_asNumericMatrix(dfRows, dfCols);
+
   for (int i=0; i<dfCols;i++) {
     df_AsMatrix2.col(i) = Rcpp::as<arma::vec>(df[i]);
+    // df_asNumericMatrix(_,i)=NumericVector(df[i]);
   }
+
 
   for(int row = 0; row < dfRows; row++) {
     /**
@@ -186,3 +191,10 @@ DataFrame ref_window_lag(
 
   return wrap(df_LagSummed);
 }
+
+/***R
+RcppParallel::setThreadOptions(numThreads = 4)
+df = data.frame(a = c(1,2,3,4), b = c(0,0,1,0), c = c(1,1,1,1), d = c(0,1,0,0))
+# try_one(rbind(df, df, df, df, df, df), 2)
+try_one(df, 2)
+*/

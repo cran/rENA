@@ -4,12 +4,13 @@
 \alias{ena.plot.group}
 \title{Plot of ENA set groups}
 \usage{
-ena.plot.group(enaplot, points = NULL, method = "mean", labels = NULL,
-  colors = "black", shape = c("square", "triangle-up", "diamond", "circle"),
-  confidence.interval = c("none", "crosshairs", "box"),
-  outlier.interval = c("none", "crosshairs", "box"),
+ena.plot.group(enaplot, points = NULL, method = "mean",
+  labels = NULL, colors = "black", shape = c("square", "triangle-up",
+  "diamond", "circle"), confidence.interval = c("none", "crosshairs",
+  "box"), outlier.interval = c("none", "crosshairs", "box"),
   label.offset = "bottom right", label.font.size = NULL,
-  label.font.color = NULL, label.font.family = NULL, show.legend = T, ...)
+  label.font.color = NULL, label.font.family = NULL, show.legend = T,
+  ...)
 }
 \arguments{
 \item{enaplot}{\code{\link{ENAplot}} object to use for plotting}

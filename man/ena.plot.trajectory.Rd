@@ -9,8 +9,8 @@ ena.plot.trajectory(enaplot, points, by = NULL, labels = NULL,
   label.offset = NULL, label.font.size = enaplot$get("font.size"),
   label.font.color = enaplot$get("font.color"),
   label.font.family = c("Arial", "Courier New", "Times New Roman"),
-  shape = c("circle", "square", "triangle-up", "diamond"), colors = NULL,
-  default.hidden = F)
+  shape = c("circle", "square", "triangle-up", "diamond"),
+  colors = NULL, default.hidden = F)
 }
 \arguments{
 \item{enaplot}{\code{\link{ENAplot}} object to use for plotting}

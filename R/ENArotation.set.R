@@ -30,6 +30,9 @@ ENARotationSet = R6::R6Class("ENARotationSet",
       self$node.positions = node.positions;
       self$rotation = rotation;
       self$codes = codes;
+      if(!is.null(codes) && !is.null(self$node.positions)) {
+       rownames(self$node.positions) = codes;
+      }
       self$eigenvalues = eigenvalues;
     },
 

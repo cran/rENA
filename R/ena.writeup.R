@@ -15,10 +15,9 @@
 #' @param theory Logical indicating whether to include theory in the writeup
 #' @param methods Logical indicating whether to include methods in the writeup
 #'
-#' @return String representing the methods used to generate the model
-#'
 #' @export
-###
+#'
+#' @return String representing the methods used to generate the model
 ena.writeup <- function(
   enaset,
   tool = "rENA", tool.version = as.character(packageVersion(tool)),
@@ -40,6 +39,7 @@ ena.writeup <- function(
 #' @param keep_md [TBD]
 #' @param md_extensions [TBD]
 #' @param pandoc_args [TBD]
+#'
 #' @export
 methods_report <- function(toc = FALSE,
                           toc_depth = 3,

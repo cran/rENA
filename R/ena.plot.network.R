@@ -12,6 +12,7 @@
 #' @param node.positions matrix containing the positiions of the nodes. Defaults to enaplot$enaset$node.positions
 #' @param adjacency.key matrix containing the adjacency key for looking up the names and positions
 #' @param colors A String or vector of colors for positive and negative line weights. E.g. red or c(pos= red, neg = blue), default: c(pos= red, neg = blue)
+#' @param edge_type A String representing the type of line to draw, either "line", "dash", or "dot"
 #' @param show.all.nodes A Logical variable, default: true
 #' @param threshold A vector of numeric min/max values, default: c(0,Inf) plotting . Edge weights below the min value will not be displayed; edge weights above the max value will be shown at the max value.
 #' @param thin.lines.in.front A logical, default: true
@@ -93,6 +94,7 @@ ena.plot.network = function(
   node.positions = enaplot$enaset$node.positions,
   adjacency.key = namesToAdjacencyKey(rownames(node.positions)), #enaplot$enaset$enadata$adjacency.matrix,
   colors = c(pos="red", "blue"),
+  edge_type = "line", #c("line", "dash", "dot"),
   show.all.nodes = T,
   threshold = c(0),
   thin.lines.in.front = T,
@@ -119,6 +121,7 @@ ena.plot.network = function(
   }
   args = list(...);
   network.edges.shapes = list();
+  edge_type = match.arg(arg = edge_type, choices = c("line", "dash", "dot"));
 
   nodes = data.frame(node.positions);
   nodes$weight = rep(0, nrow(nodes))
@@ -210,7 +213,8 @@ ena.plot.network = function(
       line = list(
         name = "test",
         color= hsv(color[1],color[2],color[3]),
-        width= abs(network.thickness[i]) * enaplot$get("multiplier")
+        width= abs(network.thickness[i]) * enaplot$get("multiplier"),
+        dash = edge_type
       ),
       x0 = v0[1],
       y0 = v0[2],
