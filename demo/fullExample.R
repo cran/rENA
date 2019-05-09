@@ -1,5 +1,4 @@
-
-
+codeNames = c("Data","Technical.Constraints","Performance.Parameters","Client.and.Consultant.Requests","Design.Reasoning","Collaboration")
 accum = ena.accumulate.data(
   units = RS.data[,c("Condition","UserName")],
   conversation = RS.data[,c("Condition","GroupName")],
@@ -76,10 +75,10 @@ dim.by.activity = cbind(
  set$points.rotated[,1],
  set$enadata$trajectories$step$ActivityNumber*.8/14-.4  #scale down to dimension 1
 )
-plot = ena.plot.trajectory(
- plot,
- points = dim.by.activity,
- names = unique(set$enadata$units$UserName),
- by = set$enadata$units$UserName
-);
-print(plot)
+# plot = ena.plot.trajectory(
+#  plot,
+#  points = dim.by.activity,
+#  names = unique(set$enadata$units$UserName),
+#  by = set$enadata$units$UserName
+# );
+# print(plot)

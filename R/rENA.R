@@ -13,7 +13,7 @@
 #' @import utils
 #' @import doParallel
 #' @import parallel
-#' @import RcppRoll
+# @import RcppRoll
 # @import scales
 # @import
 # @import igraph

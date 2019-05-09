@@ -85,7 +85,7 @@ accumulate.data <- function(enadata) {
   if(window$back == 1) {
     ### Special case for window of 1, skip window check and convert each line to co-occurrences
     dfDT.co.occurrences = dfDT_codes[,{
-      ocs = data.table::as.data.table(rows_to_co_occurrences(.SD[,.SD,.SDcols=codes, with=T]));
+      ocs = data.table::as.data.table(rows_to_co_occurrences(.SD[,.SD,.SDcols=codes, with=T], binary = binary));
 
       # Return value from data.table back to dfDT.co.occurrences
       data.table::data.table(.SD,ocs)

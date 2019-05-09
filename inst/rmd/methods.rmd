@@ -58,9 +58,9 @@ References
 
 `r if(methods == T && tool=="webENA") paste0("Marquart, C. L., Hinojosa, C., Swiecki, Z., Eagan, B., & Shaffer, D. W. (2018). Epistemic Network Analysis (Version ", tool.version, ") [Software]. Available from http://app.epistemicnetwork.org")``r if(methods == T && tool=="rENA") paste0("Marquart, C. L., Swiecki, Z., Collier, W., Eagan, B., Woodward, R., & Shaffer, D. W. (2018). rENA: Epistemic Network Analysis (Version ", tool.version, "). Retrieved from https://cran.r-project.org/web/packages/rENA/index.html")`
 
-`r if(theory == T) paste0("Ruis, A. R. (In press). “Trois Empreintes d’un Même Cachet”: Toward a Historical Definition of Nutrition. Viral Networks.")`
+`r if(theory == T) paste0("Ruis, A. R. (2018). \"Trois Empreintes d’un Même Cachet\": Toward a Historical Definition of Nutrition. In E. T. Ewing & K. Randall (eds.), Viral networks: Connecting digital humanities and medical history (pp. 179–212). Blacksburg: VT Publishing.")`
 
-`r if(theory == T) paste0("Ruis, A. R., Rosser, A. A., Quandt-Walle, C., Nathwani, J. N., Shaffer, D. W., & Pugh, C. M. (in press). The hands and head of a surgeon: Modeling operative competency with multimodal epistemic network analysis. American Journal of Surgery.")`
+`r if(theory == T) paste0("Ruis, A. R., Rosser, A. A., Quandt-Walle, C., Nathwani, J. N., Shaffer, D. W., & Pugh, C. M. (2018). The hands and head of a surgeon: Modeling operative competency with multimodal epistemic network analysis. American Journal of Surgery, 216(5), 835-840.")`
 
 `r if(theory == T) paste0("Shaffer, D. W. (2004). Pedagogical praxis: Using technology to build professional communities of practice. Association for Computing Machinery (ACM) SigGROUP Bulletin, 24(3), 39–43.")`
 
