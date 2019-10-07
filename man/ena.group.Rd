@@ -41,6 +41,3 @@ means = ena.group(set, by=accum$metadata$Condition)
 
 
 }
-\keyword{ENA,}
-\keyword{group}
-\keyword{set,}

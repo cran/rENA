@@ -13,10 +13,9 @@
 #' @param font.size An integer determining the font size for graph labels, default: 10
 #' @param font.color A character determining the color of label font, default: black
 #' @param font.family A character determining the font type, choices: Arial, Courier New, Times New Roman, default: Arial
-#' @param scale.to Either network or points. Default: "network"
+#' @param scale.to "network" (default), "points", or a list with x and y ranges. Network and points both scale to the c(-max, max) of the corresponding data.frame
 #' @param ... additional parameters addressed in inner function
 #'
-#' @keywords ENA, generate, plot
 #'
 #' @seealso \code{\link{ena.make.set}}, \code{\link{ena.plot.points}}
 #'
@@ -52,14 +51,20 @@ ena.plot <- function(
 
   title = "ENA Plot",
 
-  dimension.labels = c("X","Y"),
+  dimension.labels = c("",""),
 
   font.size = 10,
   font.color = "#000000",
   font.family = c("Arial", "Courier New", "Times New Roman"),
-  scale.to = c("network", "points"),
+  scale.to = "network", #, "points"),
   ...
 ) {
+  if (is(enaset, "ENAset")) {
+    warning(paste0("Usage of ENAset objects will be deprecated ",
+      "and potentially removed altogether in future versions."))
+
+    enaset <- ena.set(enaset);
+  }
 
   font.family = match.arg(font.family);
 

@@ -1,4 +1,4 @@
-##
+#####
 #' @title Plot of ENA trajectories
 #'
 #' @description Function used to plot trajectories
@@ -25,7 +25,6 @@
 #' @param label.font.color A character which determines the color of label font, default: enaplot\$font.color
 #' @param label.font.family A character which determines font type, choices: Arial, Courier New, Times New Roman, default: enaplot\$font.family
 #' @param default.hidden A logical indicating if the trajectories should start hidden (click on the legend to show them) Default: FALSE
-#' @keywords ENA, plot, trajectory
 #'
 #' @seealso \code{\link{ena.plot}}
 #'
@@ -46,29 +45,19 @@
 #'
 #' set = ena.make.set(accum);
 #'
-#' unitNames = set$enadata$units
-#'
-#' ### Subset rotated points and plot Condition 1 Group Mean
-#' first.game = unitNames$Condition == "FirstGame"
-#' first.game.points = set$points.rotated[first.game,]
-#'
-#' ### Subset rotated points and plot Condition 2 Group Mean
-#' second.game = unitNames$Condition == "SecondGame"
-#' second.game.points = set$points.rotated[second.game,]
-#'
 #' ### get mean network plots
-#' first.game.lineweights = set$line.weights[first.game,]
+#' first.game.lineweights = as.matrix(set$line.weights$Condition$FirstGame)
 #' first.game.mean = colMeans(first.game.lineweights)
 #'
-#' second.game.lineweights = set$line.weights[second.game,]
+#' second.game.lineweights = as.matrix(set$line.weights$Condition$SecondGame)
 #' second.game.mean = colMeans(second.game.lineweights)
 #'
 #' subtracted.network = first.game.mean - second.game.mean
 #'
 #' # Plot dimension 1 against ActivityNumber metadata
 #' dim.by.activity = cbind(
-#'     set$points.rotated[,1],
-#'     set$enadata$trajectories$step$ActivityNumber*.8/14-.4  #scale down to dimension 1
+#'     as.matrix(set$points)[,1],
+#'     set$trajectories$ActivityNumber * .8/14-.4  #scale down to dimension 1
 #' )
 #'
 #' plot = ena.plot(set)
@@ -76,14 +65,13 @@
 #' plot = ena.plot.trajectory(
 #'   plot,
 #'   points = dim.by.activity,
-#'   names = unique(set$enadata$units$UserName),
-#'   by = set$enadata$units$UserName
+#'   names = unique(set$model$unit.label),
+#'   by = set$trajectories$ENA_UNIT
 #' );
 #' print(plot)
 #'
 #' @return The \code{\link{ENAplot}} provided to the function, with its plot updated to include the trajectories
-##
-
+#####
 ena.plot.trajectory = function(
   enaplot,
   points,
@@ -106,51 +94,69 @@ ena.plot.trajectory = function(
   if(!is.character(label.font.family)) {
     label.font.size = enaplot$get("font.family");
   }
-  labels.show = match.arg(labels.show);
-  shape = match.arg(shape);
+  labels.show <- match.arg(labels.show);
+  shape <- match.arg(shape);
 
   if(is.null(by)) {
-    by = list(all = rep(T, nrow(points)));
+    by <- list(all = rep(T, nrow(points)));
   }
   if(!is(points, "data.table")) {
-    points = data.table::as.data.table(points);
+    points <- data.table::as.data.table(points);
   }
   if(length(colors) == 1)
-    colors = rep(colors, length(names))
+    colors <- rep(colors, length(names))
 
-  mode="lines+markers+text";
-  hoverinfo = "x+y";
-  tbl = data.table::data.table(points);
-  if(!is.null(labels)) {
-    if(labels.show %in% c("Always","Both"))
-      mode=paste0(mode,"+text");
-    if(labels.show %in% c("Hover","Both"))
-      hoverinfo=paste0(hoverinfo,"+text");
+  mode <- "lines+markers+text";
+  hoverinfo <- "x+y";
+  tbl <- data.table::data.table(points);
+  if (!is.null(labels)) {
+    if (labels.show %in% c("Always","Both"))
+      mode <- paste0(mode,"+text");
+    if (labels.show %in% c("Hover","Both"))
+      hoverinfo <- paste0(hoverinfo,"+text");
 
     tbl = data.table::data.table(points, labels = labels);
   }
-  dfDT.trajs = tbl[,{ data.table::data.table(lines = list(.SD))  }, by=by]
 
+  # if(is.logical(by)) {
+  # } else {}
+  if(!is.null(by)) {
+    if(is.character(by) && length(by) == nrow(tbl))
+        by <- as.factor(by)
 
-  valid.label.offsets = c("top left","top center","top right","middle left","middle center","middle right","bottom left","bottom center","bottom right");
-  if(!all(label.offset %in% valid.label.offsets))
-    stop(sprintf( "Unrecognized label.offsets: %s", paste(unique(label.offset[!(label.offset %in% valid.label.offsets)]), collapse = ", ") ))
+    dfdt_trajs <- tbl[,{ data.table::data.table(lines = list(.SD))  }, by = by]
+  } else {
+    dfdt_trajs <- tbl[,{ data.table::data.table(lines = list(.SD))  }]
+  }
+
+  valid_label_offsets = c("top left","top center","top right","middle left",
+              "middle center","middle right","bottom left","bottom center",
+              "bottom right")
+  if(!all(label.offset %in% valid_label_offsets))
+    stop(sprintf( "Unrecognized label.offsets: %s",
+      paste(unique(label.offset[!(label.offset %in% valid_label_offsets)]),
+      collapse = ", ") ))
+
   if(length(label.offset) == 1)
-    label.offset = rep(label.offset, nrow(dfDT.trajs))
+    label.offset = rep(label.offset, nrow(dfdt_trajs))
 
-  if (!is.null(colors) && length(colors) > 1 && length(colors) != length(names)) {
+  if (!is.null(colors) &&
+      length(colors) > 1 && length(colors) != length(names)
+  ) {
     stop("Length of the colors must be 1 or the same length as by")
   }
 
-  for(x in 1:nrow(dfDT.trajs)) {
+  for (x in 1:nrow(dfdt_trajs)) {
+    d <- remove_meta_data(dfdt_trajs[x,]$lines[[1]])
+    d.names <- colnames(d)
     enaplot$plot = plotly::add_trace(
       enaplot$plot,
-      data = dfDT.trajs[x,]$lines[[1]],
-      x = ~V1, y = ~V2,
-      name = names[x], #as.character(names[x]), #dfDT.trajs[x]$lines[[1]]$labels,
+      data = d,
+      x = as.formula(paste0("~", d.names[1])),
+      y = as.formula(paste0("~", d.names[2])),
+      name = names[x],
       mode = mode,
-      text = dfDT.trajs[x,]$lines[[1]]$labels,
-      # textposition = 'middle right',
+      text = dfdt_trajs[x,]$lines[[1]]$labels,
       textposition = label.offset[x],
       hoverinfo = hoverinfo,
       showlegend = T,
@@ -169,6 +175,10 @@ ena.plot.trajectory = function(
       visible = ifelse(default.hidden, "legendonly", T)
     );
   }
+
+  enaplot$plotted$trajectories[[
+    length(enaplot$plotted$trajectories) + 1
+  ]] <- dfdt_trajs
 
   return(enaplot);
 }

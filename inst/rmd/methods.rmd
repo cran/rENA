@@ -1,16 +1,16 @@
 ---
 output: rENA:::methods_report
 ---
-`r accum = enaset$enadata`
-`r ub = enaset$enadata$function.params$units.by`
+`r ub = enaset[["_function.params"]]$units.by`
+`r meta = enaset$meta.data[, ub, with = F]`
 `r u = enaset$enadata$units`
-`r cvb = enaset$enadata$function.params$conversations.by`
-`r cv = enaset$enadata$conversations`
-`r cvEx = as.vector(as.matrix((accum$raw[1,cvb,with=F]))[1,])`
-`r codes = enaset$enadata$codes`
-`r wb = enaset$enadata$function.params$window.size.back`
-`r wgt = enaset$enadata$function.params$weight.by`
-`r normed = identical(enaset$function.params$norm.by, rENA:::sphere_norm_c)`
+`r cvb = enaset[["_function.params"]]$conversations.by`
+`r cv = enaset[["_function.params"]]$conversation`
+`r cvEx = as.vector(as.matrix((enaset$model$raw.input[1,cvb,with=F]))[1,])`
+`r codes = enaset$rotation$codes`
+`r wb = enaset[["_function.params"]]$window.size.back`
+`r wgt = enaset[["_function.params"]]$weight.by`
+`r normed = identical(enaset[["_function.params"]]$norm.by, rENA:::fun_sphere_norm)`
 `r corr = ena.correlations(enaset)`
 `r corrRnd = apply(apply(matrix(corr), 1, unlist), c(1,2), round, sig.dig)`
 `r if(theory == T) paste0("ENA Theory")`
@@ -26,7 +26,7 @@ output: rENA:::methods_report
 
 `r if(methods == T) paste0("In this study, we applied Epistemic Network Analysis (Shaffer, 2017; Shaffer, Collier, & Ruis, 2016; Shaffer & Ruis, 2017) to our data using the ENA", if(tool=="rENA") "package for the statistical programming language R (version ", tool.version, ") (Marquart, Swiecki, et al., 2018)", if(tool=="webENA") " Web Tool (version ", tool.version, ") (Marquart, Hinojosa, Swiecki, Eagan, & Shaffer, 2018)")`
 
-`r if(methods == T) paste0("We defined the units of analysis as all lines of data associated with a single value of ", ub[1], if(length(ub) > 1)" subsetted by ", concatenate::cc_and(ub[2:length(ub)], oxford=T), ". For example, one unit consisted of all the lines associated with ", concatenate::cc_and(apply(matrix(c(ub, as.matrix(u[1,])[1,]), nrow=2), 1, paste, collapse=" "), oxford=T),".")`
+`r if(methods == T) paste0("We defined the units of analysis as all lines of data associated with a single value of ", ub[1], if(length(ub) > 1)" subsetted by ", concatenate::cc_and(ub[2:length(ub)], oxford=T), ". For example, one unit consisted of all the lines associated with ", concatenate::cc_and(apply(matrix(c(colnames(meta)[-1], t(meta[1,-c(1)])), ncol = 2, nrow = ncol(meta)-1), 1, paste, collapse = " "), oxford = T),".")`
 
 `r if(methods == T) paste0( if(identical(wb, "Conversation")) "The ENA algorithm constructs a network model for each unit of analysis, showing how the codes in all lines associated with that unit—within a given set of lines called a conversation—are connected to one another. The resulting networks are aggregated for all conversations for each unit of analysis in the model." else if(is.numeric(wb)) paste0("The ENA algorithm uses a moving window to construct a network model for each line in the data, showing how codes in the current line are connected to codes that occur within the recent temporal context (Siebert-Evenstone et al., 2017), defined as ", (if(!is.infinite(wb)){ paste0(wb," lines (each line plus the ",(wb-1)," previous lines)")} else {("all lines preceding the current line")}))," within a given conversation. The resulting networks are aggregated for all lines for each unit of analysis in the model. In this model, we aggregated networks using a ",if(identical('binary',wgt)){("binary")}else{("weighted")},(" summation in which the networks for a given"),(if(identical(wb, "Conversation")){(" conversation")}else{(" line")}),(" reflect"),(if(identical('binary',wgt)){(" the presence or absence of the co-occurrence")} else if(identical(wgt, 'product')){(" the product of the value")} else if(identical(wgt,'sqrt')){(" square root of the product")} else{ (" log of the product") }),(" of each pair of codes."))`
 

@@ -99,27 +99,16 @@ set = ena.make.set(
 
 Now that we have generated ENAset, we can think about plotting.  To do so, we first need to think about what it is we to plot or compare.  In this example, we will look at the two specific groups, defined in `RS.data` by the `Condition` column.
 
-```{r Create Logical Vectors and Subset Two Groups}
-### Make a reference to the units for easier access
-unitNames = set$enadata$units
-
-### Logical vector representing which rows will be FirstGame
-first.game = unitNames$Condition == "FirstGame"
-
-### Logical vector representing which rows will be SecondGame
-second.game = unitNames$Condition == "SecondGame"
-```
-
 ## Plot Units In Each Group
 
 We will start by plotting the units for each condtion as a different color. Referencing back to the `set$points.rotated` we will subset the rows that are in each condition and plot each group of units individually (on the same plot), as a different color.
 
 ```{r echo=TRUE}
 ### Subset rotated points for the first condition
-first.game.points = set$points.rotated[first.game,]
+first.game.points = as.matrix(set$points$Condition$FirstGame)
 
 ### Subset rotated points for the second condition
-second.game.points = set$points.rotated[second.game,]
+second.game.points = as.matrix(set$points$Condition$SecondGame)
 
 plot = ena.plot(set, scale.to = "points", title = "Groups of Units")
 plot = ena.plot.points(plot, points = first.game.points, confidence.interval = "box", colors = c("red"))
@@ -153,10 +142,10 @@ To plot a network, we will use the `ena.plot.network` function.  This function r
 The line weights will come from `set$line.weights`, which we will subset by our two groups as we did while plotting the unit points.
 ```{r }
 ### Subset lineweights for FirstGame and Calculate the colMeans
-first.game.lineweights = set$line.weights[first.game,]
+first.game.lineweights = as.matrix(set$line.weights$Condition$FirstGame)
 
 ### Subset lineweights for SecondGame and Calculate the colMeans
-second.game.lineweights = set$line.weights[second.game,]
+second.game.lineweights = as.matrix(set$line.weights$Condition$SecondGame)
 ```
 
 ```{r Calculate Means and Their Differences of Two Groups}
@@ -204,9 +193,9 @@ library(scales)
 # Scale the nodes to match that of the network, for better viewing
 point.max = max(first.game.points, second.game.points)
 first.game.scaled = scales::rescale(first.game.points, 
-                                    c(0,max(set$node.positions)), c(0,point.max))
+                                    c(0,max(as.matrix(set$rotation$nodes))), c(0,point.max))
 second.game.scaled = scales::rescale(second.game.points, 
-                                     c(0,max(set$node.positions)), c(0,point.max))
+                                     c(0,max(as.matrix(set$rotation$nodes))), c(0,point.max))
 
 plot = ena.plot(set, title = "Plot with Units and Network") %>% 
           ena.plot.points(points = first.game.scaled, colors = c("red")) %>% 
@@ -219,28 +208,3 @@ plot = ena.plot(set, title = "Plot with Units and Network") %>%
 
 plot$plot
 ```
-
-
-## Plot Only a Subset of Codes
-
-Currently, one of the more difficult items to accomplish is to plot a subset of codes.  It's possible, if the codes to hide have low edge weights, they can be hidden using either `show.all.nodes = F` or `threshold = {0:1}`, or both of them.  However, in the case that we want to hide codes that are not necessarily the unconnected oo nodes with the lowest sum edge weights, it becomes a bit more difficult.
-
-The `ena.plot.network` function expects a `network` parameter as a vector of edge weights.  In the basic form, the function will use the default `node.positions` from the set provided to `ena.plot` along with the `adjacency.key`.  So, in order to plot a subset of codes, we need to subset the items for those as well.
-```{r }
-# List of codes to hide
-nodes.to.hide = c("Data", "Client.and.Consultant.Requests")
-
-# Create a logical vector representing which codes to show
-codes.to.show = !(set$enadata$adjacency.matrix[1,] %in%  nodes.to.hide) & 
-                  !(set$enadata$adjacency.matrix[2,] %in% nodes.to.hide)
-
-nodes.to.show = !rownames(set$node.positions) %in% nodes.to.hide
-plot.subset.weights = ena.plot(set) %>% 
-                        ena.plot.network(
-                          network = subtracted.mean[codes.to.show], 
-                          node.positions = set$node.positions[nodes.to.show,]
-                        )
-
-plot.subset.weights$plot
-```
-

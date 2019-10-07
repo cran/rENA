@@ -5,15 +5,13 @@
 \title{Plot an ENA network}
 \usage{
 ena.plot.network(enaplot = NULL, network = NULL,
-  node.positions = enaplot$enaset$node.positions,
-  adjacency.key = namesToAdjacencyKey(rownames(node.positions)),
-  colors = c(pos = "red", "blue"), edge_type = "line",
-  show.all.nodes = T, threshold = c(0), thin.lines.in.front = T,
-  thickness = c(min(abs(network)), max(abs(network))),
-  opacity = thickness, saturation = thickness,
+  node.positions = enaplot$enaset$rotation$nodes, adjacency.key = NULL,
+  colors = c(pos = enaplot$palette[1], enaplot$palette[2]),
+  edge_type = "line", show.all.nodes = T, threshold = c(0),
+  thin.lines.in.front = T, thickness = c(min(abs(network)),
+  max(abs(network))), opacity = thickness, saturation = thickness,
   scale.range = c(ifelse(min(network) == 0, 0, 0.1), 1),
-  node.size = c(3, 10), labels = rownames(node.positions),
-  label.offset = "middle right",
+  node.size = c(3, 10), labels = NULL, label.offset = "middle right",
   label.font.size = enaplot$get("font.size"),
   label.font.color = enaplot$get("font.color"),
   label.font.family = enaplot$get("font.family"), legend.name = NULL,
@@ -93,32 +91,30 @@ set = ena.make.set(
   enadata = accum,
   rotation.by = ena.rotate.by.mean,
   rotation.params = list(
-      accum$metadata$Condition=="FirstGame",
-      accum$metadata$Condition=="SecondGame"
+    accum$meta.data$Condition=="FirstGame",
+    accum$meta.data$Condition=="SecondGame"
   )
 )
 
 plot = ena.plot(set)
 
-unitNames = set$enadata$units
-
 ### Subset rotated points and plot Condition 1 Group Mean
-first.game = unitNames$Condition == "FirstGame"
-first.game.points = set$points.rotated[first.game,]
+as.matrix(set$points$Condition$FirstGame)
+
+first.game.points = as.matrix(set$points$Condition$FirstGame)
 plot = ena.plot.group(plot, first.game.points, labels = "FirstGame",
     colors = "red", confidence.interval = "box")
 
 ### Subset rotated points and plot Condition 2 Group Mean
-second.game = unitNames$Condition == "SecondGame"
-second.game.points = set$points.rotated[second.game,]
+second.game.points = as.matrix(set$points$Condition$SecondGame)
 plot = ena.plot.group(plot, second.game.points, labels = "SecondGame",
     colors  = "blue", confidence.interval = "box")
 
 ### get mean network plots
-first.game.lineweights = set$line.weights[first.game,]
+first.game.lineweights = as.matrix(set$line.weights$Condition$FirstGame)
 first.game.mean = colMeans(first.game.lineweights)
 
-second.game.lineweights = set$line.weights[second.game,]
+second.game.lineweights = as.matrix(set$line.weights$Condition$SecondGame)
 second.game.mean = colMeans(second.game.lineweights)
 
 subtracted.network = first.game.mean - second.game.mean
@@ -129,8 +125,3 @@ print(plot)
 \seealso{
 \code{\link{ena.plot}}, \code{\link{ena.plot.points}}
 }
-\keyword{ENA,}
-\keyword{edges}
-\keyword{network,}
-\keyword{nodes,}
-\keyword{plot,}

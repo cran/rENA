@@ -62,22 +62,12 @@ set = ena.make.set(
 ### The weight of each connection. Units are rows, columns the co-occurrence
 #head(set$line.weights)
 
-## ----Create Logical Vectors and Subset Two Groups------------------------
-### Make a reference to the units for easier access
-unitNames = set$enadata$units
-
-### Logical vector representing which rows will be FirstGame
-first.game = unitNames$Condition == "FirstGame"
-
-### Logical vector representing which rows will be SecondGame
-second.game = unitNames$Condition == "SecondGame"
-
 ## ----echo=TRUE-----------------------------------------------------------
 ### Subset rotated points for the first condition
-first.game.points = set$points.rotated[first.game,]
+first.game.points = as.matrix(set$points$Condition$FirstGame)
 
 ### Subset rotated points for the second condition
-second.game.points = set$points.rotated[second.game,]
+second.game.points = as.matrix(set$points$Condition$SecondGame)
 
 plot = ena.plot(set, scale.to = "points", title = "Groups of Units")
 plot = ena.plot.points(plot, points = first.game.points, confidence.interval = "box", colors = c("red"))
@@ -100,10 +90,10 @@ plot$plot
 
 ## ------------------------------------------------------------------------
 ### Subset lineweights for FirstGame and Calculate the colMeans
-first.game.lineweights = set$line.weights[first.game,]
+first.game.lineweights = as.matrix(set$line.weights$Condition$FirstGame)
 
 ### Subset lineweights for SecondGame and Calculate the colMeans
-second.game.lineweights = set$line.weights[second.game,]
+second.game.lineweights = as.matrix(set$line.weights$Condition$SecondGame)
 
 ## ----Calculate Means and Their Differences of Two Groups-----------------
 first.game.mean = as.vector(colMeans(first.game.lineweights))
@@ -142,9 +132,9 @@ library(scales)
 # Scale the nodes to match that of the network, for better viewing
 point.max = max(first.game.points, second.game.points)
 first.game.scaled = scales::rescale(first.game.points, 
-                                    c(0,max(set$node.positions)), c(0,point.max))
+                                    c(0,max(as.matrix(set$rotation$nodes))), c(0,point.max))
 second.game.scaled = scales::rescale(second.game.points, 
-                                     c(0,max(set$node.positions)), c(0,point.max))
+                                     c(0,max(as.matrix(set$rotation$nodes))), c(0,point.max))
 
 plot = ena.plot(set, title = "Plot with Units and Network") %>% 
           ena.plot.points(points = first.game.scaled, colors = c("red")) %>% 
@@ -156,21 +146,4 @@ plot = ena.plot(set, title = "Plot with Units and Network") %>%
           ena.plot.network(network = subtracted.mean)
 
 plot$plot
-
-## ------------------------------------------------------------------------
-# List of codes to hide
-nodes.to.hide = c("Data", "Client.and.Consultant.Requests")
-
-# Create a logical vector representing which codes to show
-codes.to.show = !(set$enadata$adjacency.matrix[1,] %in%  nodes.to.hide) & 
-                  !(set$enadata$adjacency.matrix[2,] %in% nodes.to.hide)
-
-nodes.to.show = !rownames(set$node.positions) %in% nodes.to.hide
-plot.subset.weights = ena.plot(set) %>% 
-                        ena.plot.network(
-                          network = subtracted.mean[codes.to.show], 
-                          node.positions = set$node.positions[nodes.to.show,]
-                        )
-
-plot.subset.weights$plot
 

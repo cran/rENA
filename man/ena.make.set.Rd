@@ -4,9 +4,10 @@
 \alias{ena.make.set}
 \title{Generate ENA Set}
 \usage{
-ena.make.set(enadata, dimensions = 2, norm.by = sphere_norm_c,
+ena.make.set(enadata, dimensions = 2, norm.by = rENA::fun_sphere_norm,
   rotation.by = ena.svd, rotation.params = NULL, rotation.set = NULL,
-  endpoints.only = T, node.position.method = lws.positions.sq, ...)
+  endpoints.only = T, node.position.method = lws.positions.sq,
+  as.list = TRUE, ...)
 }
 \arguments{
 \item{enadata}{\code{\link{ENAdata}} that will be used to generate an ENA model}
@@ -24,6 +25,8 @@ ena.make.set(enadata, dimensions = 2, norm.by = sphere_norm_c,
 \item{endpoints.only}{A logical variable which determines whether to only show endpoints for trajectory models}
 
 \item{node.position.method}{A function to be used to determine node positions based on the dimensional reduction, default: lws.position.es()}
+
+\item{as.list}{R6 objects will be deprecated, but if this is TRUE, the original R6 object will be returned, otherwise a list with class `ena.set`}
 
 \item{...}{additional parameters addressed in inner function}
 }
@@ -63,8 +66,8 @@ set.means.rotated = ena.make.set(
   enadata = accum,
   rotation.by = ena.rotate.by.mean,
   rotation.params = list(
-      accum$metadata$Condition=="FirstGame",
-      accum$metadata$Condition=="SecondGame"
+      accum$meta.data$Condition=="FirstGame",
+      accum$meta.data$Condition=="SecondGame"
   )
 )
 
@@ -72,6 +75,3 @@ set.means.rotated = ena.make.set(
 \seealso{
 \code{\link{ena.accumulate.data}}, \code{\link{ENAset}}
 }
-\keyword{ENA,}
-\keyword{generate,}
-\keyword{set}

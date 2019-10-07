@@ -9,8 +9,6 @@
 #' @param by A vector of values the same length as units. Uses rotated points for group positions and normed data to get the group edge weights
 #' @param method A function that is used on grouped points. Default: mean().  If `enaset` is an ENAset, enaset$points.rotated will be groups using `mean` regardless of `method` provided
 #'
-#' @keywords ENA, set, group
-#'
 #' @examples
 #' data(RS.data)
 #'

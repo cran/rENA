@@ -7,7 +7,6 @@
 #
 # @param ena.set \code{\link{ENAset}} from ena.make.set()
 #
-# @keywords ENA, set, update
 #
 # @seealso \code{\link{ena.generate.set}}
 #

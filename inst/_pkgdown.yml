@@ -1,0 +1,32 @@
+navbar:
+  title: "rENA"
+  type: inverse
+  left:
+    - text: "Home"
+      href: index.html
+    #- text: "Extensions"
+    #  href: articles/extensions.html
+    - text: "Reference"
+      href: "reference/index.html"
+    - text: "Coverage"
+      href: "coverage/master/index.html"
+  right:
+    - icon: fa-gitlab
+      href: https://git.doit.wisc.edu/epistemic-analytics/qe-packages/rena/
+reference:
+  - title: "Creating Models"
+    desc: >
+      Functions for the generation of ENA models, all of which will return, by default, an 
+      S3 object with the class of `ena.set` that can be supplied to the other 
+      functions.
+    contents: 
+      - ena
+      - starts_with("ena.accum")
+      - ena.make.set
+  - title: "Plotting Models"
+    desc: Functions to plot an `ena.set`, all of which return an `ena.plot` object that
+      can be supplied to the other functions.
+    contents:
+      - plot.ena.set
+      - matches("add_")
+      - matches("ena.plot")

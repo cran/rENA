@@ -33,9 +33,8 @@ accum = ena.accumulate.data(
 
 ## ------------------------------------------------------------------------
 ## Save references to the two vectors for easier re-use
-unitNames = accum$units
-first.game = unitNames$Condition == "FirstGame"
-second.game = unitNames$Condition == "SecondGame"
+first.game = accum$meta.data$Condition == "FirstGame"
+second.game = accum$meta.data$Condition == "SecondGame"
 
 rotation.params = list(
   FirstGame = first.game, 
@@ -48,8 +47,8 @@ setMeansRotated = ena.make.set(
   rotation.params = rotation.params  # The defined paremeters for rotation
 )
 
-first.points = setMeansRotated$points.rotated[first.game,]
-second.points = setMeansRotated$points.rotated[second.game,]
+first.points =  as.matrix(setMeansRotated$points$Condition$FirstGame)
+second.points = as.matrix(setMeansRotated$points$Condition$SecondGame)
 plot.rotated = ena.plot(setMeansRotated,  title = "Mean Rotation", scale.to = "p") %>%
                   ena.plot.points(points = first.points,  colors = c("red")) %>% 
                   ena.plot.points(points = second.points, colors = c("blue")) %>%

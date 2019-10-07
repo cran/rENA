@@ -65,29 +65,19 @@ accum = ena.accumulate.data(
 
 set = ena.make.set(accum);
 
-unitNames = set$enadata$units
-
-### Subset rotated points and plot Condition 1 Group Mean
-first.game = unitNames$Condition == "FirstGame"
-first.game.points = set$points.rotated[first.game,]
-
-### Subset rotated points and plot Condition 2 Group Mean
-second.game = unitNames$Condition == "SecondGame"
-second.game.points = set$points.rotated[second.game,]
-
 ### get mean network plots
-first.game.lineweights = set$line.weights[first.game,]
+first.game.lineweights = as.matrix(set$line.weights$Condition$FirstGame)
 first.game.mean = colMeans(first.game.lineweights)
 
-second.game.lineweights = set$line.weights[second.game,]
+second.game.lineweights = as.matrix(set$line.weights$Condition$SecondGame)
 second.game.mean = colMeans(second.game.lineweights)
 
 subtracted.network = first.game.mean - second.game.mean
 
 # Plot dimension 1 against ActivityNumber metadata
 dim.by.activity = cbind(
-    set$points.rotated[,1],
-    set$enadata$trajectories$step$ActivityNumber*.8/14-.4  #scale down to dimension 1
+    as.matrix(set$points)[,1],
+    set$trajectories$ActivityNumber * .8/14-.4  #scale down to dimension 1
 )
 
 plot = ena.plot(set)
@@ -95,8 +85,8 @@ plot = ena.plot.network(plot, network = subtracted.network, legend.name="Network
 plot = ena.plot.trajectory(
   plot,
   points = dim.by.activity,
-  names = unique(set$enadata$units$UserName),
-  by = set$enadata$units$UserName
+  names = unique(set$model$unit.label),
+  by = set$trajectories$ENA_UNIT
 );
 print(plot)
 
@@ -104,6 +94,3 @@ print(plot)
 \seealso{
 \code{\link{ena.plot}}
 }
-\keyword{ENA,}
-\keyword{plot,}
-\keyword{trajectory}

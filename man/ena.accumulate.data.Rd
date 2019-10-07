@@ -9,7 +9,7 @@ ena.accumulate.data(units = NULL, conversation = NULL, codes = NULL,
   "SeparateTrajectory"), weight.by = "binary",
   window = c("MovingStanzaWindow", "Conversation"),
   window.size.back = 1, window.size.forward = 0, mask = NULL,
-  include.meta = T, ...)
+  include.meta = T, as.list = T, ...)
 }
 \arguments{
 \item{units}{A data frame where the columns are the properties by which units will be identified}
@@ -33,6 +33,8 @@ ena.accumulate.data(units = NULL, conversation = NULL, codes = NULL,
 \item{mask}{(optional) A binary matrix of size ncol(codes) x ncol(codes). 0s in the mask matrix row i column j indicates that co-occurrence will not be modeled between code i and code j}
 
 \item{include.meta}{Locigal indicating if unit metadata should be attached to the resulting ENAdata object, default is TRUE}
+
+\item{as.list}{R6 objects will be deprecated, but if this is TRUE, the original R6 object will be returned, otherwise a list with class `ena.set`}
 
 \item{...}{additional parameters addressed in inner function}
 }
@@ -68,5 +70,3 @@ from all previous conversations in the data.
 \seealso{
 \code{\link{ENAdata}}, \code{\link{ena.make.set}}
 }
-\keyword{accumulate}
-\keyword{data,}

@@ -4,10 +4,9 @@
 \alias{ena.plot}
 \title{Generate a plot of an ENAset}
 \usage{
-ena.plot(enaset, title = "ENA Plot", dimension.labels = c("X", "Y"),
+ena.plot(enaset, title = "ENA Plot", dimension.labels = c("", ""),
   font.size = 10, font.color = "#000000", font.family = c("Arial",
-  "Courier New", "Times New Roman"), scale.to = c("network", "points"),
-  ...)
+  "Courier New", "Times New Roman"), scale.to = "network", ...)
 }
 \arguments{
 \item{enaset}{The \code{\link{ENAset}} that will be used to generate a plot}
@@ -22,7 +21,7 @@ ena.plot(enaset, title = "ENA Plot", dimension.labels = c("X", "Y"),
 
 \item{font.family}{A character determining the font type, choices: Arial, Courier New, Times New Roman, default: Arial}
 
-\item{scale.to}{Either network or points. Default: "network"}
+\item{scale.to}{"network" (default), "points", or a list with x and y ranges. Network and points both scale to the c(-max, max) of the corresponding data.frame}
 
 \item{...}{additional parameters addressed in inner function}
 }
@@ -63,6 +62,3 @@ print(plot);
 \seealso{
 \code{\link{ena.make.set}}, \code{\link{ena.plot.points}}
 }
-\keyword{ENA,}
-\keyword{generate,}
-\keyword{plot}

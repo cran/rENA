@@ -2,64 +2,98 @@
 % Please edit documentation in R/ena.R
 \name{ena}
 \alias{ena}
-\title{TBD}
+\title{Wrapper to generate, and optionally plot, an ENA model}
 \usage{
 ena(data, codes, units, conversation, metadata = NULL,
   model = c("EndPoint", "AccumulatedTrajectory", "SeparateTrajectory"),
   weight.by = "binary", window = c("MovingStanzaWindow",
-  "Conversation"), window.size.back = 1, window.size.forward = 0,
-  mask = NULL, include.meta = TRUE, groupCol = NULL, group1 = NULL,
-  group2 = NULL, showPlots = TRUE, ...)
+  "Conversation"), window.size.back = 1, include.meta = TRUE,
+  groupVar = NULL, groups = NULL, runTest = FALSE, points = FALSE,
+  mean = FALSE, network = TRUE, networkMultiplier = 1,
+  subtractionMultiplier = 1, unit = NULL, include.plots = T,
+  print.plots = F, ...)
 }
 \arguments{
-\item{data}{A data frame}
+\item{data}{data.frame with containing metadata and coded columns}
 
-\item{codes}{Column names of data by which codes will be identified}
+\item{codes}{vector, numeric or character, of columns with codes}
 
-\item{units}{Column names of data by which units will be identified}
+\item{units}{vector, numeric or character, of columns representing units}
 
-\item{conversation}{Column names of data by which conversations will be identified}
+\item{conversation}{vector, numeric or character, of columns to segment conversations by}
 
-\item{metadata}{(optional) Column names of data identifying metadata to be associated with each unit in the data}
+\item{metadata}{vector, numeric or character, of columns with additional meta information for units}
 
-\item{model}{A character, choices: EndPoint (or E), AccumulatedTrajectory (or A), or SeparateTrajectory (or S); default: EndPoint. Determines the ENA model to be constructed}
+\item{model}{character: EndPoint (default), AccumulatedTrajectory, SeparateTrajectory}
 
-\item{weight.by}{(optional) A function to apply to values after accumulation}
+\item{weight.by}{"binary" is default, can supply a function to call (e.g. sum)}
 
-\item{window}{A character, choices are Conversation (or C), MovingStanzaWindow (MSW, MS); default MovingStanzaWindow. Determines how stanzas are constructed, which defines how co-occurrences are modeled}
+\item{window}{MovingStanzaWindow (default) or Conversation}
 
-\item{window.size.back}{A positive integer, Inf, or character (INF or Infinite), default: 1. Determines, for each line in the data frame, the number of previous lines in a conversation to include in the stanza window, which defines how co-occurrences are modeled}
+\item{window.size.back}{Number of lines in the stanza window (default: 1)}
 
-\item{window.size.forward}{(optional) A positive integer, Inf, or character (INF or Infinite), default: 0. Determines, for each line in the data frame, the number of subsequent lines in a conversation to include in the stanza window, which defines how co-occurrences are modeled}
+\item{include.meta}{[TBD]}
 
-\item{mask}{(optional) A binary matrix of size ncol(codes) x ncol(codes). 0s in the mask matrix row i column j indicates that co-occurrence will not be modeled between code i and code j}
+\item{groupVar}{vector, character, of column name containing group identifiers.
+If column contains at least two unique values, will generate model using a means rotation (a dimensional reduction maximizing the variance between the means of the two groups)}
 
-\item{include.meta}{Locigal indicating if unit metadata should be attached to the resulting ENAdata object, default is TRUE}
+\item{groups}{vector, character, of values of groupVar column used for means rotation, plotting, or statistical tests}
 
-\item{groupCol}{(optional) Column name of data that includes values you wish to group and plot units by. Default is to plot a mean network for all units.}
+\item{runTest}{logical, TRUE will run a Student's t-Test and a Wilcoxon test for groups defined by the groups argument}
 
-\item{group1}{(optional) Value of groupCol that you wish to group and plot units by}
+\item{points}{logical, TRUE will plot points (default: FALSE)}
 
-\item{group2}{(optional) Value of groupCol that you wish to group and plot units by}
+\item{mean}{logical, TRUE will plot the mean position of the groups defined in the groups argument (default: FALSE)}
 
-\item{showPlots}{Logical indicating if the function should show plots in the Viewer pane immediately after running. Default is TRUE}
+\item{network}{logical, TRUE will plot networks (default: TRUE)}
 
-\item{...}{additional parameters addressed in inner function}
+\item{networkMultiplier}{numeric, scaling factor for non-subtracted networks (default: 1)}
+
+\item{subtractionMultiplier}{numeric, scaling factor for subtracted networks (default: 1)}
+
+\item{unit}{vector, character, name of a single unit to plot}
+
+\item{include.plots}{logical, TRUE will generate plots based on the model (default: TRUE)}
+
+\item{print.plots}{logical, TRUE will show plots in the Viewer(default: FALSE)}
+
+\item{...}{Additional parameters passed to set creation and plotting functions}
 }
 \value{
-\code{\link{ENAset}} class object that can be further processed for analysis or plotting, The \code{\link{ENAplot}}s requested.
+ena.set object
 }
 \description{
-TBD
+Generates an ENA model by constructing a dimensional reduction
+of adjacency (co-occurrence) vectors as defined by the supplied
+conversations, units, and codes.
 }
 \details{
-TBD
+This function generates an ena.set object given a data.frame, units,
+conversations, and codes. After accumulating the adjacency (co-occurrence)
+vectors, computes a dimensional reduction (projection), and calculates node
+positions in the projected ENA space. Returns location of the units in the
+projected space, as well as locations for node positions, and normalized
+adjacency (co-occurrence) vectors to construct network graphs. Includes options
+for returning statistical tests between groups of units, as well as plots of units,
+groups, and networks.
 }
-\seealso{
-\code{\link{ENAdata}}, \code{\link{ena.make.set}}, \code{\link{ena.accumulate.data}}, \code{\link{ena.plot.group}}, \code{\link{ena.plot.network}}, \code{\link{ena.plot}}
+\examples{
+data(RS.data)
+
+rs = ena(
+  data = RS.data,
+  units = c("UserName","Condition", "GroupName"),
+  conversation = c("Condition","GroupName"),
+  codes = c('Data',
+            'Technical.Constraints',
+            'Performance.Parameters',
+            'Client.and.Consultant.Requests',
+            'Design.Reasoning',
+            'Collaboration'),
+  window.size.back = 4,
+  print.plots = FALSE,
+  groupVar = "Condition",
+  groups = c("FirstGame", "SecondGame")
+)
+
 }
-\keyword{accumulate,}
-\keyword{creation,}
-\keyword{data,}
-\keyword{plotting}
-\keyword{set}

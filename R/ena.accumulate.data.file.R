@@ -22,7 +22,6 @@
 # @param mask [TBD]
 # @param ... additional parameters addressed in inner function
 #
-# @keywords data, accumulate
 #
 # @seealso \code{\link{ena.make.set}}
 #
@@ -48,12 +47,14 @@
 ##
 ena.accumulate.data.file <- function(
   file,
-  units.used = NULL,   #subset of actual unit values to use for accumulation - all used if not specified
+  units.used = NULL,
   conversations.used = NULL,
-  units.by,    #unit columns to merge on to create ENA_UNIT --- MUST BE SUPPLIED
-  conversations.by,    #conversation columns to accumulate by --- MUST BE SUPPLIED
+  units.by,
+  conversations.by,
   codes = NULL,
-  model = c("EndPoint", "AccumulatedTrajectory", "SeparateTrajectory"),
+  model = c("EndPoint",
+            "AccumulatedTrajectory",
+            "SeparateTrajectory"),
   window = c("Moving Stanza", "Conversation"),
   window.size.back = 1,
   window.size.forward = 0,
@@ -61,18 +62,21 @@ ena.accumulate.data.file <- function(
   binary.stanzas = F,
   mask = NULL,
   include.meta = T,
+  as.list = T,
   ...
 ) {
-  #print(file);
-  if(is.null(file) || is.null(units.by) || is.null(conversations.by) || is.null(codes)) {
-    print("ACCUMULATION FROM FILE REQUIRES: file, units.by, conversations.by, and codes");
+  if(is.null(file) ||
+     is.null(units.by) ||
+     is.null(conversations.by) || is.null(codes)
+  ) {
+    stop("Accumulation: file, units.by, conversations.by, and codes")
   }
 
-  units = NULL;    #will be populated once csv is read
+  units <- NULL;
+  model <- match.arg(model);
+  window <- match.arg(window);
 
-  model = match.arg(model);
-  window = match.arg(window);
-  if(identical(window, "Conversation")) {
+  if (identical(window, "Conversation")) {
     conversations.by = c(conversations.by, units.by);
     window.size.back = window;
   }
@@ -91,6 +95,7 @@ ena.accumulate.data.file <- function(
     include.meta = include.meta,
     ...
   );
+  data$process();
 
   data$function.call = sys.call();
   # output = match.arg(output);
@@ -104,5 +109,11 @@ ena.accumulate.data.file <- function(
   #   r6.to.json(data, o.class = output.class, o.fields = output.fields)
   # }
   #else
+
+  if(as.list) {
+    data = ena.set(data);
+  } else {
+    warning("Usage of R6 data objects is deprecated and may be removed entirely in a future version. Consider upgrading to the new data object.")
+  }
   data
 }

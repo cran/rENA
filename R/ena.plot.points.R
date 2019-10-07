@@ -21,9 +21,10 @@
 #' @param label.font.color A character which determines the color of label font, default: enaplot$font.color
 #' @param label.font.family	A character which determines label font type, choices: Arial, Courier New, Times New Roman, default: enaplot$font.family
 #' @param show.legend Logical indicating whether to show the point labels in the in legend
+#' @param legend.name Character indicating the name to show above the plot legend
+#' @param texts [TBD]
 #' @param ... additional parameters addressed in inner function
 #'
-#' @keywords ENA, plot, points
 #'
 #' @seealso \code{\link{ena.plot}}, \code{\link{ENAplot}}, \code{\link{ena.plot.group}}
 #'
@@ -45,15 +46,15 @@
 #'   enadata = accum,
 #'   rotation.by = ena.rotate.by.mean,
 #'   rotation.params = list(
-#'       accum$metadata$Condition=="FirstGame",
-#'       accum$metadata$Condition=="SecondGame"
+#'       accum$meta.data$Condition=="FirstGame",
+#'       accum$meta.data$Condition=="SecondGame"
 #'   )
 #' )
 #'
 #' plot = ena.plot(set)
 #'
-#' group1.points = set$points.rotated[set$enadata$units$Condition == "FirstGame",]
-#' group2.points = set$points.rotated[set$enadata$units$Condition == "SecondGame",]
+#' group1.points = set$points[set$meta.data$Condition == "FirstGame",]
+#' group2.points = set$points[set$meta.data$Condition == "SecondGame",]
 #' plot = ena.plot.points(plot, points = group1.points);
 #' plot = ena.plot.points(plot, points = group2.points);
 #' print(plot);
@@ -64,7 +65,7 @@ ena.plot.points = function(
   enaplot,
 
   points = NULL,    #vector of unit names or row indices
-  point.size = 5,
+  point.size = enaplot$point$size,
   labels = NULL, #unique(enaplot$enaset$enadata$unit.names),
   label.offset = "top left",
   label.group = NULL,
@@ -74,7 +75,7 @@ ena.plot.points = function(
   label.font.family = NULL, #enaplot$get("font.family"),
 
   shape = "circle",
-  colors = default.colors[1], # c("blue"), #rep(I("black"), nrow(points)),
+  colors = NULL, # c("blue"), #rep(I("black"), nrow(points)),
 
   confidence.interval.values = NULL,
   confidence.interval = c("none", "crosshairs", "box"),
@@ -82,25 +83,36 @@ ena.plot.points = function(
   outlier.interval.values = NULL,
   outlier.interval = c("none", "crosshairs", "box"),
   show.legend = T,
+  legend.name = "Points",
+  texts = NULL,
   ...
 ) {
   ###
   # Parameter Checking and Cleaning
   ###
     env = environment();
-    for(n in c("font.size", "font.color", "font.family")){
+    for(n in c("font.size", "font.color", "font.family")) {
       if(is.null(get(paste0("label.",n))))
         env[[paste0("label.",n)]] = enaplot$get(n);
     }
 
     if(is.null(points)) {
-      stop("Must provide points to plot.")
+      # stop("Must provide points to plot.")
+      points = enaplot$enaset$points
     }
+
     if(is(points, "numeric")){
       points = matrix(points);
       dim(points) = c(1,nrow(points))
+      points.layout = data.table::data.table(points);
     }
-    points.layout = data.table::data.table(points);
+    else if (is.data.table(points)) {
+      # points.layout = remove_meta_data(points)
+      points.layout = data.table::copy(points)
+    }
+    else {
+      points.layout = data.table::data.table(points);
+    }
 
     if(!is.character(label.font.family)) {
       label.font.family = enaplot$get("font.family");
@@ -128,10 +140,9 @@ ena.plot.points = function(
       outlier.interval = "box";
     }
 
-    colnames(points.layout) = paste0("X", rep(1:ncol(points.layout)));
-
-    if(length(colors) == 1)
+    if(length(colors) == 1) {
       colors = rep(colors, nrow(points.layout))
+    }
     if(length(point.size) == 1)
       point.size = rep(point.size, nrow(points.layout))
     if(is.null(labels))
@@ -147,7 +158,8 @@ ena.plot.points = function(
     int.values = NULL;
     if(grepl("^c", confidence.interval) && !is.null(confidence.interval.values)) {
       int.values = confidence.interval.values;
-    } else if(grepl("^c", outlier.interval) && !is.null(outlier.interval.values)) {
+    }
+    else if(grepl("^c", outlier.interval) && !is.null(outlier.interval.values)) {
       int.values = outlier.interval.values;
     }
     error$x$array = int.values[,1];
@@ -158,7 +170,7 @@ ena.plot.points = function(
 
   ###
   # Set box value for CI|OI box on plot
-  ###
+  #####
     box.values = NULL;
     if(grepl("^b", confidence.interval) && !is.null(confidence.interval.values)) {
       box.values = confidence.interval.values;
@@ -168,18 +180,20 @@ ena.plot.points = function(
       box.values = outlier.interval.values;
       box.label = "Outlier Int.";
     }
-  ###
+  ######
   # END: Set box value for CI|OI box on plot
   ###
 
   ###
   # Plot
-  ###
-    this.max = max(points.layout);
-    for(m in 1:nrow(points.layout)) {
+  #####
+    points.matrix = remove_meta_data(points.layout)
+    colnames(points.matrix) = paste0("X", rep(1:ncol(points.matrix)));
+    this.max = max(points.matrix);
+    for(m in 1:nrow(points.matrix)) {
       enaplot$plot = plotly::add_trace(
         p = enaplot$plot,
-        data = points.layout[m,],
+        data = points.matrix[m,],
         type ="scatter",
         x = ~X1, y = ~X2,
         mode = "markers+text",
@@ -190,17 +204,18 @@ ena.plot.points = function(
         ),
         error_x = error$x, error_y = error$y,
         showlegend = show.legend,
-        legendgroup = label.group,
+        # legendgroup = label.group,
         # legendgroup = ifelse(!is.null(box.label), labels[1], NULL),
         name = labels[m],
-        text = labels[m],
+        text = texts[m], #labels[m],
         textfont = list(
           family = label.font.family,
           size = label.font.size,
           color = label.font.color
         ),
+        legendgroup = legend.name,
         textposition = label.offset[m],
-        hoverinfo = "text+x+y"
+        hoverinfo = "x+y+name"
       )
     }
 
@@ -237,9 +252,10 @@ ena.plot.points = function(
         yaxis = enaplot$axes$y
       );
     }
-  ###
+  #####
   # END: Plot
   ###
 
   return(enaplot);
 }
+

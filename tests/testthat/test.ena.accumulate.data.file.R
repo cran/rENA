@@ -1,6 +1,11 @@
 suppressMessages(library(rENA, quietly = T, verbose = F))
 context("Test accumulating data file");
 
+test_that("NULL sent to accumulate", {
+  df.accum <- expect_error(rENA:::ena.accumulate.data.file(
+    NULL, units.by = c("Name"), conversations.by = c("Day"),
+    codes = c("c1", "c2", "c3")))
+})
 
 test_that("Simple data.frame to accumulate", {
   fake.codes.len = 10;
@@ -19,13 +24,6 @@ test_that("Simple data.frame to accumulate", {
 
   df.accum = ena.accumulate.data.file(df, units.by = c("Name"), conversations.by = c("Day"), codes = c("c1","c2","c3"));
   df.accum.weighted = ena.accumulate.data.file(df, units.by = c("Name"), conversations.by = c("Day"), codes = c("c1","c2","c3"), weight.by = "weighted");
-
-  # testthat::expect_true(all(
-  #   as.matrix(df.accum$adjacency.vectors[, attr(df.accum$adjacency.vectors,"adjacency.codes"), with=F])
-  #     ==
-  #   #matrix(c(2,2,2,0,1,0), nrow=length(unique(df.accum$units)))
-  #     matrix(c(2,2,2,0,1,0), nrow=2)
-  # ));
 });
 test_that("Accumulate using conversation model", {
   fake.codes.len = 10;
@@ -52,11 +50,11 @@ test_that("Accumulate using conversation model", {
   );
 
   # Check co-occurrences for unit `J` in conversation `1`
-  expected.sums = colSums(df[df$Name=="J"&df$Day==1,df.accum$codes]);
+  expected.sums = colSums(df[df$Name=="J"&df$Day==1, df.accum$rotation$codes]);
   expected.sums[expected.sums > 1] = 1
   expected = tcrossprod(expected.sums);
   expected.co = expected[upper.tri(expected)]
-  actual.co = as.numeric(df.accum$accumulated.adjacency.vectors[ENA_UNIT=="J"&Day==1,grep("^adj",colnames(df.accum$accumulated.adjacency.vectors)),with=F])
+  actual.co = as.numeric(as.matrix(df.accum$model$row.connection.counts[Day == 1 & Name == 'J']))
   testthat::expect_equal(
     label = "Verify the co-occurences for unit J in conversation 1",
     object=actual.co,
@@ -69,16 +67,55 @@ test_that("Accumulate weighted data.", {
   testmeta = data.frame(tr=1:4, unit=rep(1, 4))
   testdf = cbind(testmeta, testmat)
 
-  x = ena.accumulate.data.file(testdf,
+  x.normal = rENA:::ena.accumulate.data.file(testdf,
                                units.by='unit',
                                conversations.by='tr',
-                               #units='1',
                                codes=LETTERS[1:6],
                                window.size.back=4,
-                               weight.by = "weighted")
+                               weight.by = "binary")
 
-  testthat::expect_true(all(
-    apply(x$adjacency.vectors[,grep("^adj",colnames(x$adjacency.vectors)), with=F], 2, is.double)
+  x.prod = rENA:::ena.accumulate.data.file(testdf,
+                               units.by='unit',
+                               conversations.by='tr',
+                               codes=LETTERS[1:6],
+                               window.size.back=4,
+                               weight.by = "product")
+  x.sqrt = rENA:::ena.accumulate.data.file(testdf,
+                               units.by='unit',
+                               conversations.by='tr',
+                               codes=LETTERS[1:6],
+                               window.size.back=4,
+                               weight.by = sqrt)
+  x.log = rENA:::ena.accumulate.data.file(testdf,
+                               units.by='unit',
+                               conversations.by='tr',
+                               codes=LETTERS[1:6],
+                               window.size.back=4,
+                               weight.by = function(x) { log(x + 1) })
+
+  testthat::expect_false(identical(
+    as.matrix(x.normal$connection.counts),
+    as.matrix(x.prod$connection.counts)
+  ))
+  testthat::expect_false(identical(
+    as.matrix(x.normal$connection.counts),
+    as.matrix(x.sqrt$connection.counts)
+  ))
+  testthat::expect_false(identical(
+    as.matrix(x.normal$connection.counts),
+    as.matrix(x.log$connection.counts)
+  ))
+  testthat::expect_false(identical(
+    as.matrix(x.prod$connection.counts),
+    as.matrix(x.sqrt$connection.counts)
+  ))
+  testthat::expect_false(identical(
+    as.matrix(x.prod$connection.counts),
+    as.matrix(x.log$connection.counts)
+  ))
+  testthat::expect_false(identical(
+    as.matrix(x.sqrt$connection.counts),
+    as.matrix(x.log$connection.counts)
   ))
 })
 test_that("Corrected adjacency.vectors equals manually corrected raw data (correction = log)", {
@@ -87,22 +124,23 @@ test_that("Corrected adjacency.vectors equals manually corrected raw data (corre
   testmeta = data.frame(tr=1:4, unit=rep(1, 4))
   testdf = cbind(testmeta, testmat)
 
-  x = ena.accumulate.data.file(testdf,
+  x = rENA:::ena.accumulate.data.file(testdf,
                                units.by='unit',
                                conversations.by='tr',
                                #units='1',
                                codes=LETTERS[1:6],
                                window.size.back=4,
                                weight.by = log)
-  #binary=F,
-  #correction = log)
 
-  xtest = x$adjacency.vectors.raw;
+  x_binary = rENA:::ena.accumulate.data.file(testdf,
+                               units.by='unit',
+                               conversations.by='tr',
+                               #units='1',
+                               codes=LETTERS[1:6],
+                               window.size.back=4)
 
-  cols = colnames(xtest)[grep("adjacency.code", colnames(xtest))];
-  xtest[, (cols) := lapply(.SD, log), .SDcols = cols];
-
-  all.equal(x$adjacency.vectors, xtest[,grep("^adjacency", colnames(xtest)), with=F]);
+  testthat::expect_null(x$model$unweighted.connection.counts)
+  testthat::expect_false(all(x$connection.counts == x_binary$connection.counts))
 })
 test_that("Simple forwarded metadata", {
   fake.codes.len = 10;
@@ -120,10 +158,10 @@ test_that("Simple forwarded metadata", {
     m2=c(1,2,3,4)
   );
 
-  df.accum = ena.accumulate.data.file(df, units.by = c("Name"), conversations.by = c("Day"), codes = c("c1","c2","c3"));
+  df.accum = rENA:::ena.accumulate.data.file(df, units.by = c("Name"), conversations.by = c("Day"), codes = c("c1","c2","c3"));
 
-  testthat::expect_true("m1" %in% colnames(df.accum$metadata));
-});
+  testthat::expect_true("m1" %in% colnames(df.accum$meta.data));
+2});
 test_that("Test trajectories", {
   fake.codes.len = 10;
   fake.codes <- function(x) sample(0:1,fake.codes.len, replace=T)
@@ -139,31 +177,44 @@ test_that("Test trajectories", {
     c3=c(0,0,1,0,1,0,1,0,0,0,1,0)
   );
 
-  df.accum = ena.accumulate.data.file(
+  df.accum = rENA:::ena.accumulate.data.file(
     df, units.by = c("Name"), conversations.by = c("Day", "ActivityNumber"), codes = c("c1","c2","c3"),
     model = "AccumulatedTrajectory"
   );
-  df.non.accum = ena.accumulate.data.file(
+  df.non.accum = rENA:::ena.accumulate.data.file(
     df, units.by = c("Name"), conversations.by = c("Day", "ActivityNumber"), codes = c("c1","c2","c3"),
     model = "SeparateTrajectory"
   );
 
   # Test for expected accumulated value
-  testthat::expect_equal(df.accum$adjacency.vectors[df.accum$units$Name == "J" & df.accum$units$ActivityNumber == 3, adjacency.code.1],df.accum$accumulated.adjacency.vectors[Name == "J", sum(adjacency.code.1)]);
+  testthat::expect_equal(
+    as.numeric(df.accum$connection.counts[df.accum$trajectories$ENA_UNIT == "J" & df.accum$trajectories$ActivityNumber == 1, "c1 & c2"]),
+    df.accum$model$row.connection.counts[Name == "J" & ActivityNumber == 1, sum(.SD), .SDcols = c("c1 & c2")]
+  );
 
   # Test for a value of 1 in the first accumulation of the trajectory of code 1
-  testthat::expect_true(sum(df.accum$accumulated.adjacency.vectors[Name == "Z" & ActivityNumber == 1, adjacency.code.1]) == 1);
+  testthat::expect_true(sum(df.accum$model$row.connection.counts[Name == "Z" & ActivityNumber == 1,  c("c1 & c2"), ]) == 1);
+
   # Test for a value of 0 in the second accumulation of the trajectory of code 1
-  testthat::expect_true(all(df.accum$accumulated.adjacency.vectors[Name == "Z" & ActivityNumber == 2, adjacency.code.1] == 0));
+  testthat::expect_true(all(df.accum$model$row.connection.counts[Name == "Z" & ActivityNumber == 2, c("c1 & c2")] == 0));
 
   # Test that the first summed trajectory is 1
-  testthat::expect_equal(df.accum$adjacency.vectors[df.accum$units$Name == "Z" & df.accum$units$ActivityNumber == 1, adjacency.code.1], 1);
+  testthat::expect_equal(
+    as.numeric(df.accum$connection.counts[df.accum$trajectories$ENA_UNIT == "Z" & df.accum$trajectories$ActivityNumber == 1, c("c1 & c2")])
+    ,1
+  );
 
   # Test that the second summed trajectory is 1, even thought it had a zero accumulation for it's conversations
-  testthat::expect_true(all(df.accum$adjacency.vectors[df.accum$units$Name == "J" & df.accum$units$ActivityNumber==3,] == c(2,2,1)));
+  testthat::expect_true(all(
+    as.matrix(df.accum$connection.counts[df.accum$trajectories$ENA_UNIT == "J" & df.accum$trajectories$ActivityNumber==3,]) == c(2,2,1)
+  ));
 
-  # Test that non-accumulation is properly leaving second trajectory group 0 (different than the previous test)
-  testthat::expect_true(all(df.non.accum$adjacency.vectors[df.non.accum$units$Name == "J" & df.non.accum$units$ActivityNumber==3,] == c(0,0,0)));
+
+# Test that non-accumulation is properly leaving second trajectory group 0 (different than the previous test)
+  testthat::expect_true(all(
+    as.matrix(df.non.accum$connection.counts[df.non.accum$trajectories$Name == "J" & df.non.accum$trajectories$ActivityNumber==3,])
+      == c(0,0,0)
+  ));
 })
 test_that("Test accumulation with data.frame and matrix", {
   # #df.file <- system.file("extdata", "rs.data.csv", package="rENA")

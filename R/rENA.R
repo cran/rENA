@@ -22,14 +22,11 @@ NULL
 
 # @title Default rENA constants
 # @description Default rENA constants
-opts = list (
+opts <- list (
   UNIT_NAMES = "ena.unit.names",
-  TRAJ_TYPES = c("accumulated","non-accumulated")
+  TRAJ_TYPES = c("AccumulatedTrajectory", "SeparateTrajectory")
 )
 
 # @title Default colors used for plotting.
 # @description Default colors for plotting
-default.colors = c(I("blue"), I("red"))
-
-# UNIT_NAMES = "ena.unit.names"
-# TRAJ_TYPES = c("accumulated","non-accumulated")
+default.colors <- c(I("blue"), I("red"))

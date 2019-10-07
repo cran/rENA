@@ -5,7 +5,6 @@
 #define RCPP_rENA_RCPPEXPORTS_H_GEN_
 
 #include <RcppArmadillo.h>
-#include <RcppEigen.h>
 #include <Rcpp.h>
 
 namespace rENA {
@@ -37,6 +36,27 @@ namespace rENA {
         {
             RNGScope RCPP_rngScope_gen;
             rcpp_result_gen = p_merge_columns_c(Shield<SEXP>(Rcpp::wrap(df)), Shield<SEXP>(Rcpp::wrap(cols)), Shield<SEXP>(Rcpp::wrap(sep)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<std::vector<std::string> >(rcpp_result_gen);
+    }
+
+    inline std::vector<std::string> svector_to_ut(std::vector<std::string> v) {
+        typedef SEXP(*Ptr_svector_to_ut)(SEXP);
+        static Ptr_svector_to_ut p_svector_to_ut = NULL;
+        if (p_svector_to_ut == NULL) {
+            validateSignature("std::vector<std::string>(*svector_to_ut)(std::vector<std::string>)");
+            p_svector_to_ut = (Ptr_svector_to_ut)R_GetCCallable("rENA", "_rENA_svector_to_ut");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_svector_to_ut(Shield<SEXP>(Rcpp::wrap(v)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -108,6 +128,111 @@ namespace rENA {
         if (rcpp_result_gen.inherits("try-error"))
             throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
         return Rcpp::as<DataFrame >(rcpp_result_gen);
+    }
+
+    inline NumericMatrix fun_sphere_norm(DataFrame dfM) {
+        typedef SEXP(*Ptr_fun_sphere_norm)(SEXP);
+        static Ptr_fun_sphere_norm p_fun_sphere_norm = NULL;
+        if (p_fun_sphere_norm == NULL) {
+            validateSignature("NumericMatrix(*fun_sphere_norm)(DataFrame)");
+            p_fun_sphere_norm = (Ptr_fun_sphere_norm)R_GetCCallable("rENA", "_rENA_fun_sphere_norm");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_fun_sphere_norm(Shield<SEXP>(Rcpp::wrap(dfM)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<NumericMatrix >(rcpp_result_gen);
+    }
+
+    inline NumericMatrix fun_skip_sphere_norm(DataFrame dfM) {
+        typedef SEXP(*Ptr_fun_skip_sphere_norm)(SEXP);
+        static Ptr_fun_skip_sphere_norm p_fun_skip_sphere_norm = NULL;
+        if (p_fun_skip_sphere_norm == NULL) {
+            validateSignature("NumericMatrix(*fun_skip_sphere_norm)(DataFrame)");
+            p_fun_skip_sphere_norm = (Ptr_fun_skip_sphere_norm)R_GetCCallable("rENA", "_rENA_fun_skip_sphere_norm");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_fun_skip_sphere_norm(Shield<SEXP>(Rcpp::wrap(dfM)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<NumericMatrix >(rcpp_result_gen);
+    }
+
+    inline Rcpp::NumericMatrix center_data_c(arma::mat values) {
+        typedef SEXP(*Ptr_center_data_c)(SEXP);
+        static Ptr_center_data_c p_center_data_c = NULL;
+        if (p_center_data_c == NULL) {
+            validateSignature("Rcpp::NumericMatrix(*center_data_c)(arma::mat)");
+            p_center_data_c = (Ptr_center_data_c)R_GetCCallable("rENA", "_rENA_center_data_c");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_center_data_c(Shield<SEXP>(Rcpp::wrap(values)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<Rcpp::NumericMatrix >(rcpp_result_gen);
+    }
+
+    inline arma::umat triIndices(int len, int row = -1) {
+        typedef SEXP(*Ptr_triIndices)(SEXP,SEXP);
+        static Ptr_triIndices p_triIndices = NULL;
+        if (p_triIndices == NULL) {
+            validateSignature("arma::umat(*triIndices)(int,int)");
+            p_triIndices = (Ptr_triIndices)R_GetCCallable("rENA", "_rENA_triIndices");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_triIndices(Shield<SEXP>(Rcpp::wrap(len)), Shield<SEXP>(Rcpp::wrap(row)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<arma::umat >(rcpp_result_gen);
+    }
+
+    inline Rcpp::List lws_lsq_positions(arma::mat adjMats, arma::mat t, int numDims) {
+        typedef SEXP(*Ptr_lws_lsq_positions)(SEXP,SEXP,SEXP);
+        static Ptr_lws_lsq_positions p_lws_lsq_positions = NULL;
+        if (p_lws_lsq_positions == NULL) {
+            validateSignature("Rcpp::List(*lws_lsq_positions)(arma::mat,arma::mat,int)");
+            p_lws_lsq_positions = (Ptr_lws_lsq_positions)R_GetCCallable("rENA", "_rENA_lws_lsq_positions");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_lws_lsq_positions(Shield<SEXP>(Rcpp::wrap(adjMats)), Shield<SEXP>(Rcpp::wrap(t)), Shield<SEXP>(Rcpp::wrap(numDims)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<Rcpp::List >(rcpp_result_gen);
     }
 
 }

@@ -10,18 +10,23 @@ accum = ena.accumulate.data(
 set = ena.make.set(
   enadata = accum,
   rotation.by = ena.rotate.by.mean,
-  rotation.params = list(FirstGame=accum$metadata$Condition=="FirstGame", SecondGame=accum$metadata$Condition=="SecondGame")
+  rotation.params = list(FirstGame=accum$meta.data$Condition=="FirstGame", SecondGame=accum$meta.data$Condition=="SecondGame")
 );
 
-unitNames = set$enadata$units
-
 ### Subset rotated points and plot Condition 1 Group Mean
-first.game = unitNames$Condition == "FirstGame"
+first.game = set$meta.data$Condition == "FirstGame"
 first.game.points = set$points.rotated[first.game,]
 
 ### Subset rotated points and plot Condition 2 Group Mean
-second.game = unitNames$Condition == "SecondGame"
+second.game = set$meta.data$Condition == "SecondGame"
 second.game.points = set$points.rotated[second.game,]
+
+ena.conversations(set = set,
+  units = c("FirstGame.steven z"), units.by=c("Condition","UserName"),
+  conversation.by = c("Condition","GroupName"),
+  codes=codeNames,
+  window = 4
+)
 
 #first.game.mean = colMeans( first.game.points )
 #second.game.mean = colMeans( second.game.points )

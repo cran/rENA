@@ -5,11 +5,12 @@
 #'
 #' @details Returns a matrix of 2 rows by choose(length(vector), 2) columns
 #'
-#' @export
-#'
 #' @param vector Vector representing the names of a square matrix
+#' @param upper_triangle Not Implemented
+#'
+#' @export
 ##
-namesToAdjacencyKey <- function(vector) {
+namesToAdjacencyKey <- function(vector, upper_triangle = TRUE) {
   upperTriIndices = triIndices(length(vector)) + 1;
   matrix(vector[upperTriIndices], nrow=2)
 }

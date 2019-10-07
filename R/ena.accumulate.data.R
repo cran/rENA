@@ -39,77 +39,66 @@
 #' @param window.size.forward (optional) A positive integer, Inf, or character (INF or Infinite), default: 0. Determines, for each line in the data frame, the number of subsequent lines in a conversation to include in the stanza window, which defines how co-occurrences are modeled
 #' @param ... additional parameters addressed in inner function
 #' @param include.meta Locigal indicating if unit metadata should be attached to the resulting ENAdata object, default is TRUE
-#'
-#' @keywords data, accumulate
+#' @param as.list R6 objects will be deprecated, but if this is TRUE, the original R6 object will be returned, otherwise a list with class `ena.set`
 #'
 #' @seealso \code{\link{ENAdata}}, \code{\link{ena.make.set}}
 #'
 #' @return \code{\link{ENAdata}} object with data [adjacency (co-occurrence) vectors] accumulated from the provided data frames.
 #'
 ##
-
 ena.accumulate.data <- function(
-
-  ##### NOTE: units, conversations, codes, and metadata must be data frames with the same number of rows
-  units = NULL,   # data frame containing units
-  conversation = NULL,    # df containing conversation lines
-  codes = NULL,   # df containing codes
-  metadata = NULL,   #optional - df containing metadata
-  model = c("EndPoint", "AccumulatedTrajectory", "SeparateTrajectory"),   #use match arg and list?
+  units = NULL,
+  conversation = NULL,
+  codes = NULL,
+  metadata = NULL,
+  model = c("EndPoint", "AccumulatedTrajectory", "SeparateTrajectory"),
   weight.by = "binary",
   window = c("MovingStanzaWindow", "Conversation"),
   window.size.back = 1,
   window.size.forward = 0,
-  mask = NULL, #matrix (default - upper triangle of 1's)
+  mask = NULL,
   include.meta = T,
+  as.list = T,
   ...
 ) {
-
-  if(is.null(units) || is.null(conversation) || is.null(codes)) {
-    print("ACCUMULATION FROM DATA FRAMES REQUIRES: units, conversation, and codes");
+  if (is.null(units) || is.null(conversation) || is.null(codes)) {
+    stop("Accumulation requires: units, conversation, and codes");
   }
-  if(nrow(units) != nrow(conversation) || nrow(conversation) != nrow(codes)) {
-    print("Data Frames do not have the same number of rows!");
-    ### throw error
+  if (nrow(units) != nrow(conversation) || nrow(conversation) != nrow(codes)) {
+    stop("Data Frames do not have the same number of rows");
   }
 
-  ## DOOPT - inefficient cbinds
   df <- cbind(units, conversation);
   df <- cbind(df, codes);
 
-  metadata = data.table::as.data.table(metadata)
-  if(!is.null(metadata) && nrow(metadata) == nrow(df)) {
+  metadata <- data.table::as.data.table(metadata)
+  if (!is.null(metadata) && nrow(metadata) == nrow(df)) {
     df <- cbind(df, metadata);
   }
 
-  model = match.arg(model)
-  window = match.arg(window)
+  model <- match.arg(model)
+  window <- match.arg(window)
 
-  units.by = colnames(units);   #accumulating by all unit columns provided in units df
-  conversations.by = colnames(conversation); #accumulating by all columns provided in conversation df
-  if(identical(window, "Conversation")) {
-    conversations.by = c(conversations.by, units.by);
-    window.size.back = window;
-  } else if (identical(window, "MovingStanzaWindow")) {
-    # infCheck = c("Inf", "Infinite")
-    # if(any(window.size.back %in% infCheck)) {
-    if(grepl(pattern = "inf",x = window.size.back, ignore.case=T)) {
-      window.size.back = Inf
+  units.by <- colnames(units);
+  conversations.by <- colnames(conversation);
+  if (identical(window, "Conversation")) {
+    conversations.by <- c(conversations.by, units.by);
+    window.size.back <- window;
+  }
+  else if (identical(window, "MovingStanzaWindow")) {
+    if( grepl(pattern = "inf", x = window.size.back, ignore.case = T)) {
+      window.size.back <- Inf
     }
-    # if(any(window.size.forward %in% infCheck)) {
-    if(grepl(pattern = "inf",x = window.size.forward, ignore.case=T)) {
-      window.size.forward = Inf
+    if( grepl(pattern = "inf", x = window.size.forward, ignore.case = T)) {
+      window.size.forward <- Inf
     }
   }
 
-  units.used = NULL;   # when accumulating from data frames, all units are used
-
-  data = ENAdata$new(
+  data <- ENAdata$new(
     file = df,
-    units = units,    #data frame of unit columns (including values)
-    units.used = units.used,
-    units.by = units.by,    # KEEP- automatically uses all units for accumulation from separate data frames
-    conversations.by = conversations.by,    #column names of conversation df, automatically accumulating by all cols for accum from dfs
+    units = units,
+    units.by = units.by,
+    conversations.by = conversations.by,
     codes = codes,
     window.size.back = window.size.back,
     window.size.forward = window.size.forward,
@@ -119,20 +108,17 @@ ena.accumulate.data <- function(
     include.meta = include.meta,
     ...
   );
+  data$process()
 
-  data$function.call = sys.call();
+  data$function.call <- sys.call()
 
-  # output = match.arg(output);
-  # if(output == "json") {
-  #   output.class = get(class(data))
-  #
-  #   if(is.null(output.fields)) {
-  #     output.fields = names(output.class$public_fields)
-  #   }
-  #
-  #   r6.to.json(data, o.class = output.class, o.fields = output.fields)
-  # }
-  #else
+  if(as.list) {
+    data <- ena.set(data)
+  } else {
+    warning(paste0("Usage of R6 data objects is deprecated and may be removed ",
+      "entirely in a future version. Consider upgrading to the new data ",
+      "object."))
+  }
+
   data
 }
-

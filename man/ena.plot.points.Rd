@@ -4,14 +4,15 @@
 \alias{ena.plot.points}
 \title{Plot points on an ENAplot}
 \usage{
-ena.plot.points(enaplot, points = NULL, point.size = 5,
-  labels = NULL, label.offset = "top left", label.group = NULL,
+ena.plot.points(enaplot, points = NULL,
+  point.size = enaplot$point$size, labels = NULL,
+  label.offset = "top left", label.group = NULL,
   label.font.size = NULL, label.font.color = NULL,
-  label.font.family = NULL, shape = "circle",
-  colors = default.colors[1], confidence.interval.values = NULL,
-  confidence.interval = c("none", "crosshairs", "box"),
-  outlier.interval.values = NULL, outlier.interval = c("none",
-  "crosshairs", "box"), show.legend = T, ...)
+  label.font.family = NULL, shape = "circle", colors = NULL,
+  confidence.interval.values = NULL, confidence.interval = c("none",
+  "crosshairs", "box"), outlier.interval.values = NULL,
+  outlier.interval = c("none", "crosshairs", "box"), show.legend = T,
+  legend.name = "Points", texts = NULL, ...)
 }
 \arguments{
 \item{enaplot}{\code{\link{ENAplot}} object to use for plotting}
@@ -46,6 +47,10 @@ ena.plot.points(enaplot, points = NULL, point.size = 5,
 
 \item{show.legend}{Logical indicating whether to show the point labels in the in legend}
 
+\item{legend.name}{Character indicating the name to show above the plot legend}
+
+\item{texts}{[TBD]}
+
 \item{...}{additional parameters addressed in inner function}
 }
 \value{
@@ -72,15 +77,15 @@ set = ena.make.set(
   enadata = accum,
   rotation.by = ena.rotate.by.mean,
   rotation.params = list(
-      accum$metadata$Condition=="FirstGame",
-      accum$metadata$Condition=="SecondGame"
+      accum$meta.data$Condition=="FirstGame",
+      accum$meta.data$Condition=="SecondGame"
   )
 )
 
 plot = ena.plot(set)
 
-group1.points = set$points.rotated[set$enadata$units$Condition == "FirstGame",]
-group2.points = set$points.rotated[set$enadata$units$Condition == "SecondGame",]
+group1.points = set$points[set$meta.data$Condition == "FirstGame",]
+group2.points = set$points[set$meta.data$Condition == "SecondGame",]
 plot = ena.plot.points(plot, points = group1.points);
 plot = ena.plot.points(plot, points = group2.points);
 print(plot);
@@ -89,6 +94,3 @@ print(plot);
 \seealso{
 \code{\link{ena.plot}}, \code{\link{ENAplot}}, \code{\link{ena.plot.group}}
 }
-\keyword{ENA,}
-\keyword{plot,}
-\keyword{points}

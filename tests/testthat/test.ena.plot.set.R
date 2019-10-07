@@ -1,163 +1,195 @@
-# suppressMessages(library(rENA, quietly = T, verbose = F))
-# context("Test plotting sets");
-#
-#
-# df.file <- system.file("extdata", "rs.data.csv", package="rENA")
-# # codeNames = c("E.data","S.data","E.design","S.design","S.professional","E.client","V.client","E.consultant","V.consultant","S.collaboration","I.engineer","I.intern","K.actuator","K.rom","K.materials","K.power");
-# codeNames = c('Data','Technical.Constraints','Performance.Parameters','Client.and.Consultant.Requests','Design.Reasoning','Collaboration');
-#
-# df.accum = ena.accumulate.data.file(
-#   df.file,
-#   units.by = c("UserName","Condition"),
-#   conversations.by = c("ActivityNumber","GroupName"),
-#   codes = codeNames, window.size.back = 4
-# );
-# df.set.lws = ena.make.set(df.accum, position.method = lws.positions.es);
-#
-# file = read.csv(df.file)
-# accum = ena.accumulate.data(
-#   units = file[,c("UserName","Condition")],
-#   conversation = file[,c("Condition","GroupName")],
-#   metadata = file[,c("CONFIDENCE.Change","CONFIDENCE.Pre","CONFIDENCE.Post","C.Change")],
-#   codes = file[,codeNames],
-#   window.size.back = 4
-# );
-# Rset = ena.make.set(
-#   enadata = accum,
-#   rotation.by = ena.rotate.by.mean,
-#   rotation.params = list(accum$metadata$Condition=="FirstGame", accum$metadata$Condition=="SecondGame")
-# )
-#
-# ##### TESTING PLOT.GROUP
-# group1.points = df.set.lws$points.rotated[df.set.lws$enadata$units$Condition == "FirstGame",]
-#
-# ##### FOR TESTING ALREADY MEANED GROUP
-# #group.points = colMeans(group.points)
-# #group.points = data.frame("V1" = group.points[1], "V2" = group.points[2])
-#
-# df.plot <- ena.plot(df.set.lws);
-# df.plot = ena.plot.points(df.plot, points = data.frame(group1.points));
-# df.plot = ena.plot.group(df.plot, group1.points, color = "blue", labels = "First Game Mean");
-#
-#
-# #####
-#
-# df.accum.traj = ena.accumulate.data.file(
-#   df.file,
-#   units.by = c("UserName","Condition"),
-#   conversations.by = c("ActivityNumber"),
-#   codes = codeNames,
-#   model = "A"
-# );
-# accum.traj = ena.accumulate.data(
-#   units = file[,c("UserName","Condition")],
-#   conversation = file[,c("GroupName","ActivityNumber")],
-#   metadata = file[,c("CONFIDENCE.Change","CONFIDENCE.Pre","CONFIDENCE.Post","C.Change")],
-#   codes = file[,codeNames],
-#   window.size.back = 4,
-#   model = "A"
-# );
-# set.traj = ena.make.set(accum.traj);
-#
-# test_that("Plot all units in set", {
-#   p <- ena.plot(df.set.lws) %>% ena.plot.points(df.set.lws$points.rotated)
-#
-#   # testthat::expect_is(p, "plotly");
-# })
-#
-# test_that("Plot only some units, sampled from centered data", {
-#   p.color <- ena.plot(df.set.lws);
-#   p.color = ena.plot.points(p.color, points = df.set.lws$points.rotated, color = "yellow");
-#   p.color = ena.plot.points(p.color, points = df.set.lws$points.rotated, color = "green");
-#
-#   # testthat::expect_is(p, "plotly");
-# })
-#
-# test_that("Plot a trajectory set", {
-#   akashv.traj.rows = set.traj$enadata$units$UserName=="akash v"
-#
-#   p.traj.user = ena.plot(set.traj) %>% ena.plot.trajectory(
-#     points = set.traj$points.rotated[akashv.traj.rows,],
-#     names = c("akash v")
-#   );
-#
-#   #cbind(set.traj$points.rotated[akashv.traj.rows,1],
-#   #df.set.traj.lws$enadata$trajectories$step$ActivityNumber[akashv.traj.rows])
-#   ena.plot(set.traj) %>% ena.plot.trajectory(
-#     points = cbind(set.traj$points.rotated[akashv.traj.rows,1],
-#                    set.traj$enadata$trajectories$step$ActivityNumber[akashv.traj.rows]),
-#     names = c("akash v")
-#   );
-#
-#   set = set.traj
-#   unitNames = set$enadata$units
-#
-#   first.game = unitNames$Condition == "FirstGame"
-#   first.game.points = set$points.rotated[first.game,]
-#
-#   ### Subset rotated points and plot Condition 2 Group Mean
-#   second.game = unitNames$Condition == "SecondGame"
-#   second.game.points = set$points.rotated[second.game,]
-#
-#   #first.game.mean = colMeans( first.game.points )
-#   #second.game.mean = colMeans( second.game.points )
-#
-#   #first.game.ci = t.test(first.game.points, conf.level = 0.95)$conf.int
-#   #second.game.ci = t.test(second.game.points, conf.level = 0.95)$conf.int
-#
-#   ### get mean network plots
-#   first.game.lineweights = set$line.weights[first.game,]
-#   first.game.mean = colMeans(first.game.lineweights)
-#
-#   second.game.lineweights = set$line.weights[second.game,]
-#   second.game.mean = colMeans(second.game.lineweights)
-#
-#   subtracted.network = first.game.mean - second.game.mean
-#
-#   dim.by.activity = cbind(
-#     set$points.rotated[,1],
-#     set$enadata$trajectories$step$ActivityNumber*.8/14-.4  #scale down to dimension 1
-#   );
-#
-#   plot = ena.plot(set)
-#   plot = ena.plot.network(plot, network = subtracted.network, legend.name="Network")
-#   plot = ena.plot.trajectory(
-#     plot,
-#     points = dim.by.activity,
-#     names = unique(set$enadata$units$UserName),
-#     by = set$enadata$units$UserName
-#   );
-# });
-#
-# # test_that("Plot a network", {
-#   # p = ena.plot.set(
-#   #   df.set.lws,
-#   #   plot.mode="network",
-#   #   network.one="brandon f.SecondGame"
-#   # );
-#
-#   # testthat::expect_is(p, "plotly");
-# # })
-#
-# # test_that("Plot two networks", {
-# #   p = ena.plot.set(
-# #     df.set.lws,
-# #     plot.mode="network",
-# #     network.one="brandon f.SecondGame",
-# #     network.two="arden f.FirstGame"
-# #   );
-# #
-# #   # testthat::expect_is(p, "plotly");
-# # })
-#
-# test_that("Plot a mean trajectory", {
-#   # message("Testing a mean trajectory: not implemented")
-# })
-#
-# test_that("Plot a combined plot of units and nodes", {
-#   # message("Test for units+nodes: not implemented")
-# })
-#
-#
-#
-#
+suppressMessages(library(rENA, quietly = F, verbose = F))
+context("Test plotting sets")
+
+data(RS.data)
+codenames <- c("Data", "Technical.Constraints", "Performance.Parameters",
+  "Client.and.Consultant.Requests", "Design.Reasoning", "Collaboration");
+
+accum <- rENA:::ena.accumulate.data.file(
+  RS.data, units.by = c("UserName", "Condition"),
+  conversations.by = c("ActivityNumber", "GroupName"),
+  codes = codenames
+);
+test_that("Test for top-level plot object", {
+  set <- ena.make.set(accum)
+
+  testthat::expect_null(set$model$plots)
+  testthat::expect_is(set$plots, "list")
+})
+test_that("Create a plot object", {
+  set <- ena.make.set(accum)
+
+  newplot <- plot(set)
+
+  testthat::expect_is(newplot, "ena.set")
+  testthat::expect_is(newplot$plots[[1]], "ENAplot")
+})
+
+test_that("Plot all points", {
+  newset <- ena.make.set(accum)
+
+  newplot <- plot(newset) %>% add_points()
+
+  testthat::expect_equal(nrow(newplot$plots[[1]]$plotted$points[[1]]$data), nrow(newset$points))
+})
+
+test_that("Plot some points", {
+  accum <- rENA:::ena.accumulate.data.file(
+    RS.data, units.by = c("UserName", "Condition"),
+    conversations.by = c("ActivityNumber", "GroupName"),
+    codes = codenames
+  );
+  newset <- ena.make.set(accum)
+
+  newplot <- plot(newset) %>%
+     add_points(Condition$FirstGame, colors = "blue")
+
+  expected <- nrow(newset$points$Condition$FirstGame)
+  observed <- nrow(newplot$plots[[1]]$plotted$points[[1]]$data)
+  testthat::expect_equal(observed, expected)
+
+  n_to_plot = 5
+  newplot2 <- plot(newset) %>%
+                add_points(as.matrix(
+                  newset$points$Condition$FirstGame)[1:n_to_plot, ]
+                )
+
+  observed <- nrow(newplot2$plots[[1]]$plotted$points[[1]]$data)
+  testthat::expect_equal(observed, 5)
+})
+
+test_that("Plot some points with mean from list", {
+  accum <- rENA:::ena.accumulate.data.file(
+    RS.data, units.by = c("UserName", "Condition"),
+    conversations.by = c("ActivityNumber", "GroupName"),
+    codes = codenames
+  );
+  newset <- ena.make.set(accum)
+
+  newplot <- plot(newset) %>%
+     add_points(Condition$FirstGame, colors = "blue", mean = list(colors = "red"))
+
+  testthat::expect_equal(
+    nrow(newplot$plots[[1]]$plotted$points[[1]]$data),
+    nrow(newset$points$Condition$FirstGame)
+  )
+})
+
+test_that("Plot a group", {
+  accum <- rENA:::ena.accumulate.data.file(
+    RS.data, units.by = c("UserName", "Condition"),
+    conversations.by = c("ActivityNumber", "GroupName"),
+    codes = codenames
+  );
+  newset <- ena.make.set(accum)
+
+  newplot <- plot(newset) %>%
+     add_group(Condition$FirstGame, colors = "blue")
+
+  testthat::expect_equal(length(newplot$plots[[1]]$plotted$means[[1]]$data), 15)
+
+  noplot = testthat::expect_warning(plot(newset) %>%
+                          add_group(Condition$NoGame))
+  noplot = testthat::expect_warning(plot(newset) %>%
+                          add_group(Condition2$FirstGame))
+})
+
+test_that("Plot a network", {
+  accum <- rENA:::ena.accumulate.data.file(
+    RS.data, units.by = c("UserName", "Condition"),
+    conversations.by = c("ActivityNumber", "GroupName"),
+    codes = codenames
+  );
+  newset <- ena.make.set(accum)
+
+  newplot <- plot(newset) %>% add_network(Condition$FirstGame)
+  testthat::expect_equal(
+    length(newplot$plots[[1]]$plotted$networks[[1]]),
+    ncol(newset$rotation$adjacency.key)
+  )
+
+  newplot2 <- plot(newset) %>% add_network(with.mean = TRUE)
+  testthat::expect_equal(
+    length(newplot2$plots[[1]]$plotted$networks[[1]]),
+    ncol(newset$rotation$adjacency.key)
+  )
+  testthat::expect_equal(length(newplot2$plots[[1]]$plotted$means), 1)
+
+  newplot3 <- plot(newset) %>%
+                add_network(Condition$FirstGame, with.mean = TRUE)
+  testthat::expect_equal(
+    length(newplot3$plots[[1]]$plotted$networks[[1]]),
+    ncol(newset$rotation$adjacency.key)
+  )
+
+  wgts <- as.matrix(newset$line.weights$Condition$FirstGame)
+  expect_equal(nrow(wgts), 26)
+  newplot4 <- plot(newset) %>% add_network(wgts)
+  testthat::expect_equal(
+    length(newplot4$plots[[1]]$plotted$networks[[1]]),
+    ncol(newset$rotation$adjacency.key)
+  )
+
+
+  newplot5 <- plot(newset) %>%
+              add_network(
+                Condition$FirstGame - Condition$SecondGame, with.mean = TRUE
+              )
+  testthat::expect_equal(length(newplot5$plots[[1]]$plotted$means), 2)
+  testthat::expect_equal(
+    length(newplot5$plots[[1]]$plotted$networks[[1]]),
+    ncol(newset$rotation$adjacency.key)
+  )
+})
+
+test_that("Plot a Trajectory", {
+  accum <- rENA:::ena.accumulate.data.file(
+    RS.data, units.by = c("UserName", "Condition"),
+    conversations.by = c("ActivityNumber", "GroupName"),
+    codes = codenames,
+    model = "A"
+  );
+  newset <- ena.make.set(accum)
+
+  newplot <- plot(newset) %>% add_trajectory("ENA_UNIT")
+  testthat::expect_equal(
+    nrow(newplot$plots[[1]]$plotted$trajectories[[1]]),
+    length(unique(newset$points$ENA_UNIT))
+  )
+
+  newplot2 <- plot(newset) %>% add_trajectory()
+  testthat::expect_equal(
+    nrow(newplot2$plots[[1]]$plotted$trajectories[[1]]),
+    length(unique(newset$points$ENA_UNIT))
+  )
+
+  newplot3 <- plot(newset) %>% add_trajectory(Condition$FirstGame)
+  testthat::expect_equal(
+    nrow(newplot3$plots[[1]]$plotted$trajectories[[1]]),
+    length(unique(newset$points$Condition$FirstGame$ENA_UNIT))
+  )
+})
+
+test_that("Test old plot object", {
+  accum <- suppressWarnings({
+    rENA:::ena.accumulate.data.file(
+      RS.data, units.by = c("UserName", "Condition"),
+      conversations.by = c("ActivityNumber", "GroupName"),
+      codes = codenames, as.list = F
+    )
+  })
+  set <- suppressWarnings({
+    ena.make.set(accum, as.list = F)
+  })
+
+  testthat::expect_warning(ena.plot(set))
+
+  plot <- suppressWarnings({ ena.plot(set) })
+  plot <- plot %>% ena.plot.points()
+
+  testthat::expect_is(plot, "ENAplot")
+  testthat::expect_equal(
+    length(plot$plot$x$attrs) - 1,
+    length(set$enadata$unit.names)
+  )
+})

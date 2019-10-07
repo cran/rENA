@@ -50,8 +50,8 @@ accum = ena.accumulate.data(
 set = ena.make.set(
   enadata = accum,
   rotation.by = ena.rotate.by.mean,
-  rotation.params = list(accum$metadata$Condition=="FirstGame",
-                         accum$metadata$Condition=="SecondGame")
+  rotation.params = list(accum$meta.data$Condition=="FirstGame",
+                         accum$meta.data$Condition=="SecondGame")
 );
 ena.conversations(set = RS.data,
   units = c("FirstGame.steven z"), units.by=c("Condition","UserName"),

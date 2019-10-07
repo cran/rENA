@@ -32,8 +32,8 @@
 #' set = ena.make.set(
 #'   enadata = accum,
 #'   rotation.by = ena.rotate.by.mean,
-#'   rotation.params = list(accum$metadata$Condition=="FirstGame",
-#'                          accum$metadata$Condition=="SecondGame")
+#'   rotation.params = list(accum$meta.data$Condition=="FirstGame",
+#'                          accum$meta.data$Condition=="SecondGame")
 #' );
 #' ena.conversations(set = RS.data,
 #'   units = c("FirstGame.steven z"), units.by=c("Condition","UserName"),
@@ -47,13 +47,16 @@
 ena.conversations = function(set, units, units.by=NULL, codes=NULL, conversation.by = NULL, window = 4, conversation.exclude = c()) {
   # rawData = data.table::copy(set$enadata$raw);
   if(is.null(units.by)) {
-    # units.by = set$enadata$function.params$units.by;
-    units.by = set$function.params$units.by;
+    units.by = set$`_function.params`$units.by;
   }
   # conversation.by = set$enadata$function.params$conversations.by;
   # window = set$enadata$function.params$window.size.back;
   # rawAcc = data.table::copy(set$enadata$accumulated.adjacency.vectors);
+  if(is(set, "ena.set")) {
+    rawAcc2 = set$model$raw.input
+  } else {
     rawAcc2 = data.table::data.table(set) #$enadata$raw);
+  }
 
   # rawAcc$KEYCOL = merge_columns_c(rawAcc, conversation.by)
   rawAcc2$KEYCOL = merge_columns_c(rawAcc2, conversation.by)
@@ -87,13 +90,15 @@ ena.conversations = function(set, units, units.by=NULL, codes=NULL, conversation
     codedUnitRowConvsAll = unique(unlist(sapply(X = 1:length(codedUnitRows2), simplify = F, FUN = function(x) {
       thisConvRows = rows2[[codedUnitRowConvs2[x]]]
       thisRowInConv = which(thisConvRows == codedUnitRows2[x])
-      thisRowAndWindow = rep(thisRowInConv,window) - (window-1):0;
+      winUse = ifelse(is.infinite(window), thisRowInConv, window)
+      thisRowAndWindow = rep(thisRowInConv,winUse) - (winUse-1):0
       coOccursFound = all(rawAcc2[thisConvRows[thisRowAndWindow[thisRowAndWindow > 0]], lapply(.SD, sum), .SDcols=codes] > 0)
       if(coOccursFound) {
         thisConvRows[thisRowAndWindow[thisRowAndWindow > 0]]
       } else {
         unitRowsNotCooccurred <<- c(unitRowsNotCooccurred, thisConvRows[thisRowInConv])
-        coOccursFound
+        # coOccursFound
+        NULL
       }
     })))
   }
