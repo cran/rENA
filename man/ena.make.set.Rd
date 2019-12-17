@@ -4,7 +4,7 @@
 \alias{ena.make.set}
 \title{Generate ENA Set}
 \usage{
-ena.make.set(enadata, dimensions = 2, norm.by = rENA::fun_sphere_norm,
+ena.make.set(enadata, dimensions = 2, norm.by = fun_sphere_norm,
   rotation.by = ena.svd, rotation.params = NULL, rotation.set = NULL,
   endpoints.only = T, node.position.method = lws.positions.sq,
   as.list = TRUE, ...)

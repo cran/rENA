@@ -9,6 +9,7 @@
 #CXX11 =  /usr/local/clang6/bin/clang++
 #CXX98 =  /usr/local/clang6/bin/clang++
 #CXX14 =  /usr/local/clang6/bin/clang++
+CXX_STD = CXX14
 
 PKG_CXXFLAGS = -I../inst/include
 PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)

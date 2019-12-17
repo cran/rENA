@@ -85,10 +85,6 @@ ena.plot.trajectory = function(
   label.font.family = c("Arial", "Courier New", "Times New Roman"),
   shape = c("circle", "square", "triangle-up", "diamond"),
   colors = NULL,
-  #confidence.interval = NULL,
-  #confidence.interval.values = NULL,
-  #outlier.interval = NULL,
-  #outlier.interval.values = NULL,
   default.hidden = F
 ) {
   if(!is.character(label.font.family)) {
@@ -118,8 +114,6 @@ ena.plot.trajectory = function(
     tbl = data.table::data.table(points, labels = labels);
   }
 
-  # if(is.logical(by)) {
-  # } else {}
   if(!is.null(by)) {
     if(is.character(by) && length(by) == nrow(tbl))
         by <- as.factor(by)

@@ -9,18 +9,18 @@ Author: Cody L Marquart [aut, cre] (<https://orcid.org/0000-0002-3387-6792>),
   David Williamson Shaffer [aut]
 Authors@R: c(person("Cody L", "Marquart", role = c("aut", "cre"), email="cody.marquart@wisc.edu", comment = c(ORCID = "0000-0002-3387-6792")), person("Zachari","Swiecki", role = c("aut"), email="swiecki@wisc.edu"), person("Wesley","Collier", role = c("aut"), email="wcollier@wisc.edu"), person("Brendan","Eagan", role = c("aut"), email="beagan@wisc.edu"), person("Roman", "Woodward", role = c("aut"), email="rwoodward3@wisc.edu"), person("David Williamson", "Shaffer", role = c("aut"), email = "dws@education.wisc.edu"))
 Maintainer: Cody L Marquart <cody.marquart@wisc.edu>
-Version: 0.2.0.0
+Version: 0.2.0.1
 Description: ENA (Shaffer, D. W. (2017) Quantitative Ethnography. ISBN: 0578191687) is a method used to identify meaningful and quantifiable patterns in discourse or reasoning. ENA moves beyond the traditional frequency-based assessments by examining the structure of the co-occurrence, or connections in coded data. Moreover, compared to other methodological approaches, ENA has the novelty of (1) modeling whole networks of connections and (2) affording both quantitative and qualitative comparisons between different network models.   Shaffer, D.W., Collier, W., & Ruis, A.R. (2016) <doi:10.18608/jla.2016.33.3>.
 LazyData: TRUE
 Depends: R (>= 3.0.0)
 License: GPL-3 | file LICENSE
-LinkingTo: Rcpp, RcppArmadillo, RcppParallel
+LinkingTo: Rcpp, RcppArmadillo
 Imports: data.table, Rcpp, R6, methods, foreach, stats, plotly,
-        doParallel, parallel, data.tree, scales, magrittr
+        doParallel, parallel, scales, magrittr
 Suggests: testthat (>= 2.1.0), knitr, rmarkdown
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2019-10-07 11:13:44 UTC; root
+Packaged: 2019-12-17 11:42:15 UTC; clmarquart
 Repository: CRAN
-Date/Publication: 2019-10-07 16:00:03 UTC
+Date/Publication: 2019-12-17 17:00:03 UTC

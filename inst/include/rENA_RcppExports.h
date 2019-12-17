@@ -46,6 +46,27 @@ namespace rENA {
         return Rcpp::as<std::vector<std::string> >(rcpp_result_gen);
     }
 
+    inline arma::rowvec vector_to_ut(arma::mat v) {
+        typedef SEXP(*Ptr_vector_to_ut)(SEXP);
+        static Ptr_vector_to_ut p_vector_to_ut = NULL;
+        if (p_vector_to_ut == NULL) {
+            validateSignature("arma::rowvec(*vector_to_ut)(arma::mat)");
+            p_vector_to_ut = (Ptr_vector_to_ut)R_GetCCallable("rENA", "_rENA_vector_to_ut");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_vector_to_ut(Shield<SEXP>(Rcpp::wrap(v)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<arma::rowvec >(rcpp_result_gen);
+    }
+
     inline std::vector<std::string> svector_to_ut(std::vector<std::string> v) {
         typedef SEXP(*Ptr_svector_to_ut)(SEXP);
         static Ptr_svector_to_ut p_svector_to_ut = NULL;

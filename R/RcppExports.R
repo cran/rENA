@@ -12,6 +12,16 @@ merge_columns_c <- function(df, cols, sep = ".") {
     .Call('_rENA_merge_columns_c', PACKAGE = 'rENA', df, cols, sep)
 }
 
+#' Upper Triangle from Vector
+#'
+#' @title vector to upper triangle
+#' @description TBD
+#' @param v [TBD]
+#' @export
+vector_to_ut <- function(v) {
+    .Call('_rENA_vector_to_ut', PACKAGE = 'rENA', v)
+}
+
 svector_to_ut <- function(v) {
     .Call('_rENA_svector_to_ut', PACKAGE = 'rENA', v)
 }

@@ -57,7 +57,7 @@
 ena.make.set <- function(
   enadata,
   dimensions = 2,
-  norm.by = rENA::`fun_sphere_norm`,
+  norm.by = fun_sphere_norm,
   rotation.by = ena.svd,
   rotation.params = NULL,
   rotation.set = NULL,

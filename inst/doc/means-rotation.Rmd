@@ -6,7 +6,7 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Means Rotation in rENA}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
 ---
 
 ```{r setup, include=F}
@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 ```{r message=F, warning=F, paged.print=T}
-library(rENA)
+#library(rENA)
 ```
 ```{r echo=F, message=F, warning=F}
 library(plotly)

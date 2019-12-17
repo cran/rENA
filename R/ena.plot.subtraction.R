@@ -20,10 +20,10 @@ ena.plot.subtraction = function(
   sub.plot = ena.plot(enaset = set, title = paste0("Network Subtraction -- ",group1," vs ",group2))
 
   if(network == TRUE) {
-    g1.lw = as.matrix(set$line.weights)[group1.rows,]
+    g1.lw = as.matrix(set$line.weights)[group1.rows,,drop=FALSE]
     g1.mean.lw = colMeans(g1.lw) * networkMultiplier
 
-    g2.lw = as.matrix(set$line.weights)[group2.rows,]
+    g2.lw = as.matrix(set$line.weights)[group2.rows,,drop=FALSE]
     g2.mean.lw = colMeans(g2.lw) * networkMultiplier
 
     sub = (g1.mean.lw - g2.mean.lw) * subtractionMultiplier
@@ -34,8 +34,8 @@ ena.plot.subtraction = function(
   }
 
   if(points == TRUE) {
-    g1.points.for.plot = as.matrix(set$points)[group1.rows,]
-    g2.points.for.plot = as.matrix(set$points)[group2.rows,]
+    g1.points.for.plot = as.matrix(set$points)[group1.rows,,drop=FALSE]
+    g2.points.for.plot = as.matrix(set$points)[group2.rows,,drop=FALSE]
 
     g1.plot = ena.plot.points(enaplot = g1.plot, points = g1.points.for.plot, colors = "blue")
     g2.plot = ena.plot.points(enaplot = g2.plot, points = g2.points.for.plot, colors = "red")
@@ -44,8 +44,8 @@ ena.plot.subtraction = function(
   }
 
   if(mean == TRUE) {
-    g1.points.for.plot = as.matrix(set$points)[group1.rows,]
-    g2.points.for.plot = as.matrix(set$points)[group2.rows,]
+    g1.points.for.plot = as.matrix(set$points)[group1.rows,,drop=FALSE]
+    g2.points.for.plot = as.matrix(set$points)[group2.rows,,drop=FALSE]
 
     g1.plot = ena.plot.group(g1.plot, g1.points.for.plot, colors = "blue", labels = group1,confidence.interval = "box")
     g2.plot = ena.plot.group(g2.plot, g2.points.for.plot, colors = "red", labels = group2,confidence.interval = "box")

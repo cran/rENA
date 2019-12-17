@@ -117,7 +117,7 @@ ena <- function(
       networkMultiplier = networkMultiplier,
       subtractionMultiplier = subtractionMultiplier,
       unit = unit,
-      showPlots = print.plots,
+      print.plots = print.plots,
       ...
     )
   }

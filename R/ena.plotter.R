@@ -108,18 +108,18 @@ ena.plotter = function(
       g.plot = ena.plot(enaset = set, title = group)
 
       if(network == TRUE) {
-        g.lw = as.matrix(set$line.weights)[group.rows,]
+        g.lw = as.matrix(set$line.weights)[group.rows, , drop = FALSE]
         g.mean.lw = colMeans(g.lw) * networkMultiplier
         g.plot = ena.plot.network(g.plot, network = g.mean.lw, colors = "black")
       }
 
       if(points == TRUE) {
-        g.points.for.plot = as.matrix(set$points)[group.rows,]
+        g.points.for.plot = as.matrix(set$points)[group.rows, , drop = FALSE]
         g.plot = ena.plot.points(enaplot = g.plot,points = g.points.for.plot,colors = "black")
       }
 
       if(mean == TRUE) {
-        g.points.for.plot = as.matrix(set$points)[group.rows,]
+        g.points.for.plot = as.matrix(set$points)[group.rows, , drop = FALSE]
         g.plot = ena.plot.group(g.plot, g.points.for.plot, colors = "black", labels = group,confidence.interval = "box")
       }
 
@@ -169,19 +169,19 @@ ena.plotter = function(
     g.plot = ena.plot(enaset = set, title = group)
 
     if(network == TRUE) {
-      g.lw = as.matrix(set$line.weights)[group.rows,]
+      g.lw = as.matrix(set$line.weights)[group.rows, , drop = FALSE]
       g.mean.lw = colMeans(g.lw) * networkMultiplier
 
       g.plot = ena.plot.network(g.plot, network = g.mean.lw, colors = "black")
     }
 
     if(points == TRUE) {
-      g.points.for.plot = as.matrix(set$points)[group.rows,]
+      g.points.for.plot = as.matrix(set$points)[group.rows, , drop = FALSE]
       g.plot = ena.plot.points(enaplot = g.plot,points = g.points.for.plot,colors = "black")
     }
 
     if(mean == TRUE) {
-      g.points.for.plot = as.matrix(set$points)[group.rows,]
+      g.points.for.plot = as.matrix(set$points)[group.rows, , drop = FALSE]
       g.plot = ena.plot.group(g.plot, g.points.for.plot, colors = "black", labels = group,confidence.interval = "box")
     }
 

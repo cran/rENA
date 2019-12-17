@@ -51,14 +51,16 @@ ena.set.creator = function(
   # testType = c("nonparametric","parametric"),
   ...
 ) {
+  data <- data.table::data.table(data)
+
   model = match.arg(model)
   window = match.arg(window)
   # testType = match.arg(testType)
   accum = ena.accumulate.data(
-    units = data[,units, drop = F],
-    conversation = data[,conversation, drop = F],
-    metadata = data[,metadata, drop = F],
-    codes = data[,codes],
+    units = data[, ..units, drop = FALSE],
+    conversation = data[, ..conversation, drop = FALSE],
+    metadata = data[, ..metadata, drop = FALSE],
+    codes = data[, ..codes, drop = FALSE],
     window = window,
     window.size.back = window.size.back,
     # window.size.forward = window.size.forward,

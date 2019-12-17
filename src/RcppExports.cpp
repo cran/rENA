@@ -45,6 +45,40 @@ RcppExport SEXP _rENA_merge_columns_c(SEXP dfSEXP, SEXP colsSEXP, SEXP sepSEXP) 
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// vector_to_ut
+arma::rowvec vector_to_ut(arma::mat v);
+static SEXP _rENA_vector_to_ut_try(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(vector_to_ut(v));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _rENA_vector_to_ut(SEXP vSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_rENA_vector_to_ut_try(vSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
 // svector_to_ut
 std::vector<std::string> svector_to_ut(std::vector<std::string> v);
 static SEXP _rENA_svector_to_ut_try(SEXP vSEXP) {
@@ -367,6 +401,7 @@ static int _rENA_RcppExport_validate(const char* sig) {
     static std::set<std::string> signatures;
     if (signatures.empty()) {
         signatures.insert("std::vector<std::string>(*merge_columns_c)(DataFrame,CharacterVector,std::string)");
+        signatures.insert("arma::rowvec(*vector_to_ut)(arma::mat)");
         signatures.insert("std::vector<std::string>(*svector_to_ut)(std::vector<std::string>)");
         signatures.insert("arma::mat(*rows_to_co_occurrences)(DataFrame,bool)");
         signatures.insert("DataFrame(*ref_window_df)(DataFrame,float,float,bool,bool)");
@@ -383,6 +418,7 @@ static int _rENA_RcppExport_validate(const char* sig) {
 // registerCCallable (register entry points for exported C++ functions)
 RcppExport SEXP _rENA_RcppExport_registerCCallable() { 
     R_RegisterCCallable("rENA", "_rENA_merge_columns_c", (DL_FUNC)_rENA_merge_columns_c_try);
+    R_RegisterCCallable("rENA", "_rENA_vector_to_ut", (DL_FUNC)_rENA_vector_to_ut_try);
     R_RegisterCCallable("rENA", "_rENA_svector_to_ut", (DL_FUNC)_rENA_svector_to_ut_try);
     R_RegisterCCallable("rENA", "_rENA_rows_to_co_occurrences", (DL_FUNC)_rENA_rows_to_co_occurrences_try);
     R_RegisterCCallable("rENA", "_rENA_ref_window_df", (DL_FUNC)_rENA_ref_window_df_try);
@@ -398,6 +434,7 @@ RcppExport SEXP _rENA_RcppExport_registerCCallable() {
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rENA_merge_columns_c", (DL_FUNC) &_rENA_merge_columns_c, 3},
+    {"_rENA_vector_to_ut", (DL_FUNC) &_rENA_vector_to_ut, 1},
     {"_rENA_svector_to_ut", (DL_FUNC) &_rENA_svector_to_ut, 1},
     {"_rENA_rows_to_co_occurrences", (DL_FUNC) &_rENA_rows_to_co_occurrences, 2},
     {"_rENA_ref_window_df", (DL_FUNC) &_rENA_ref_window_df, 5},

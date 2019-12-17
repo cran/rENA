@@ -68,6 +68,13 @@ NumericMatrix toNumericMatrix(DataFrame x) {
   return y;
 }
 
+//' Upper Triangle from Vector
+//'
+//' @title vector to upper triangle
+//' @description TBD
+//' @param v [TBD]
+//' @export
+// [[Rcpp::export]]
 arma::rowvec vector_to_ut(arma::mat v) {
   int vL = v.size();
   int vS = ( (vL * (vL + 1)) / 2) - vL;
@@ -184,18 +191,24 @@ DataFrame ref_window_df(
         headRows = 0;
       }
       arma::mat currRows2_refs = currRows2.head_rows(headRows);
-      arma::mat currRow_refsSummed = arma::sum(currRows2_refs);
+      arma::mat currRow_refsSummed(1, currRows2_refs.n_cols, fill::zeros);
+      if(currRows2_refs.n_rows > 0) {
+        currRow_refsSummed = arma::sum(currRows2_refs);
+      }
 
       arma::rowvec toUT_refs = vector_to_ut(currRow_refsSummed);
       toUT = toUT - toUT_refs;
     }
 
     if(windowForward > 0 && lastRow <= (dfRows-1)) {
-      arma::mat currRows2_refs = currRows2.tail_rows(lastRow - row);
+      int tail_rows_to_use = lastRow - row;
+      if(tail_rows_to_use > 0) {
+        arma::mat currRows2_refs = currRows2.tail_rows(tail_rows_to_use);
 
-      arma::mat currRow_refsSummed = arma::sum(currRows2_refs);
-      arma::rowvec toUT_refs = vector_to_ut(currRow_refsSummed);
-      toUT = toUT - toUT_refs;
+        arma::mat currRow_refsSummed = arma::sum(currRows2_refs);
+        arma::rowvec toUT_refs = vector_to_ut(currRow_refsSummed);
+        toUT = toUT - toUT_refs;
+      }
     }
 
     if (binaryStanzas==true) {
@@ -244,7 +257,6 @@ DataFrame ref_window_lag(
 
   return wrap(df_LagSummed);
 }
-
 
 //' Sphere norm
 //' @title Sphere norm
@@ -355,7 +367,8 @@ Rcpp::List lws_lsq_positions(arma::mat adjMats, arma::mat t, int numDims) { // =
   // Weighting matrix, putting half of each line.wieght onto the respective
   // nodes.
   arma::mat weights = arma::mat(adjMats.n_rows, numNodes, fill::zeros);
-  for (int k = 0; k < adjMats.n_rows; k++) {
+  int row_count = adjMats.n_rows;
+  for (int k = 0; k < row_count; k++) {
     arma::rowvec currAdj = adjMats.row(k);
     int z = 0;
     for(int x = 0; x < numNodes-1; x++) {
@@ -367,7 +380,8 @@ Rcpp::List lws_lsq_positions(arma::mat adjMats, arma::mat t, int numDims) { // =
     }
   }
 
-  for (int k = 0; k < adjMats.n_rows; k++) {
+  //row_count = adjMats.n_rows;
+  for (int k = 0; k < row_count; k++) {
     double length = 0;
     for(int i = 0; i < numNodes; i++) {
       length = length + std::abs(weights(k,i));

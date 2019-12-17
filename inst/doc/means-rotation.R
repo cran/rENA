@@ -5,7 +5,7 @@ knitr::opts_chunk$set(
 )
 
 ## ----message=F, warning=F, paged.print=T---------------------------------
-library(rENA)
+#library(rENA)
 
 ## ----echo=F, message=F, warning=F----------------------------------------
 library(plotly)

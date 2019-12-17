@@ -69,7 +69,7 @@ first.game.points = as.matrix(set$points$Condition$FirstGame)
 ### Subset rotated points for the second condition
 second.game.points = as.matrix(set$points$Condition$SecondGame)
 
-plot = ena.plot(set, scale.to = "points", title = "Groups of Units")
+plot = ena.plot(set, scale.to = "network", title = "Groups of Units")
 plot = ena.plot.points(plot, points = first.game.points, confidence.interval = "box", colors = c("red"))
 plot = ena.plot.points(plot, points = second.game.points, confidence.interval = "box", colors = c("blue"))
 plot$plot
@@ -77,7 +77,7 @@ plot$plot
 ## ------------------------------------------------------------------------
 ### Using the same plot object above, we will be able to plot the means 
 ### alongside their corresponding units.
-plot = ena.plot(set, scale.to = "points", title = "Groups and Means")
+plot = ena.plot(set, scale.to = list(x=-1:1, y=-1:1), title = "Groups and Means")
 plot = ena.plot.points(plot, points = first.game.points, 
                        confidence.interval = "box", colors = c("red"))
 plot = ena.plot.points(plot, points = second.game.points, 
@@ -131,15 +131,15 @@ library(scales)
 
 # Scale the nodes to match that of the network, for better viewing
 point.max = max(first.game.points, second.game.points)
-first.game.scaled = scales::rescale(first.game.points, 
+first.game.scaled = scales::rescale(first.game.points,
                                     c(0,max(as.matrix(set$rotation$nodes))), c(0,point.max))
-second.game.scaled = scales::rescale(second.game.points, 
+second.game.scaled = scales::rescale(second.game.points,
                                      c(0,max(as.matrix(set$rotation$nodes))), c(0,point.max))
 
-plot = ena.plot(set, title = "Plot with Units and Network") %>% 
+plot = ena.plot(set, title = "Plot with Units and Network", font.family = "Times") %>% 
           ena.plot.points(points = first.game.scaled, colors = c("red")) %>% 
           ena.plot.points(points = second.game.scaled, colors = c("blue")) %>% 
-          ena.plot.group(point = first.game.scaled, colors =c("red"), 
+          ena.plot.group(point = first.game.scaled, colors =c("red"),
                          confidence.interval = "box") %>% 
           ena.plot.group(point = second.game.scaled, colors =c("blue"), 
                          confidence.interval = "box") %>%
