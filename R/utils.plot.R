@@ -403,7 +403,6 @@ with_trajectory <- function(
 
   args = list(...)
 
-
   all_steps_w_zero <- data.table(rbind(
     rep(0, length(by)),
     expand.grid(

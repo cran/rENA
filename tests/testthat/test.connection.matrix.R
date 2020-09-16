@@ -36,6 +36,9 @@ test_that("return single unit", {
   testthat::expect_is(connections, "matrix")
   testthat::expect_equal(nrow(connections), ncol(connections))
 })
+test_that("stop on non-connections", {
+  testthat::expect_error(connection.matrix(1))
+})
 
 test_that("test additional metadata", {
   meta <- colnames(RS.data)[3:8]

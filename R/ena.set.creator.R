@@ -90,13 +90,13 @@ ena.set.creator = function(
 
   ### make set if group column is specified, but groups are not
   else if(is.null(groups) == TRUE) {
-    unique.groups = unique(data[,groupVar])
+    unique.groups = unique(as.character(data[[groupVar]]))
 
     if(length(unique.groups) == 1) {
       warning("Group variable only contains one unique value. ENAset has been created without means rotation")
 
       if(runTest == TRUE) {
-        warning("Multiple groups not specified. Unable to run test ")
+        warning("Multiple groups not specified. Unable to run test")
       }
     }
 
@@ -104,7 +104,7 @@ ena.set.creator = function(
       group1 = unique.groups[1]
       group2 = unique.groups[2]
 
-      warning(paste0("No groups specified. Defaulting to means rotation using first two unique group values of group variable: ",group1," and ",group2))
+      message(paste0("No groups specified. Defaulting to means rotation using first two unique group values of group variable: ",group1," and ",group2))
 
       set_params$rotation.by = ena.rotate.by.mean
       set_params$rotation.params = list(accum$meta.data[[groupVar]] == group1, accum$meta.data[[groupVar]] == group2)
@@ -115,7 +115,7 @@ ena.set.creator = function(
     }
   }
   else if(length(groups) == 1) {
-    warning("Only one group value specified. ENAset has been created without means rotation")
+    message("Only one group value specified. ENAset has been created without means rotation")
 
     if(runTest == TRUE) {
       warning("Multiple groups not specified. Unable to run test")

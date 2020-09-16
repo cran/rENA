@@ -4,15 +4,13 @@
 \name{ENAset}
 \alias{ENAset}
 \title{ENAset R6class}
-\format{An object of class \code{R6ClassGenerator} of length 25.}
-\usage{
-ENAset
-}
 \description{
 ENAset R6class
-}
-\section{Fields}{
 
+ENAset R6class
+}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{enadata}}{An \code{\link{ENAdata}} object originally used to create the set}
 
@@ -30,8 +28,6 @@ ENAset R6class
 
 \item{\code{rotation.set}}{- An \code{\link{ENARotationSet}} object}
 
-\item{\code{correlation}}{- A data frame of spearman and pearson correlations for each dimension specified}
-
 \item{\code{variance}}{- A vector of variance accounted for by each dimension specified}
 
 \item{\code{centroids}}{- A matrix of the calculated centroid positions}
@@ -39,6 +35,125 @@ ENAset R6class
 \item{\code{function.call}}{- The string representation of function called}
 
 \item{\code{function.params}}{- A list of all parameters sent to function call}
-}}
 
-\keyword{datasets}
+\item{\code{rotation_dists}}{TBD}
+
+\item{\code{points.rotated.scaled}}{TBD}
+
+\item{\code{points.rotated.non.zero}}{TBD}
+
+\item{\code{line.weights.unrotated}}{TBD}
+
+\item{\code{line.weights.non.zero}}{TBD}
+
+\item{\code{correlations}}{A data frame of spearman and pearson correlations for each dimension specified
+
+Create ENAset}
+}
+\if{html}{\out{</div>}}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{ENAset$new()}}
+\item \href{#method-process}{\code{ENAset$process()}}
+\item \href{#method-get}{\code{ENAset$get()}}
+\item \href{#method-clone}{\code{ENAset$clone()}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENAset$new(
+  enadata,
+  dimensions = 2,
+  norm.by = fun_sphere_norm,
+  rotation.by = ena.svd.R6,
+  rotation.params = NULL,
+  rotation.set = NULL,
+  node.position.method = lws.positions.sq.R6,
+  endpoints.only = T,
+  ...
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{enadata}}{TBD}
+
+\item{\code{dimensions}}{TBD}
+
+\item{\code{norm.by}}{TBD}
+
+\item{\code{rotation.by}}{TBD}
+
+\item{\code{rotation.params}}{TBD}
+
+\item{\code{rotation.set}}{TBD}
+
+\item{\code{node.position.method}}{TBD}
+
+\item{\code{endpoints.only}}{TBD}
+
+\item{\code{...}}{TBD}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+ENAset
+Process ENAset
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-process"></a>}}
+\if{latex}{\out{\hypertarget{method-process}{}}}
+\subsection{Method \code{process()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENAset$process()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+ENASet
+Get property from object
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get"></a>}}
+\if{latex}{\out{\hypertarget{method-get}{}}}
+\subsection{Method \code{get()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENAset$get(x = "enadata")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{character key to retrieve from object}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+value from object at x
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENAset$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

@@ -38,10 +38,20 @@ ena.set <- function(x) {
   }
 
   if (x.is.set) {
-    newset$line.weights <- as.data.table(cbind(
-                              x$enadata$metadata, x$line.weights))
+    newset$line.weights <- as.data.table(cbind(x$enadata$metadata, x$line.weights))
+    to_cols <- names(which(!find_meta_cols(newset$line.weights)))
+    for(col in to_cols) {
+      set(x = newset$line.weights, j = col, value = as.ena.co.occurrence(newset$line.weights[[col]]))
+    }
+    class(newset$line.weights) <- c("ena.line.weights", class(newset$line.weights))
 
     newset$points <- cbind(x$enadata$metadata, x$points.rotated)
+    to_cols <- names(which(!find_meta_cols(newset$points)))
+    for(col in to_cols) {
+      set(x = newset$points, j = col, value = as.ena.dimension(newset$points[[col]]))
+    }
+    newset$points <- as.ena.matrix(newset$points, "ena.points")
+
     newset$rotation.matrix <- x$rotation.set$rotation
   }
 
@@ -57,6 +67,7 @@ ena.set <- function(x) {
     unit.labels = x$enadata$unit.names
   )
 
+  #####
   # if(quote(x$enadata$function.params$weight.by) != "binary") {
   #   newset$model$unweighted.connection.counts <- x$enadata$adjacency.vectors.raw
   #   class(newset$model$unweighted.connection.counts) <- c("ena.connections",
@@ -78,6 +89,7 @@ ena.set <- function(x) {
   #     }
   #   }
   # }
+  #####
 
   cols <- grep("adjacency.code", colnames(newset$model$row.connection.counts))
   colnames(newset$model$row.connection.counts)[cols] <- code.columns

@@ -4,9 +4,15 @@
 \alias{with_trajectory}
 \title{Title}
 \usage{
-with_trajectory(x, ..., by = x$`_function.params`$conversation[1],
-  add_jitter = TRUE, frame = 1100, transition = 1000,
-  easing = "circle-in-out")
+with_trajectory(
+  x,
+  ...,
+  by = x$`_function.params`$conversation[1],
+  add_jitter = TRUE,
+  frame = 1100,
+  transition = 1000,
+  easing = "circle-in-out"
+)
 }
 \arguments{
 \item{x}{[TBD]}

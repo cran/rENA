@@ -14,6 +14,8 @@
 #' @param type c("file","stream") File will save to a file in output_dir, Stream returns the contents directly
 #' @param theory Logical indicating whether to include theory in the writeup
 #' @param methods Logical indicating whether to include methods in the writeup
+#' @param params additional parameters for rmarkdown::render
+#' @param output_file character
 #'
 #' @export
 #'
@@ -22,11 +24,16 @@ ena.writeup <- function(
   enaset,
   tool = "rENA", tool.version = as.character(packageVersion(tool)),
   comparison = NULL, comparison.groups = NULL, sig.dig = 2,
-  output_dir = getwd(), type = c("file","stream"), theory = T, methods = T
+  output_dir = getwd(), type = c("file","stream"), theory = T, methods = T,
+  params = NULL, output_file = NULL
 ) {
+  if(is.null(enaset$`_function.params`$weight.by))
+    enaset$`_function.params`$weight.by <- enaset$`_function.params`$args$weight.by
+
   type = match.arg(type, choices = c("file","stream"), several.ok = FALSE)
   file = rmarkdown::render(system.file("rmd","methods.rmd", package="rENA"), output_dir = output_dir,
-                    knit_root_dir = output_dir, intermediates_dir = output_dir, quiet = TRUE)
+                    knit_root_dir = output_dir, intermediates_dir = output_dir, quiet = TRUE,
+                    params = params, output_file = output_file)
   if(type == "file") file
   else readChar(file, file.info(file)$size)
 }

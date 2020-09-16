@@ -4,8 +4,7 @@
 \alias{add_points}
 \title{Plot points on an ena.plot}
 \usage{
-add_points(x, wh = NULL, ..., name = "plot", mean = NULL,
-  colors = NULL)
+add_points(x, wh = NULL, ..., name = "plot", mean = NULL, colors = NULL)
 }
 \arguments{
 \item{x}{ena.plot to add point on}

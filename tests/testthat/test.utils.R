@@ -71,6 +71,19 @@ test_that("Test print output", {
   unlink(tmp)
 })
 
+test_that("Test print plot output", {
+  tmp <- tempfile()
+  on.exit(unlink(tmp), add = TRUE)
+
+  sink(tmp)
+  suppressWarnings(print(plot(set_end)))
+
+  testthat::expect_true(
+    grepl(x = readLines(tmp)[1], pattern = "[[1]]")
+  )
+  unlink(tmp)
+})
+
 test_that("Test means rotation", {
   set_rotated <- means_rotate(set_end)
 
@@ -135,3 +148,28 @@ test_that("Test trajectory", {
   testthat::expect_true(all(set_end$rotation$nodes == set_traj_projected$rotation$nodes))
 })
 
+test_that("Test as using factors", {
+  code_vec <- as.ena.code(factor(sample(LETTERS, 100, replace = T)))
+  testthat::expect_is(code_vec, "ena.code")
+
+  code_vec <- as.ena.codes(factor(sample(LETTERS, 100, replace = T)))
+  testthat::expect_is(code_vec, "ena.codes")
+
+  code_vec <- as.ena.dimension(factor(sample(LETTERS, 100, replace = T)))
+  testthat::expect_is(code_vec, "ena.dimension")
+
+  code_vec <- as.ena.co.occurrence(factor(sample(LETTERS, 100, replace = T)))
+  testthat::expect_is(code_vec, "ena.co.occurrence")
+})
+
+test_that("Verify tri indices", {
+  two <- rENA:::triIndices(3)
+  testthat::expect_equal(two[1,], c(0, 0, 1))
+  testthat::expect_equal(two[2,], c(1, 2, 2))
+
+  one <- rENA:::triIndices(3, row = 0)
+  testthat::expect_equal(one[1,], c(0, 0, 1))
+
+  one <- rENA:::triIndices(3, row = 1)
+  testthat::expect_equal(one[1,], c(1, 2, 2))
+})

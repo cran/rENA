@@ -4,19 +4,127 @@
 \name{ENAplot}
 \alias{ENAplot}
 \title{ENAset R6class}
-\format{An object of class \code{R6ClassGenerator} of length 25.}
-\usage{
-ENAplot
-}
 \description{
 ENAset R6class
-}
-\section{Fields}{
 
+ENAset R6class
+}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{enaset}}{- The \code{\link{ENAset}} object from which the ENAplot was constructed}
 
 \item{\code{plot}}{- The plotly object used for data visualization}
-}}
 
-\keyword{datasets}
+\item{\code{axes}}{- TBD}
+
+\item{\code{point}}{- TBD}
+
+\item{\code{palette}}{- TBD}
+
+\item{\code{plotted}}{- TBD
+Create ENApolot}
+}
+\if{html}{\out{</div>}}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{ENAplot$new()}}
+\item \href{#method-print}{\code{ENAplot$print()}}
+\item \href{#method-get}{\code{ENAplot$get()}}
+\item \href{#method-clone}{\code{ENAplot$clone()}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENAplot$new(
+  enaset = NULL,
+  title = "ENA Plot",
+  dimension.labels = c("", ""),
+  font.size = 14,
+  font.color = "#000000",
+  font.family = "Arial",
+  scale.to = "network",
+  ...
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{enaset}}{TBD}
+
+\item{\code{title}}{TBD}
+
+\item{\code{dimension.labels}}{TBD}
+
+\item{\code{font.size}}{TBD}
+
+\item{\code{font.color}}{TBD}
+
+\item{\code{font.family}}{TBD}
+
+\item{\code{scale.to}}{TBD}
+
+\item{\code{...}}{TBD}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+ENAplot
+Print ENA plot
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
+\subsection{Method \code{print()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENAplot$print()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Get property from object
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get"></a>}}
+\if{latex}{\out{\hypertarget{method-get}{}}}
+\subsection{Method \code{get()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENAplot$get(x)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{character key to retrieve from object}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+value from object at x
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENAplot$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

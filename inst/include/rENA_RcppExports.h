@@ -25,6 +25,27 @@ namespace rENA {
         }
     }
 
+    inline arma::umat ena_correlation(arma::umat points, arma::umat centroids) {
+        typedef SEXP(*Ptr_ena_correlation)(SEXP,SEXP);
+        static Ptr_ena_correlation p_ena_correlation = NULL;
+        if (p_ena_correlation == NULL) {
+            validateSignature("arma::umat(*ena_correlation)(arma::umat,arma::umat)");
+            p_ena_correlation = (Ptr_ena_correlation)R_GetCCallable("rENA", "_rENA_ena_correlation");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_ena_correlation(Shield<SEXP>(Rcpp::wrap(points)), Shield<SEXP>(Rcpp::wrap(centroids)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<arma::umat >(rcpp_result_gen);
+    }
+
     inline std::vector<std::string> merge_columns_c(DataFrame df, CharacterVector cols, std::string sep = ".") {
         typedef SEXP(*Ptr_merge_columns_c)(SEXP,SEXP,SEXP);
         static Ptr_merge_columns_c p_merge_columns_c = NULL;
@@ -109,17 +130,17 @@ namespace rENA {
         return Rcpp::as<arma::mat >(rcpp_result_gen);
     }
 
-    inline DataFrame ref_window_df(DataFrame df, float windowSize = 1, float windowForward = 0, bool binary = true, bool binaryStanzas = false) {
-        typedef SEXP(*Ptr_ref_window_df)(SEXP,SEXP,SEXP,SEXP,SEXP);
+    inline DataFrame ref_window_df(DataFrame df, float windowSize = 1, float windowForward = 0, bool binary = true) {
+        typedef SEXP(*Ptr_ref_window_df)(SEXP,SEXP,SEXP,SEXP);
         static Ptr_ref_window_df p_ref_window_df = NULL;
         if (p_ref_window_df == NULL) {
-            validateSignature("DataFrame(*ref_window_df)(DataFrame,float,float,bool,bool)");
+            validateSignature("DataFrame(*ref_window_df)(DataFrame,float,float,bool)");
             p_ref_window_df = (Ptr_ref_window_df)R_GetCCallable("rENA", "_rENA_ref_window_df");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_ref_window_df(Shield<SEXP>(Rcpp::wrap(df)), Shield<SEXP>(Rcpp::wrap(windowSize)), Shield<SEXP>(Rcpp::wrap(windowForward)), Shield<SEXP>(Rcpp::wrap(binary)), Shield<SEXP>(Rcpp::wrap(binaryStanzas)));
+            rcpp_result_gen = p_ref_window_df(Shield<SEXP>(Rcpp::wrap(df)), Shield<SEXP>(Rcpp::wrap(windowSize)), Shield<SEXP>(Rcpp::wrap(windowForward)), Shield<SEXP>(Rcpp::wrap(binary)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

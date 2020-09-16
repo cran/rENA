@@ -4,9 +4,15 @@
 \alias{methods_report}
 \title{methods_report}
 \usage{
-methods_report(toc = FALSE, toc_depth = 3, fig_width = 5,
-  fig_height = 4, keep_md = FALSE, md_extensions = NULL,
-  pandoc_args = NULL)
+methods_report(
+  toc = FALSE,
+  toc_depth = 3,
+  fig_width = 5,
+  fig_height = 4,
+  keep_md = FALSE,
+  md_extensions = NULL,
+  pandoc_args = NULL
+)
 }
 \arguments{
 \item{toc}{[TBD]}

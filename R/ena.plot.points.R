@@ -135,8 +135,8 @@ ena.plot.points = function(
       label.offset = rep(label.offset, nrow(points.layout))
 
     if(grepl("^c", confidence.interval) && grepl("^c", outlier.interval)) {
-      print("Confidence Interval and Outlier Interval cannot both be crosshair");
-      print("Plotting Outlier Interval as box");
+      message("Confidence Interval and Outlier Interval cannot both be crosshair");
+      message("Plotting Outlier Interval as box");
       outlier.interval = "box";
     }
 
@@ -162,8 +162,8 @@ ena.plot.points = function(
     else if(grepl("^c", outlier.interval) && !is.null(outlier.interval.values)) {
       int.values = outlier.interval.values;
     }
-    error$x$array = int.values[,1];
-    error$y$array = int.values[,2];
+    error$x$array = int.values[, 1];
+    error$y$array = int.values[, 2];
   ###
   # END: Set error value for crosshair on plot
   ###

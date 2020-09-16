@@ -1,3 +1,4 @@
+destination: public/
 navbar:
   title: "rENA"
   type: inverse
@@ -9,17 +10,17 @@ navbar:
     - text: "Reference"
       href: "reference/index.html"
     - text: "Coverage"
-      href: "coverage/master/index.html"
+      href: "coverage/index.html"
   right:
     - icon: fa-gitlab
-      href: https://git.doit.wisc.edu/epistemic-analytics/qe-packages/rena/
+      href: https://gitlab.com/epistemic-analytics/qe-packages/rena/
 reference:
   - title: "Creating Models"
     desc: >
-      Functions for the generation of ENA models, all of which will return, by default, an 
-      S3 object with the class of `ena.set` that can be supplied to the other 
+      Functions for the generation of ENA models, all of which will return, by default, an
+      S3 object with the class of `ena.set` that can be supplied to the other
       functions.
-    contents: 
+    contents:
       - ena
       - starts_with("ena.accum")
       - ena.make.set

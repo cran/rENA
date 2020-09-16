@@ -15,11 +15,31 @@
 #' @field metadata A data frame of unique metadata for each unit
 #' @field trajectories A list: units - data frame, for a given row tells which trajectory it's a part; step - data frame, where along the trajectory a row sits
 #'
+#' @field adjacency.matrix TBD
+#' @field adjacency.vectors.raw TBD
 #' @field codes A vector of code names
 #' @field function.call The string representation of function called and parameters provided
 #' @field function.params A list of all parameters sent to function call
 ####
 ENAdata <- R6::R6Class("ENAdata", public = list(
+
+  #' Construct ENAdata
+  #'
+  #' @param file TBD
+  #' @param units TBD
+  #' @param units.used TBD
+  #' @param units.by TBD
+  #' @param conversations.by TBD
+  #' @param codes TBD
+  #' @param model TBD
+  #' @param weight.by TBD
+  #' @param window.size.back TBD
+  #' @param window.size.forward TBD
+  #' @param mask TBD
+  #' @param include.meta TBD
+  #' @param ... TBD
+  #'
+  #' @return
   initialize = function(
     file,
     units = NULL,
@@ -63,7 +83,8 @@ ENAdata <- R6::R6Class("ENAdata", public = list(
     ) {
       if (exists(x = p)) {
         self$function.params[[p]] <- get(p)
-      } else if (!is.null(args[[p]])) {
+      }
+      else if (!is.null(args[[p]])) {
         self$function.params[[p]] <- args[[p]]
       }
     }
@@ -75,9 +96,7 @@ ENAdata <- R6::R6Class("ENAdata", public = list(
     return(self)
   },
 
-    ####
-    ## Public Properties
-    ####
+    ## Public Properties ----
       model = NULL,
       raw = NULL,
       adjacency.vectors = NULL,
@@ -94,51 +113,29 @@ ENAdata <- R6::R6Class("ENAdata", public = list(
       codes = NULL,
       function.call = NULL,
       function.params = NULL,
-    ####
-    ## END: Public Properties
-    ####
 
-    ####
-    ## Public Functions
-    ####
-      ####
-      # Process the accumulation
-      #####
+    ## Public Functions ----
+
+      #' Process accumulation
+      #'
+      #' @return ENAdata
       process = function() {
         private$loadFile();
       },
 
-      ####
-      # \code{get()} - Return a read-only property
-      # \preformatted{  Example:
-      #     get( x = 'file' )}
-      # \preformatted{  Parameters:
-      #      x - Property to return. Defaults 'data', returns the original data
-      ####
+      #' Get property from object
+      #'
+      #' @param x character key to retrieve from object
+      #' @return value from object at x
       get = function(x = "data") {
         return(private[[x]])
       },
 
-      ####
-      # \code{read()} - Return the accumulated data
-      # \preformatted{  Example:
-      #     get( colnames = T, sep = " & " )}
-      # \preformatted{  Parameters:
-      #      colnames - Logical, whether to replace colnames with their names
-      #                 values from the adjacency (co-occurrence)
-      #      sep - String to use as a seperator in the updated column names.
-      #             Ignored if colnames == F}
-      ####
-      read = function(colnames = T, sep = " & ") {
-        named_data <- data.table::copy(self$adjacency.vectors);
-        if (colnames == T) {
-          named_rows <- attr(named_data, "adjacency.matrix");
-          colnames(named_data)[grep("adjacency.code", colnames(named_data))] <-
-            apply(named_rows, 2, function(x) paste(x[1], x[2], sep = sep))
-        }
-
-        return()
-      },
+      #' Add metadata
+      #'
+      #' @param merge logical (default: FALSE)
+      #'
+      #' @return data.frame
       add.metadata = function(merge = F) {
         meta_avail <- colnames(self$raw)[
           -which(colnames(self$raw) %in%
@@ -159,47 +156,17 @@ ENAdata <- R6::R6Class("ENAdata", public = list(
                       with = F
                     ]
 
-        df_to_return <- NULL;
-        if (merge == T) {
-          df_to_return <- merge(
-            self$adjacency.vectors,
-            raw.meta[, unique(colnames(raw.meta)), with = F],
-            by = c("ENA_UNIT"),
-            suffixes = c("", ".y"), sort = F
-          )
-        } else {
-          df_to_return <- raw.meta[ENA_UNIT %in% self$unit.names,];
-        }
+        df_to_return <- raw.meta[ENA_UNIT %in% self$unit.names,];
 
         return(df_to_return)
-      },
-      print = function(...) {
-        args <- list(...);
-        fields <- NULL;
-        to.print <- list();
-        if (is.null(args$fields)) {
-          fields <- names(get(class(self))$public_fields)
-        } else {
-          fields <- args$fields
-        }
-        for (f in fields) {
-          to.print[[f]] <- self[[f]]
-        }
-        return(to.print);
       }
-    ####
-    ## END: Public Functions
-    ####
+
   ),
 
-  ####
-  ### Private
-  ####
+  ### Private ----
   private = list(
 
-    ####
-    ## Private Properties
-    #####
+    ## Private Properties ----
       file = NULL,
       window.size = NULL,
       units.used = NULL,
@@ -208,14 +175,9 @@ ENAdata <- R6::R6Class("ENAdata", public = list(
       weight.by = NULL,
       trajectory.by = NULL,
       mask = NULL,
-    #####
-    ## END: Private Properties
-    ####
 
-    ####
-    ## Private Functions
-    #####
-    loadFile = function() {
+    ## Private Functions ----
+      loadFile = function() {
       if(any(class(private$file) == "data.table")) {
         df_DT <- private$file
       } else {

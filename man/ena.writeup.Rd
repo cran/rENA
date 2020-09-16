@@ -4,10 +4,20 @@
 \alias{ena.writeup}
 \title{Calculate the correlations}
 \usage{
-ena.writeup(enaset, tool = "rENA",
-  tool.version = as.character(packageVersion(tool)), comparison = NULL,
-  comparison.groups = NULL, sig.dig = 2, output_dir = getwd(),
-  type = c("file", "stream"), theory = T, methods = T)
+ena.writeup(
+  enaset,
+  tool = "rENA",
+  tool.version = as.character(packageVersion(tool)),
+  comparison = NULL,
+  comparison.groups = NULL,
+  sig.dig = 2,
+  output_dir = getwd(),
+  type = c("file", "stream"),
+  theory = T,
+  methods = T,
+  params = NULL,
+  output_file = NULL
+)
 }
 \arguments{
 \item{enaset}{ENAset to view methods of}
@@ -29,6 +39,10 @@ ena.writeup(enaset, tool = "rENA",
 \item{theory}{Logical indicating whether to include theory in the writeup}
 
 \item{methods}{Logical indicating whether to include methods in the writeup}
+
+\item{params}{additional parameters for rmarkdown::render}
+
+\item{output_file}{character}
 }
 \value{
 String representing the methods used to generate the model

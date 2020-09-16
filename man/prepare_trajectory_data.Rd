@@ -4,10 +4,15 @@
 \alias{prepare_trajectory_data}
 \title{Title}
 \usage{
-prepare_trajectory_data(x = NULL,
+prepare_trajectory_data(
+  x = NULL,
   by = x$`_function.params`$conversation[1],
-  rotation_matrix = x$rotation.matrix, points = NULL, units = points,
-  units_by = x$`_function.params`$units, steps = NULL)
+  rotation_matrix = x$rotation.matrix,
+  points = NULL,
+  units = points,
+  units_by = x$`_function.params`$units,
+  steps = NULL
+)
 }
 \arguments{
 \item{x}{[TBD]}

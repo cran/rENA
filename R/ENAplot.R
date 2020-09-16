@@ -1,4 +1,3 @@
-####
 #' ENAset R6class
 #'
 #' @docType class
@@ -6,20 +5,29 @@
 #' @import data.table
 #' @export
 #'
-# @param enaset ENAplot Object
-#'
 #' @field enaset - The \code{\link{ENAset}} object from which the ENAplot was constructed
 #' @field plot - The plotly object used for data visualization
-#'
-####
-
+#' @field axes - TBD
+#' @field point - TBD
+#' @field palette - TBD
+#' @field plotted - TBD
 ENAplot = R6::R6Class("ENAplot",
 
   public = list(
 
-    ####
-    ## Constructor - documented in main class declaration
-    ####
+    ## Public Functions ----
+      #' Create ENApolot
+      #'
+      #' @param enaset TBD
+      #' @param title TBD
+      #' @param dimension.labels TBD
+      #' @param font.size TBD
+      #' @param font.color TBD
+      #' @param font.family TBD
+      #' @param scale.to TBD
+      #' @param ... TBD
+      #'
+      #' @return ENAplot
       initialize = function(
         enaset = NULL,
 
@@ -71,20 +79,25 @@ ENAplot = R6::R6Class("ENAplot",
           max.axis = max(abs(as.matrix(enaset$points)))*1.2
           if(is.null(scale.to$x)) {
             axis.range.x = c(-max.axis, max.axis)
-          } else {
+          }
+          else {
             axis.range.x = scale.to$x
           }
           if(is.null(scale.to$y)) {
             axis.range.y = c(-max.axis, max.axis)
-          } else {
+          }
+          else {
             axis.range.y = scale.to$y
           }
-        } else {
-          if(scale.to == "points") {
+        }
+        else {
+          if(is.character(scale.to) && scale.to == "points") {
             max.axis = max(abs(as.matrix(enaset$points)))*1.2
-          } else if (is.numeric(scale.to)) {
+          }
+          else if (is.numeric(scale.to)) {
             max.axis = tail(scale.to, 1)
-          } else {
+          }
+          else {
             max.axis = max(abs(as.matrix(enaset$rotation$nodes)))*1.2;
           }
           axis.range.x = axis.range.y = c(-max.axis, max.axis)
@@ -123,13 +136,23 @@ ENAplot = R6::R6Class("ENAplot",
           )
         );
       },
-    ####
-    ## END: Constructor - documented in main class declaration
-    ####
 
-    ####
-    ## Public Properties
-    ####
+      #' Print ENA plot
+      #'
+      #' @return
+      print = function() {
+        print(self$plot);
+      },
+
+      #' Get property from object
+      #'
+      #' @param x character key to retrieve from object
+      #' @return value from object at x
+      get = function(x) {
+        return(private[[x]])
+      },
+
+    ## Public Properties ----
       enaset = NULL,
       plot = NULL,
       axes = list(
@@ -143,34 +166,7 @@ ENAplot = R6::R6Class("ENAplot",
       plotted = list(
         points = list(), networks = list(),
         trajectories = list(), means = list()
-      ),
-    ####
-    ## END: Public Properties
-    ####
-
-    ####
-    ## Public Functions
-    ####
-      print = function() {
-        print(self$plot);
-      },
-
-      ####
-      # \code{get()} - Return a read-only property
-      # \preformatted{  Example:
-      #     get( x = 'title' )}
-      # \preformatted{  Parameters:
-      #      x - Property to return. Defaults to 'title', returning the title}
-      ####
-      get = function(x) {
-        return(private[[x]])
-      },
-      update.axis.lines = function() {
-
-      }
-    ####
-    ## END: Public Functions
-    ####
+      )
   ),
 
   private = list(

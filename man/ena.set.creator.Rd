@@ -4,11 +4,22 @@
 \alias{ena.set.creator}
 \title{Wrapper to generate an ENA model}
 \usage{
-ena.set.creator(data, codes, units, conversation, metadata = NULL,
+ena.set.creator(
+  data,
+  codes,
+  units,
+  conversation,
+  metadata = NULL,
   model = c("EndPoint", "AccumulatedTrajectory", "SeparateTrajectory"),
-  weight.by = "binary", window = c("MovingStanzaWindow",
-  "Conversation"), window.size.back = 1, include.meta = TRUE,
-  groupVar = NULL, groups = NULL, runTest = FALSE, ...)
+  weight.by = "binary",
+  window = c("MovingStanzaWindow", "Conversation"),
+  window.size.back = 1,
+  include.meta = TRUE,
+  groupVar = NULL,
+  groups = NULL,
+  runTest = FALSE,
+  ...
+)
 }
 \arguments{
 \item{data}{data.frame with containing metadata and coded columns}

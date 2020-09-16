@@ -4,7 +4,12 @@
 \alias{ena.group}
 \title{Compute summary statistic for groupings of units using given method (typically, mean)}
 \usage{
-ena.group(enaset = NULL, by = NULL, method = mean)
+ena.group(
+  enaset = NULL,
+  by = NULL,
+  method = mean,
+  names = as.vector(unique(by))
+)
 }
 \arguments{
 \item{enaset}{An \code{\link{ENAset}} or a vector of values to group.}
@@ -12,6 +17,8 @@ ena.group(enaset = NULL, by = NULL, method = mean)
 \item{by}{A vector of values the same length as units. Uses rotated points for group positions and normed data to get the group edge weights}
 
 \item{method}{A function that is used on grouped points. Default: mean().  If `enaset` is an ENAset, enaset$points.rotated will be groups using `mean` regardless of `method` provided}
+
+\item{names}{A vector of names to use for the results. Default: unique(by)}
 }
 \value{
 A list containing names, points, and edge weights for each of the unique groups formed by the function
@@ -37,7 +44,7 @@ set = ena.make.set(
   enadata = accum
 )
 
-means = ena.group(set, by=accum$metadata$Condition)
+means = ena.group(set, "Condition")
 
 
 }

@@ -14,34 +14,51 @@
 #' @field node.positions - A data frame of positions for each code
 #' @field codes - A vector of code names
 #' @field rotation.set - An \code{\link{ENARotationSet}} object
-#' @field correlation - A data frame of spearman and pearson correlations for each dimension specified
 #' @field variance - A vector of variance accounted for by each dimension specified
 #' @field centroids - A matrix of the calculated centroid positions
 #' @field function.call - The string representation of function called
 #' @field function.params - A list of all parameters sent to function call
+#' @field rotation_dists TBD
+#' @field points.rotated.scaled TBD
+#' @field points.rotated.non.zero TBD
+#' @field line.weights.unrotated TBD
+#' @field line.weights.non.zero TBD
+#' @field correlations A data frame of spearman and pearson correlations for each dimension specified
 #'
 ####
-
 ENAset = R6::R6Class("ENAset",
-   public = list(
-     #####
-     ### Constructor - documented in main class declaration
-     #####
-     initialize = function(
-       enadata,
-       dimensions = 2,
+  public = list(
 
-       norm.by = fun_sphere_norm,
 
-       rotation.by = ena.svd.R6,
-       rotation.params = NULL,
-       rotation.set = NULL,
+  ## Public Functions ----
+    #' Create ENAset
+    #'
+    #' @param enadata TBD
+    #' @param dimensions TBD
+    #' @param norm.by TBD
+    #' @param rotation.by TBD
+    #' @param rotation.params TBD
+    #' @param rotation.set TBD
+    #' @param node.position.method TBD
+    #' @param endpoints.only TBD
+    #' @param ... TBD
+    #'
+    #' @return ENAset
+    initialize = function(
+        enadata,
+        dimensions = 2,
 
-       #center.data = center_data_c,    ### made local to run
-       node.position.method = lws.positions.sq.R6,
-       endpoints.only = T,
-       ...
-     ) {
+        norm.by = fun_sphere_norm,
+
+        rotation.by = ena.svd.R6,
+        rotation.params = NULL,
+        rotation.set = NULL,
+
+        #center.data = center_data_c,    ### made local to run
+        node.position.method = lws.positions.sq.R6,
+        endpoints.only = T,
+        ...
+    ) {
        self$enadata <- enadata;
 
        private$dimensions <- dimensions;
@@ -60,154 +77,72 @@ ENAset = R6::R6Class("ENAset",
 
        private$args <- list(...);
      },
-     #####
-     ### END: Constructor
-     #####
 
-     #####
-     ## Public Properties
-     #####
-     rotation_dists = NULL,  #leave for now - to be removed for a temp variable
-     enadata = NULL,
-     points.raw = NULL,    #was data$raw
-     points.normed.centered = NULL,    #was data$centered$normed
-     points.rotated = NULL,    #was data$centered$rotated
-     points.rotated.scaled = NULL,
-     points.rotated.non.zero = NULL,
-     line.weights = NULL,   #was data$normed
-     line.weights.non.zero = NULL,
-     line.weights.unrotated = NULL,
-     node.positions = NULL,  #was nodes$positions$scaled
-     codes = NULL,
-     rotation.set = NULL,   ## new - ENARotation object
-     correlations = NULL,   #not formerly listed, comes from optimized node positions in egr.positions
-     variance = NULL,     #was self$data$centered$latent
-     centroids = NULL,
-     function.call = NULL,     #new - string reping function call
-     function.params = list(   #list containing parameters function was called with
-       norm.by = NULL,
-       node.position.method = NULL,
-       rotation.by = NULL,
-       rotation.params = NULL,
-       endpoints.only = NULL
-     ),
-     #####
-     ## END: Public Properties
-     #####
 
-     #####
-     ## Public Functions
-     #####
+    #' Process ENAset
+    #'
+    #' @return ENASet
+    process = function() {
+      return(private$run())
+    },
 
-     ####
-     # \code{process()} - Process the ENAset.
-     # \preformatted{}
-     ####
-     process = function() {
-       return(private$run())
-     },
+    #' Get property from object
+    #'
+    #' @param x character key to retrieve from object
+    #' @return value from object at x
+    get = function(x = "enadata") {
+      return(private[[x]])
+    },
 
-     ####
-     get.data = function(wh = c("normed","centered","rotated"), with.meta = T) {
-       wh =  match.arg(wh);
-       data = NULL;
-       if( wh == "normed" ) {
-         data = self$line.weights
-       } else if ( wh == "centered" ) {
-         data = self$points.normed.centered
-       } else if ( wh == "rotated" ) {
-         data = self$points.rotated
-       }
-       df.to.return = NULL;
-       if(with.meta == T) {
-         data.units = attr(data, opts$UNIT_NAMES);
-         df.to.return = merge(
-           data.table::data.table(
-             data, data.units,
-             ENA_UNIT=merge_columns_c(data.units, self$enadata$get("units.by")),
-             TRAJ_UNIT=merge_columns_c(data.units, c(self$enadata$get("units.by"), self$enadata$get("trajectory.by")))
-           ),
-           self$enadata$add.metadata()
-         )
-       } else {
-         df.to.return = data
-       }
-       df.to.return
-     },
+  ## Public Properties ----
+    rotation_dists = NULL,  #leave for now - to be removed for a temp variable
+    enadata = NULL,
+    points.raw = NULL,    #was data$raw
+    points.normed.centered = NULL,    #was data$centered$normed
+    points.rotated = NULL,    #was data$centered$rotated
+    points.rotated.scaled = NULL,
+    points.rotated.non.zero = NULL,
+    line.weights = NULL,   #was data$normed
+    line.weights.non.zero = NULL,
+    line.weights.unrotated = NULL,
+    node.positions = NULL,  #was nodes$positions$scaled
+    codes = NULL,
+    rotation.set = NULL,   ## new - ENARotation object
+    correlations = NULL,   #not formerly listed, comes from optimized node positions in egr.positions
+    variance = NULL,     #was self$data$centered$latent
+    centroids = NULL,
+    function.call = NULL,     #new - string reping function call
+    function.params = list(   #list containing parameters function was called with
+      norm.by = NULL,
+      node.position.method = NULL,
+      rotation.by = NULL,
+      rotation.params = NULL,
+      endpoints.only = NULL
+    )
+  ),
 
-     ####
-     # \code{get()} - Return a read-only property
-     # \preformatted{  Example:
-     #     get( x = 'file' )}
-     # \preformatted{  Parameters:
-     #      x - Property to return. Defaults to 'file', returning the original data}
-     ####
-     get = function(x = "enadata") {
-       return(private[[x]])
-     },
-     print = function(...) {
-       args = list(...);
-       fields = NULL;
-       to.print = list();
+  private = list(
 
-       if (!is.null(args$fields)) {
-         fields = args$fields
-       } else if(!is.null(private$args$fields)) {
-         fields = private$args$fields
-       } else {
-         #fields = Filter(function(f) { (class(self[[f]]) != "function") }, names(get(class(self))$public_fields))
-         fields = Filter(function(f) {
-           cls = class(self[[f]]);
-           !is(self[[f]], "function") && !is.null(self[[f]])
-         }, names(get(class(self))$public_fields))
-       }
-
-       for(field in fields) {
-         if(grepl("\\$", field)) {
-           parts = Filter(function(f) { f!="" }, strsplit(field,"\\$")[[1]])
-           to.print[[field]] = Reduce(function(o, i) { o[[i]] }, parts, self)
-         } else {
-           to.print[[field]] = self[[field]]
-         }
-       }
-       return(to.print);
-     }
-
-     #####
-     ## END: Public Functions
-     #####
-   ),
-
-   private = list(
-     #####
-     ## Private Properties
-     #####
+     ## Private Properties ----
      args = NULL,
      data.original = NULL,
      optim = NULL,
 
      #moved from public
      dimensions = 2,
-     #####
-     ## END: Private Properties
-     #####
 
-     #####
-     ## Private Functions
-     #####
-     run = function() {       
+     ## Private Functions ----
+     run = function() {
        df = self$enadata$adjacency.vectors;
 
-       ###
        # Backup of ENA data, this is not touched again.
-       ###
        #private$data.original = df[,grep("adjacency.code", colnames(df)), with=F];
        private$data.original = df;
-       ###
+
+
        # Copy of the original data, this is used for all
        # further operations. Unlike, `data.original`, this
        # is likely to be overwritten.
-       ###
        self$points.raw = data.table::copy(private$data.original);
 
        ###
@@ -246,9 +181,10 @@ ENAset = R6::R6Class("ENAset",
        ###
        # Generate and Assign the rotation set
        ###
-        if(!is.null(self$function.params$rotation.by) && is.null(self$function.params$rotation.set)) {
+        if(is.function(self$function.params$rotation.by) && is.null(self$function.params$rotation.set)) {
           self$rotation.set = do.call(self$function.params$rotation.by, list(self, self$function.params$rotation.params));
-        } else if (!is.null(self$function.params$rotation.set)) {
+        }
+        else if (!is.null(self$function.params$rotation.set)) {
           if(is(self$function.params$rotation.set, "ENARotationSet")) {
             print("Using custom rotation.set.")
 
@@ -256,7 +192,8 @@ ENAset = R6::R6Class("ENAset",
           } else {
             stop("Supplied rotation.set is not an instance of ENARotationSet")
           }
-        } else {
+        }
+        else {
           stop("Unable to find or create a rotation set")
         }
        ###
@@ -281,17 +218,25 @@ ENAset = R6::R6Class("ENAset",
             self$centroids = positions$centroids
 
             self$rotation.set$node.positions = positions$node.positions
-          } else {
-            print("The node position method didn't return back the expected objects:")
-            print("    Expected: c('node.positions','centroids')");
-            print(paste("    Received: ",names(positions),sep=""));
           }
-        } else if (!is.null(self$function.params$rotation.set)) {
-          self$node.positions = self$function.params$rotation.set$node.positions
-        } else {
-          stop("Unable to determine the node positions either by calculating
-                them using `node.position.method` or using a supplied
-                `rotation.set`");
+          else {
+            stop(paste(
+                "The node position method didn't return back the expected objects:",
+                "\tExpected: c('node.positions','centroids')",
+                paste("\tReceived: ", names(positions), sep=""),
+                sep = "\n"
+            ));
+          }
+        }
+        else {
+          if (!is.null(self$function.params$rotation.set) && !is.null(self$function.params$rotation.set$node.positions)) {
+            self$node.positions = self$function.params$rotation.set$node.positions
+          }
+          else {
+            stop("Unable to determine the node positions either by calculating
+                  them using `node.position.method` or using a supplied
+                  `rotation.set`");
+          }
         }
        ###
 
@@ -304,8 +249,5 @@ ENAset = R6::R6Class("ENAset",
 
        return(self);
      }
-     #####
-     ## END: Private Functions
-     #####
    )
 )

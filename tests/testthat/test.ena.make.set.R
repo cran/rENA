@@ -30,6 +30,21 @@ test_that("Simple data.frame to accumulate and make set", {
   );
 })
 
+
+test_that("Disable sphere norm", {
+  accum <- ena.accumulate.data.file(
+    RS.data, units.by = c("UserName", "Condition"),
+    conversations.by = c("ActivityNumber", "GroupName"),
+    codes = codenames
+  );
+  set <- ena.make.set(accum, norm.by = fun_skip_sphere_norm)
+  set_normed <- ena.make.set(accum, norm.by = fun_sphere_norm)
+
+  proj <- as.vector(as.matrix(set$model$points.for.projection)[1,])
+  proj_normed <- as.vector(as.matrix(set_normed$model$points.for.projection)[1,])
+  testthat::expect_false(all(proj == proj_normed))
+})
+
 test_that("Test custom rotation.set", {
   df.file <- RS.data
 
@@ -54,6 +69,7 @@ test_that("Test custom rotation.set", {
   ))
   expect_equal(df_set_usrs$rotation$nodes, df_set_grps_usrs$rotation$nodes)
   expect_equal(df_set_grps$line.weights, df_set_grps_usrs$line.weights)
+  expect_equal(df_set_usrs$rotation$center.vec, df_set_grps_usrs$rotation$center.vec)
 
   testthat::expect_error(
     df_set_bogus <- ena.make.set(df_accum_grps, rotation.set = list()),
@@ -69,7 +85,7 @@ test_that("Test rotate by mean", {
   df.file <- RS.data
 
   conversations.by <- c("Condition", "ActivityNumber", "GroupName")
-  df_accum_usrs <- ena.accumulate.data.file(
+  df_accum_usrs <- rENA:::ena.accumulate.data.file(
     df.file, units.by = c("UserName", "Condition"),
     conversations.by = conversations.by, codes = codenames);
 
@@ -128,20 +144,22 @@ test_that("Test rotation with table for weights", {
   )
 })
 
-# test_that("Simple data.frame to accumulate and make set", {
-#   codenames <- c("Data", "Technical.Constraints", "Performance.Parameters",
-#     "Client.and.Consultant.Requests", "Design.Reasoning", "Collaboration");
-#
-#   data(RS.data)
-#   df.file <- RS.data
-#   accum <- ena.accumulate.data.file(
-#     RS.data, units.by = c("UserName", "Condition"),
-#     conversations.by = c("ActivityNumber", "GroupName"),
-#     codes = codenames
-#   );
-#   set <- ena.make.set(accum)
-#
-# })
+#####
+  # test_that("Simple data.frame to accumulate and make set", {
+  #   codenames <- c("Data", "Technical.Constraints", "Performance.Parameters",
+  #     "Client.and.Consultant.Requests", "Design.Reasoning", "Collaboration");
+  #
+  #   data(RS.data)
+  #   df.file <- RS.data
+  #   accum <- ena.accumulate.data.file(
+  #     RS.data, units.by = c("UserName", "Condition"),
+  #     conversations.by = c("ActivityNumber", "GroupName"),
+  #     codes = codenames
+  #   );
+  #   set <- ena.make.set(accum)
+  #
+  # })
+#####
 
 test_that("Test bad position method", {
   codenames <- c("Data", "Technical.Constraints", "Performance.Parameters",
@@ -163,7 +181,13 @@ test_that("Test bad position method", {
     regexp = "position method didn't return back the expected objects"
   )
 
-  custom_rotation <- structure(list(),class = "ena.rotation.set")
+  custom_rotation <- structure(list(), class = "ena.rotation.set")
+  testthat::expect_error(
+    ena.make.set(acc, rotation.by = NULL, rotation.set = custom_rotation),
+    regexp = "does not have a center vector"
+  )
+
+  custom_rotation$center.vec <- runif(choose(length(codenames), 2))
   testthat::expect_error(
     ena.make.set(acc, rotation.by = NULL, rotation.set = custom_rotation),
     regexp = "no rotation matrix"
@@ -184,24 +208,28 @@ test_that("Test bad position method", {
   )
 })
 
-# test_that("Test writeup output", {
-#   accum <- rENA:::ena.accumulate.data.file(
-#     RS.data, units.by = c("UserName", "Condition"),
-#     conversations.by = c("ActivityNumber", "GroupName"),
-#     codes = codenames
-#   );
-#   set <- ena.make.set(accum)
-#
-#   writeup <- suppressMessages(ena.writeup(set, theory = T, methods = T, type = "file", output_dir = tempdir()))
-#
-#   writeup_lines <- readLines(writeup)
-#   methods_para_2_start <- grep(x = writeup_lines, pattern = "We defined the units of analysis")
-#   methods_para_2_end <- methods_para_2_start + grep(x = writeup_lines[methods_para_2_start:length(writeup_lines)], pattern = "^$")[1] - 2
-#
-#   methods_para <- paste(writeup_lines[methods_para_2_start:methods_para_2_end], collapse = " ")
-#
-#   testthat::expect_equal(
-#     expected = "We defined the units of analysis as all lines of data associated with a single value of UserName subsetted by Condition. For example, one unit consisted of all the lines associated with Condition FirstGame.",
-#     object = methods_para
-#   )
-# })
+#####
+  test_that("Test writeup output", {
+    accum <- rENA:::ena.accumulate.data.file(
+      RS.data, units.by = c("UserName", "Condition"),
+      conversations.by = c("ActivityNumber", "GroupName"),
+      codes = codenames
+    );
+    set <- ena.make.set(accum)
+
+    writeup <- suppressWarnings(suppressMessages(ena.writeup(set, theory = T, methods = T, type = "file", output_dir = tempdir())))
+    writeup_lines <- readLines(writeup)
+    methods_para_2_start <- grep(x = writeup_lines, pattern = "We defined the units of analysis")
+    methods_para_2_end <- methods_para_2_start + grep(x = writeup_lines[methods_para_2_start:length(writeup_lines)], pattern = "^$")[1] - 2
+    methods_para <- paste(writeup_lines[methods_para_2_start:methods_para_2_end], collapse = " ")
+    testthat::expect_equal(
+      expected = "We defined the units of analysis as all lines of data associated with a single value of UserName subsetted by Condition. For example, one unit consisted of all the lines associated with Condition FirstGame.",
+      object = methods_para
+    )
+
+    writeup_lines <- suppressMessages(ena.writeup(set, theory = T, methods = T, type = "stream", output_dir = tempdir()))
+    testthat::expect_true(
+      grepl(x = writeup_lines, pattern = "ENA Theory")
+    )
+  })
+#####

@@ -1,17 +1,17 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ----message=F, warning=F, paged.print=T---------------------------------
+## ----message=F, warning=F, paged.print=T--------------------------------------
 library(rENA)
 data(RS.data)
 
-## ----echo=F, message=F, warning=F----------------------------------------
+## ----echo=F, message=F, warning=F---------------------------------------------
 library(plotly)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 
 units = RS.data[,c("Condition","UserName")]
 head(units)
@@ -31,7 +31,7 @@ meta = RS.data[,c("CONFIDENCE.Change",
                   "CONFIDENCE.Pre","CONFIDENCE.Post","C.Change")]
 head(meta)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 accum = ena.accumulate.data(
   units = units,
   conversation = conversation,
@@ -47,7 +47,7 @@ accum = ena.accumulate.data(
 ### codes in the adjacency.vector
 #head(accum$adjacency.matrix)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 set = ena.make.set(
   enadata = accum
 )
@@ -62,7 +62,7 @@ set = ena.make.set(
 ### The weight of each connection. Units are rows, columns the co-occurrence
 #head(set$line.weights)
 
-## ----echo=TRUE-----------------------------------------------------------
+## ----echo=TRUE----------------------------------------------------------------
 ### Subset rotated points for the first condition
 first.game.points = as.matrix(set$points$Condition$FirstGame)
 
@@ -74,7 +74,7 @@ plot = ena.plot.points(plot, points = first.game.points, confidence.interval = "
 plot = ena.plot.points(plot, points = second.game.points, confidence.interval = "box", colors = c("blue"))
 plot$plot
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 ### Using the same plot object above, we will be able to plot the means 
 ### alongside their corresponding units.
 plot = ena.plot(set, scale.to = list(x=-1:1, y=-1:1), title = "Groups and Means")
@@ -88,14 +88,14 @@ plot = ena.plot.group(plot, point = second.game.points,
                       colors =c("blue"), confidence.interval = "box")
 plot$plot
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 ### Subset lineweights for FirstGame and Calculate the colMeans
 first.game.lineweights = as.matrix(set$line.weights$Condition$FirstGame)
 
 ### Subset lineweights for SecondGame and Calculate the colMeans
 second.game.lineweights = as.matrix(set$line.weights$Condition$SecondGame)
 
-## ----Calculate Means and Their Differences of Two Groups-----------------
+## ----Calculate Means and Their Differences of Two Groups----------------------
 first.game.mean = as.vector(colMeans(first.game.lineweights))
 second.game.mean = as.vector(colMeans(second.game.lineweights))
 
@@ -109,23 +109,23 @@ head(first.game.mean, 5)
 head(second.game.mean, 5)
 head(subtracted.mean, 5)
 
-## ----Plot Network of Units in FirstGame----------------------------------
+## ----Plot Network of Units in FirstGame---------------------------------------
 #Plot subtracted network only
 plot.first = ena.plot(set, title = "FirstGame")
 plot.first = ena.plot.network(plot.first, network = first.game.mean)
 plot.first$plot
 
-## ----Plot Network of Units in SecondGame---------------------------------
+## ----Plot Network of Units in SecondGame--------------------------------------
 plot.second = ena.plot(set, title = "SecondGame")
 plot.second = ena.plot.network(plot.second, network = second.game.mean, colors = c("blue"))
 plot.second$plot
 
-## ----Plot a Subtracted Network-------------------------------------------
+## ----Plot a Subtracted Network------------------------------------------------
 plot.sub = ena.plot(set, title = "Subtracted")
 plot.sub = ena.plot.network(plot.sub, network = subtracted.mean)
 plot.sub$plot
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(magrittr)
 library(scales)
 

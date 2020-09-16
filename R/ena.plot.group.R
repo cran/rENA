@@ -89,14 +89,14 @@ ena.plot.group <- function(
 
   if(is.null(points)) {
     stop("Points must be provided.");
-  } else if(is(points, "ena.points")) {
+  }
+  else if(is(points, "ena.points")) {
     points = remove_meta_data(points)
   }
 
   ### problem if outlier and confidence intervals selected for crosshair
   if(confidence.interval == "crosshairs" && outlier.interval == "crosshairs") {
-    print("Confidence Interval and Outlier Interval cannot both be crosshair");
-    print("Plotting Outlier Interval as box");
+    message("Confidence Interval and Outlier Interval cannot both be crosshair. Plotting Outlier Interval as box");
     outlier.interval = "box";
   }
 
@@ -116,6 +116,7 @@ ena.plot.group <- function(
       }
       if(outlier.interval != "none") {
         outlier.interval.values = c(IQR(points[,1]), IQR(points[,2])) * 1.5;
+        outlier.interval.values = matrix(rep(outlier.interval.values, 2), ncol = 2, byrow = T) * c(-1, 1)
       }
 
       if(length(unique(colors)) > 1) {

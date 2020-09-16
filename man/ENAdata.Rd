@@ -4,15 +4,13 @@
 \name{ENAdata}
 \alias{ENAdata}
 \title{ENAdata R6class}
-\format{An object of class \code{R6ClassGenerator} of length 25.}
-\usage{
-ENAdata
-}
 \description{
 ENAdata R6class
-}
-\section{Fields}{
 
+ENAdata R6class
+}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{raw}}{A data frame constructed from the unit, convo, code, and metadata parameters of ena.accumulate.data}
 
@@ -30,11 +28,153 @@ ENAdata R6class
 
 \item{\code{trajectories}}{A list: units - data frame, for a given row tells which trajectory it's a part; step - data frame, where along the trajectory a row sits}
 
+\item{\code{adjacency.matrix}}{TBD}
+
+\item{\code{adjacency.vectors.raw}}{TBD}
+
 \item{\code{codes}}{A vector of code names}
 
 \item{\code{function.call}}{The string representation of function called and parameters provided}
 
-\item{\code{function.params}}{A list of all parameters sent to function call}
-}}
+\item{\code{function.params}}{A list of all parameters sent to function call
+Construct ENAdata}
+}
+\if{html}{\out{</div>}}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{ENAdata$new()}}
+\item \href{#method-process}{\code{ENAdata$process()}}
+\item \href{#method-get}{\code{ENAdata$get()}}
+\item \href{#method-add.metadata}{\code{ENAdata$add.metadata()}}
+\item \href{#method-clone}{\code{ENAdata$clone()}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENAdata$new(
+  file,
+  units = NULL,
+  units.used = NULL,
+  units.by = NULL,
+  conversations.by = NULL,
+  codes = NULL,
+  model = NULL,
+  weight.by = "binary",
+  window.size.back = 1,
+  window.size.forward = 0,
+  mask = NULL,
+  include.meta = T,
+  ...
+)}\if{html}{\out{</div>}}
+}
 
-\keyword{datasets}
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{file}}{TBD}
+
+\item{\code{units}}{TBD}
+
+\item{\code{units.used}}{TBD}
+
+\item{\code{units.by}}{TBD}
+
+\item{\code{conversations.by}}{TBD}
+
+\item{\code{codes}}{TBD}
+
+\item{\code{model}}{TBD}
+
+\item{\code{weight.by}}{TBD}
+
+\item{\code{window.size.back}}{TBD}
+
+\item{\code{window.size.forward}}{TBD}
+
+\item{\code{mask}}{TBD}
+
+\item{\code{include.meta}}{TBD}
+
+\item{\code{...}}{TBD}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Process accumulation
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-process"></a>}}
+\if{latex}{\out{\hypertarget{method-process}{}}}
+\subsection{Method \code{process()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENAdata$process()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+ENAdata
+Get property from object
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get"></a>}}
+\if{latex}{\out{\hypertarget{method-get}{}}}
+\subsection{Method \code{get()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENAdata$get(x = "data")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{character key to retrieve from object}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+value from object at x
+Add metadata
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add.metadata"></a>}}
+\if{latex}{\out{\hypertarget{method-add.metadata}{}}}
+\subsection{Method \code{add.metadata()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENAdata$add.metadata(merge = F)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{merge}}{logical (default: FALSE)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+data.frame
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENAdata$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

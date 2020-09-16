@@ -4,11 +4,72 @@
 \name{ENARotationSet}
 \alias{ENARotationSet}
 \title{ENARotationSet R6class}
-\format{An object of class \code{R6ClassGenerator} of length 25.}
-\usage{
-ENARotationSet
-}
 \description{
 ENARotationSet R6class
+
+ENARotationSet R6class
 }
-\keyword{datasets}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{rotation}}{TBD}
+
+\item{\code{node.positions}}{TBD}
+
+\item{\code{codes}}{TBD}
+
+\item{\code{eigenvalues}}{TBD
+Create ENARotationSet}
+}
+\if{html}{\out{</div>}}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{ENARotationSet$new()}}
+\item \href{#method-clone}{\code{ENARotationSet$clone()}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENARotationSet$new(rotation, codes, node.positions, eigenvalues = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{rotation}}{TBD}
+
+\item{\code{codes}}{TBD}
+
+\item{\code{node.positions}}{TBD}
+
+\item{\code{eigenvalues}}{TBD}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+ENARotationsSet
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ENARotationSet$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

@@ -4,9 +4,19 @@
 \alias{ena.plotter}
 \title{Wrapper to generate plots of units, groups, and networks}
 \usage{
-ena.plotter(set, groupVar = NULL, groups = NULL, points = FALSE,
-  mean = FALSE, network = TRUE, networkMultiplier = 1,
-  subtractionMultiplier = 1, unit = NULL, print.plots = F, ...)
+ena.plotter(
+  set,
+  groupVar = NULL,
+  groups = NULL,
+  points = FALSE,
+  mean = FALSE,
+  network = TRUE,
+  networkMultiplier = 1,
+  subtractionMultiplier = 1,
+  unit = NULL,
+  print.plots = F,
+  ...
+)
 }
 \arguments{
 \item{set}{an ena.set object}

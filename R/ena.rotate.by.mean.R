@@ -80,10 +80,6 @@ orthogonal_svd <- function(data, weights) {
   Q <- qr_ortho(weights)
   X.bar <- data %*% Q[, (ncol(weights) + 1):ncol(Q)]
   V <- prcomp(X.bar, scale. = F)$rotation
-  if (is(V, "numeric")) {
-    message("orthogonalSVD:  converting pca result to matrix")
-    V <- matrix(V, nrow = length(V))
-  }
 
   to_return <- (cbind(
     Q[, 1:ncol(weights)],

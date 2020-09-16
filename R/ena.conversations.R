@@ -47,6 +47,9 @@
 ena.conversations = function(set, units, units.by=NULL, codes=NULL, conversation.by = NULL, window = 4, conversation.exclude = c()) {
   # rawData = data.table::copy(set$enadata$raw);
   if(is.null(units.by)) {
+    if(!is(set, "ena.set")) {
+      stop("If units.by is NULL, set must be an ena.set object")
+    }
     units.by = set$`_function.params`$units.by;
   }
   # conversation.by = set$enadata$function.params$conversations.by;
@@ -83,7 +86,7 @@ ena.conversations = function(set, units, units.by=NULL, codes=NULL, conversation
   # codedUnitRowConvs = rawAcc[codedUnitRows,KEYCOL];
   codedUnitRowConvs2 = rawAcc2[codedUnitRows2,KEYCOL];
 
-  # codedUnitRowConvsAll = NULL;
+  codedUnitRowConvsAll = NULL;
   codedUnitRowConvsAll2 = NULL;
   unitRowsNotCooccurred = c()
   if(length(codedUnitRows2) > 0) {

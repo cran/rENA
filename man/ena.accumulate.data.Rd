@@ -4,12 +4,21 @@
 \alias{ena.accumulate.data}
 \title{Accumulate data from a data frame into a set of adjacency (co-occurrence) vectors}
 \usage{
-ena.accumulate.data(units = NULL, conversation = NULL, codes = NULL,
-  metadata = NULL, model = c("EndPoint", "AccumulatedTrajectory",
-  "SeparateTrajectory"), weight.by = "binary",
+ena.accumulate.data(
+  units = NULL,
+  conversation = NULL,
+  codes = NULL,
+  metadata = NULL,
+  model = c("EndPoint", "AccumulatedTrajectory", "SeparateTrajectory"),
+  weight.by = "binary",
   window = c("MovingStanzaWindow", "Conversation"),
-  window.size.back = 1, window.size.forward = 0, mask = NULL,
-  include.meta = T, as.list = T, ...)
+  window.size.back = 1,
+  window.size.forward = 0,
+  mask = NULL,
+  include.meta = T,
+  as.list = T,
+  ...
+)
 }
 \arguments{
 \item{units}{A data frame where the columns are the properties by which units will be identified}

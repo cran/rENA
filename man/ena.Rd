@@ -4,14 +4,30 @@
 \alias{ena}
 \title{Wrapper to generate, and optionally plot, an ENA model}
 \usage{
-ena(data, codes, units, conversation, metadata = NULL,
+ena(
+  data,
+  codes,
+  units,
+  conversation,
+  metadata = NULL,
   model = c("EndPoint", "AccumulatedTrajectory", "SeparateTrajectory"),
-  weight.by = "binary", window = c("MovingStanzaWindow",
-  "Conversation"), window.size.back = 1, include.meta = TRUE,
-  groupVar = NULL, groups = NULL, runTest = FALSE, points = FALSE,
-  mean = FALSE, network = TRUE, networkMultiplier = 1,
-  subtractionMultiplier = 1, unit = NULL, include.plots = T,
-  print.plots = F, ...)
+  weight.by = "binary",
+  window = c("MovingStanzaWindow", "Conversation"),
+  window.size.back = 1,
+  include.meta = TRUE,
+  groupVar = NULL,
+  groups = NULL,
+  runTest = FALSE,
+  points = FALSE,
+  mean = FALSE,
+  network = TRUE,
+  networkMultiplier = 1,
+  subtractionMultiplier = 1,
+  unit = NULL,
+  include.plots = T,
+  print.plots = F,
+  ...
+)
 }
 \arguments{
 \item{data}{data.frame with containing metadata and coded columns}

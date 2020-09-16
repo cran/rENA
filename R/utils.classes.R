@@ -38,6 +38,12 @@ as.ena.codes <- function(x) {
   class(x) = c("ena.codes", class(x))
   x
 }
+#' Re-class vector as ena.co.occurrence
+#'
+#' @param x Vector to re-class
+#'
+#' @return re-classed vector
+#' @export
 as.ena.co.occurrence <- function(x) {
   if(is.factor(x)) {
     x = as.character(x)

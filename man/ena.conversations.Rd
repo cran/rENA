@@ -4,8 +4,15 @@
 \alias{ena.conversations}
 \title{Find conversations by unit}
 \usage{
-ena.conversations(set, units, units.by = NULL, codes = NULL,
-  conversation.by = NULL, window = 4, conversation.exclude = c())
+ena.conversations(
+  set,
+  units,
+  units.by = NULL,
+  codes = NULL,
+  conversation.by = NULL,
+  window = 4,
+  conversation.exclude = c()
+)
 }
 \arguments{
 \item{set}{[TBD]}

@@ -1,6 +1,8 @@
 suppressMessages(library(rENA, quietly = T, verbose = F))
 context("Test functions accumulating data")
 
+codenames <- c("Data", "Technical.Constraints", "Performance.Parameters",
+  "Client.and.Consultant.Requests", "Design.Reasoning", "Collaboration");
 test_that("Null data errors", {
   df.whole <- data.frame(
     Name = c("J", "Z"),
@@ -351,12 +353,12 @@ test_that("Test forward windows", {
   );
   df.conversation <- data.frame(
     Day = c(1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2)
-  )
+  );
   df.codes <- data.frame(
     c1 = c(1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1),
     c2 = c(1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0),
     c3 = c(0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0)
-  )
+  );
 
   df_accum_inf_forward <- ena.accumulate.data(
     units = df.units, conversation = df.conversation, codes = df.codes,
@@ -365,4 +367,13 @@ test_that("Test forward windows", {
   expect_equal(as.numeric(as.matrix(
                 df_accum_inf_forward$connection.counts)[1, ]),
                 c(4, 6, 4))
+
+  df_accum_forward <- ena.accumulate.data(
+    units = df.units, conversation = df.conversation, codes = df.codes,
+    window.size.forward = 5, window.size.back = 5, weight.by = "binary"
+  );
+
+  expect_equal(as.numeric(as.matrix(
+                df_accum_forward$connection.counts)[1, ]),
+                c(5, 6, 6))
 })

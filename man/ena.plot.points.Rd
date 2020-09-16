@@ -4,15 +4,27 @@
 \alias{ena.plot.points}
 \title{Plot points on an ENAplot}
 \usage{
-ena.plot.points(enaplot, points = NULL,
-  point.size = enaplot$point$size, labels = NULL,
-  label.offset = "top left", label.group = NULL,
-  label.font.size = NULL, label.font.color = NULL,
-  label.font.family = NULL, shape = "circle", colors = NULL,
-  confidence.interval.values = NULL, confidence.interval = c("none",
-  "crosshairs", "box"), outlier.interval.values = NULL,
-  outlier.interval = c("none", "crosshairs", "box"), show.legend = T,
-  legend.name = "Points", texts = NULL, ...)
+ena.plot.points(
+  enaplot,
+  points = NULL,
+  point.size = enaplot$point$size,
+  labels = NULL,
+  label.offset = "top left",
+  label.group = NULL,
+  label.font.size = NULL,
+  label.font.color = NULL,
+  label.font.family = NULL,
+  shape = "circle",
+  colors = NULL,
+  confidence.interval.values = NULL,
+  confidence.interval = c("none", "crosshairs", "box"),
+  outlier.interval.values = NULL,
+  outlier.interval = c("none", "crosshairs", "box"),
+  show.legend = T,
+  legend.name = "Points",
+  texts = NULL,
+  ...
+)
 }
 \arguments{
 \item{enaplot}{\code{\link{ENAplot}} object to use for plotting}

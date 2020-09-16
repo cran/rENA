@@ -15,6 +15,7 @@
 #' @import parallel
 # @import RcppRoll
 # @import scales
+#' @import concatenate
 # @import
 # @import igraph
 #' @useDynLib rENA
