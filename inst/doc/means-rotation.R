@@ -31,7 +31,7 @@ accum = ena.accumulate.data(
   window.size.back = 4
 )
 
-## -----------------------------------------------------------------------------
+## ---- screenshot.force=FALSE--------------------------------------------------
 ## Save references to the two vectors for easier re-use
 first.game = accum$meta.data$Condition == "FirstGame"
 second.game = accum$meta.data$Condition == "SecondGame"

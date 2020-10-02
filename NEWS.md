@@ -1,3 +1,9 @@
+## rENA 0.2.1.1
+
+#### Bugs
+  * Removing test checking for output
+  * Including 'webshot' as Suggests to fix for issues on CRAN
+
 ## rENA 0.2.1.0
 
 #### Features

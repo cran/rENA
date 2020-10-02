@@ -209,27 +209,27 @@ test_that("Test bad position method", {
 })
 
 #####
-  test_that("Test writeup output", {
-    accum <- rENA:::ena.accumulate.data.file(
-      RS.data, units.by = c("UserName", "Condition"),
-      conversations.by = c("ActivityNumber", "GroupName"),
-      codes = codenames
-    );
-    set <- ena.make.set(accum)
-
-    writeup <- suppressWarnings(suppressMessages(ena.writeup(set, theory = T, methods = T, type = "file", output_dir = tempdir())))
-    writeup_lines <- readLines(writeup)
-    methods_para_2_start <- grep(x = writeup_lines, pattern = "We defined the units of analysis")
-    methods_para_2_end <- methods_para_2_start + grep(x = writeup_lines[methods_para_2_start:length(writeup_lines)], pattern = "^$")[1] - 2
-    methods_para <- paste(writeup_lines[methods_para_2_start:methods_para_2_end], collapse = " ")
-    testthat::expect_equal(
-      expected = "We defined the units of analysis as all lines of data associated with a single value of UserName subsetted by Condition. For example, one unit consisted of all the lines associated with Condition FirstGame.",
-      object = methods_para
-    )
-
-    writeup_lines <- suppressMessages(ena.writeup(set, theory = T, methods = T, type = "stream", output_dir = tempdir()))
-    testthat::expect_true(
-      grepl(x = writeup_lines, pattern = "ENA Theory")
-    )
-  })
+  # test_that("Test writeup output", {
+  #   accum <- rENA:::ena.accumulate.data.file(
+  #     RS.data, units.by = c("UserName", "Condition"),
+  #     conversations.by = c("ActivityNumber", "GroupName"),
+  #     codes = codenames
+  #   );
+  #   set <- ena.make.set(accum)
+  #
+  #   writeup <- suppressWarnings(suppressMessages(ena.writeup(set, theory = T, methods = T, type = "file", output_dir = tempdir())))
+  #   writeup_lines <- readLines(writeup)
+  #   methods_para_2_start <- grep(x = writeup_lines, pattern = "We defined the units of analysis")
+  #   methods_para_2_end <- methods_para_2_start + grep(x = writeup_lines[methods_para_2_start:length(writeup_lines)], pattern = "^$")[1] - 2
+  #   methods_para <- paste(writeup_lines[methods_para_2_start:methods_para_2_end], collapse = " ")
+  #   testthat::expect_equal(
+  #     expected = "We defined the units of analysis as all lines of data associated with a single value of UserName subsetted by Condition. For example, one unit consisted of all the lines associated with Condition FirstGame.",
+  #     object = methods_para
+  #   )
+  #
+  #   writeup_lines <- suppressMessages(ena.writeup(set, theory = T, methods = T, type = "stream", output_dir = tempdir()))
+  #   testthat::expect_true(
+  #     grepl(x = writeup_lines, pattern = "ENA Theory")
+  #   )
+  # })
 #####

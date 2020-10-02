@@ -109,23 +109,23 @@ head(first.game.mean, 5)
 head(second.game.mean, 5)
 head(subtracted.mean, 5)
 
-## ----Plot Network of Units in FirstGame---------------------------------------
+## ----Plot Network of Units in FirstGame, screenshot.force=FALSE---------------
 #Plot subtracted network only
 plot.first = ena.plot(set, title = "FirstGame")
 plot.first = ena.plot.network(plot.first, network = first.game.mean)
 plot.first$plot
 
-## ----Plot Network of Units in SecondGame--------------------------------------
+## ----Plot Network of Units in SecondGame, screenshot.force=FALSE--------------
 plot.second = ena.plot(set, title = "SecondGame")
 plot.second = ena.plot.network(plot.second, network = second.game.mean, colors = c("blue"))
 plot.second$plot
 
-## ----Plot a Subtracted Network------------------------------------------------
+## ----Plot a Subtracted Network, screenshot.force=FALSE------------------------
 plot.sub = ena.plot(set, title = "Subtracted")
 plot.sub = ena.plot.network(plot.sub, network = subtracted.mean)
 plot.sub$plot
 
-## -----------------------------------------------------------------------------
+## ---- screenshot.force=FALSE--------------------------------------------------
 library(magrittr)
 library(scales)
 

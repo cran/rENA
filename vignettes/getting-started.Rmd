@@ -163,20 +163,20 @@ head(second.game.mean, 5)
 head(subtracted.mean, 5)
 ```
 
-```{r Plot Network of Units in FirstGame}
+```{r Plot Network of Units in FirstGame, screenshot.force=FALSE}
 #Plot subtracted network only
 plot.first = ena.plot(set, title = "FirstGame")
 plot.first = ena.plot.network(plot.first, network = first.game.mean)
 plot.first$plot
 ```
 
-```{r Plot Network of Units in SecondGame}
+```{r Plot Network of Units in SecondGame, screenshot.force=FALSE}
 plot.second = ena.plot(set, title = "SecondGame")
 plot.second = ena.plot.network(plot.second, network = second.game.mean, colors = c("blue"))
 plot.second$plot
 ```
 
-```{r Plot a Subtracted Network}
+```{r Plot a Subtracted Network, screenshot.force=FALSE}
 plot.sub = ena.plot(set, title = "Subtracted")
 plot.sub = ena.plot.network(plot.sub, network = subtracted.mean)
 plot.sub$plot
@@ -186,7 +186,7 @@ plot.sub$plot
 
 Now we can combine everything together, and using the `magrittr` library, we can make things a bit easier.  The `magrittr` library passes the result of one function, using the forward-pipe operator `%>%`, as the first parameter to the next chained function. This removes the need to supply the plot parameter to each call.
 
-```{r }
+```{r, screenshot.force=FALSE}
 library(magrittr)
 library(scales)
 
