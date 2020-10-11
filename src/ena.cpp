@@ -246,7 +246,7 @@ DataFrame ref_window_df(
     int headRows = 0;
     int currRows2_n_rows = (int) currRows2.n_rows;
     if(currRows2_n_rows > 0 && window_back > 1 && row-1 >= 0) {
-      headRows = (int) (currRows2_n_rows - 1 - lastRow);
+      headRows = (int) (currRows2_n_rows - 1 - window_forward);
       if(headRows <= 0) {
         headRows = (int) 0;
       }

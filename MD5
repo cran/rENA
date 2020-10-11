@@ -1,7 +1,7 @@
-1eb6f7433fc2e310b0a76f534f975a67 *DESCRIPTION
+4b49b58016c159b747b316cb8d0d6761 *DESCRIPTION
 3a66c128e15db21fbc4f00d019125dee *LICENSE
 0f748f6fc50d7800f23267107985b34a *NAMESPACE
-fa17fa3c20a5e742223a83982af61040 *NEWS.md
+dff9fce232ca123dc4167c4b398db6d4 *NEWS.md
 7f46f8310c08e828313448387332b701 *R/ENAdata.R
 21288c45eb7b0a979cfe65ef51c8a95f *R/ENAplot.R
 9242b92880a5025b37f7af1ed18f1f5c *R/ENArotation.set.R
@@ -50,14 +50,14 @@ ae6915941db4d9ac969808f1d6fa85f8 *R/utils.R
 9ecce817d769f41fdffd31cee567b4ba *data/RS.data.rda
 93d85160cec62289f90068c16398b1de *demo/00Index
 e2dd2ba29b28ade821e17e5fb97c1b48 *demo/fullExample.R
-16d4ffa9807a2b69fbb7b4ac490f2a4e *inst/CITATION
+7ddeade4c3f27615276ee2484dded7b6 *inst/CITATION
 f79ef350721e3410d7cce3eeacdcbe46 *inst/_pkgdown.yml
 7442545863c6297d9f5880267f9cea65 *inst/doc/getting-started.R
 f9e1b09a4b080da59de89375a697d45e *inst/doc/getting-started.Rmd
-f50d50af9a2e559a5d5b26b4dc7407ba *inst/doc/getting-started.html
+228bee9b9784616a113a05cb1b2f9bac *inst/doc/getting-started.html
 50f1b0179faf6b13e7b11db4d0a8d26f *inst/doc/means-rotation.R
 17ecb4b2cdc8233d553f07bbb38108ad *inst/doc/means-rotation.Rmd
-cc43c166b1504adc1e28885835f510b1 *inst/doc/means-rotation.html
+569d0e0a9d535b433f545dc5397b842a *inst/doc/means-rotation.html
 9bc153f1ac120e45fbd86143e330858c *inst/include/rENA.h
 c6ae1e0a80ed24020aef6a8adde0654a *inst/include/rENA_RcppExports.h
 5952c3672397f67d9d091d5f844f4864 *inst/rmd/methods.plain
@@ -130,7 +130,7 @@ fff650233783a9060d97a20d06a1f069 *man/with_means.Rd
 3b58f7eecf5678363297f9d4f3aafe32 *src/Makevars
 3d1fc6a4cbdd742b42b2cf3761996b70 *src/Makevars.win
 c31ff3a20cfbcbdf45e884d3b5a31e93 *src/RcppExports.cpp
-d132ee74045d33a6cf400b781d53c69d *src/ena.cpp
+b0b426b04db64d44d36e3492c43b03ee *src/ena.cpp
 eef10bbd6786e332a71cb5e97c8e4cd2 *tests/testthat.R
 f641a255201a7c995423d3aa7fed0571 *tests/testthat/test-cohens.R
 095f036f7d9e1e265cbdaf51680d72cf *tests/testthat/test-convs.R
@@ -141,7 +141,7 @@ c38a3fa017ed4e9bbd51368f9efa13fe *tests/testthat/test-ena_wrapper.R
 19b8be5425551f7786ff4605900a9266 *tests/testthat/test-set_creator.R
 1e8820810faefcd7ff6d42c189714051 *tests/testthat/test-table_subsetting.R
 161898e664b5a99098315fd15421f654 *tests/testthat/test.connection.matrix.R
-fd92b5e64370b014deb1ff20a1c71eb8 *tests/testthat/test.ena.accumulate.data.file.R
+f9a7dfd49158efb1b66972b6ca3afccb *tests/testthat/test.ena.accumulate.data.file.R
 5abfb2936f066b716eb28d10a8adb094 *tests/testthat/test.ena.accumulations.R
 afa8943f16e9299f55d0007bdd3c303e *tests/testthat/test.ena.get.conversation.R
 f30670a25c8b628e862fb7aeb22c8a08 *tests/testthat/test.ena.group.R

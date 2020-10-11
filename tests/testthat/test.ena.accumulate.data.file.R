@@ -158,9 +158,12 @@ test_that("Simple forwarded metadata", {
     m2=c(1,2,3,4)
   );
 
-  df.accum = rENA:::ena.accumulate.data.file(df, units.by = c("Name"), conversations.by = c("Day"), codes = c("c1","c2","c3"));
+  df.accum = rENA:::ena.accumulate.data.file(df, units.by = c("Name"), conversations.by = c("Day"), codes = c("c1","c2","c3"), window.size.back = 4, weight.by = 'product');
 
   testthat::expect_true("m1" %in% colnames(df.accum$meta.data));
+
+  row_3_win_mat <- tcrossprod(apply((df[1:3, 3:5]), 2, sum)) - tcrossprod(apply((df[1:2, 3:5]), 2, sum))
+  all.equal(row_3_win_mat[upper.tri(row_3_win_mat)], as.numeric(as.matrix(df.accum$model$row.connection.counts)[3,]))
 2});
 test_that("Test trajectories", {
   fake.codes.len = 10;
