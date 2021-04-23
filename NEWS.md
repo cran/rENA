@@ -1,3 +1,19 @@
+## rENA 0.2.3
+
+#### Bugs
+  * Removed Vignettes
+
+#### Feature 
+  * Added option `center.align.to.origin` to `ena.make.set()`, when TRUE centers zero points to the origin (default: FALSE)
+
+## rENA 0.2.2.0
+
+#### Bugs
+  * Removed outline from plotted nodes in networks
+  
+#### Features
+  * Weighting function now applied at the line level, not at the unit level
+
 ## rENA 0.2.1.2
 
 #### Bugs

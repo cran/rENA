@@ -279,7 +279,10 @@ ena.plot.network = function(
     textposition = label.offset[rows.to.keep],
     marker = list(
       color = "#000000",
-      size = abs(nodes$weight)
+      size = abs(nodes$weight),
+      line = list(
+        width = 0
+      )
       #,name = labels[i] #rownames(nodes)[i]
     ),
     textfont = list (

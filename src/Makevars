@@ -1,18 +1,26 @@
-## -*- mode: makefile; -*-
-
-#F77 = /usr/local/bin/gfortran
-#FC = $F77
-#CXX =  /usr/local/clang6/bin/clang++  -Wall
-#LDFLAGS=-L/usr/local/clang6/lib
-#CC=  /usr/local/clang6/bin/clang
-#SHLIB_CXXLD=ccache /usr/local/clang6/bin/clang++
-#CXX11 =  /usr/local/clang6/bin/clang++
-#CXX98 =  /usr/local/clang6/bin/clang++
-#CXX14 =  /usr/local/clang6/bin/clang++
-CXX_STD = CXX14
-
-PKG_CXXFLAGS = -I../inst/include
+# ## -*- mode: makefile; -*-
+#
+# #F77 = /usr/local/bin/gfortran
+# #FC = $F77
+# #CXX =  /usr/local/clang6/bin/clang++  -Wall
+# #LDFLAGS=-L/usr/local/clang6/lib
+# #CC=  /usr/local/clang6/bin/clang
+# #SHLIB_CXXLD=ccache /usr/local/clang6/bin/clang++
+# #CXX11 =  /usr/local/clang6/bin/clang++
+# #CXX98 =  /usr/local/clang6/bin/clang++
+# #CXX14 =  /usr/local/clang6/bin/clang++
+# CXX_STD = CXX14
+#
+# PKG_CXXFLAGS = -I../inst/include
 PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+#
+#
+# #FLIBS = 'gfortran -print-search-dirs | grep ^libraries: | sed 's|libraries: =||' | sed 's|:| -L|g' | sed 's|^|-L|''
 
-
-#FLIBS = 'gfortran -print-search-dirs | grep ^libraries: | sed 's|libraries: =||' | sed 's|:| -L|g' | sed 's|^|-L|''
+CC=/usr/local/clang7/bin/clang
+CXX=/usr/local/clang7/bin/clang++
+CXX11=/usr/local/clang7/bin/clang++
+CXX14=/usr/local/clang7/bin/clang++
+CXX17=/usr/local/clang7/bin/clang++
+CXX1X=/usr/local/clang7/bin/clang++
+LDFLAGS=-L/usr/local/clang7/lib

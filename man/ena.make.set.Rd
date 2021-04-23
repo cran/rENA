@@ -11,7 +11,8 @@ ena.make.set(
   rotation.by = ena.svd,
   rotation.params = NULL,
   rotation.set = NULL,
-  endpoints.only = T,
+  endpoints.only = TRUE,
+  center.align.to.origin = FALSE,
   node.position.method = lws.positions.sq,
   as.list = TRUE,
   ...
@@ -31,6 +32,8 @@ ena.make.set(
 \item{rotation.set}{A previously-constructed  ENARotationSet object to use for the dimensional reduction}
 
 \item{endpoints.only}{A logical variable which determines whether to only show endpoints for trajectory models}
+
+\item{center.align.to.origin}{A logical variable when TRUE (default) determines aligns both point center and centroid center to the origin}
 
 \item{node.position.method}{A function to be used to determine node positions based on the dimensional reduction, default: lws.position.es()}
 

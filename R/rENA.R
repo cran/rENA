@@ -18,7 +18,7 @@
 #' @import concatenate
 # @import
 # @import igraph
-#' @useDynLib rENA
+#' @useDynLib rENA, .registration = TRUE
 NULL
 
 # @title Default rENA constants

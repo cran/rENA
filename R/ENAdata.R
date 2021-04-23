@@ -233,19 +233,19 @@ ENAdata <- R6::R6Class("ENAdata", public = list(
             rep(nrow(self$adjacency.vectors), length(adjCols))
           )
 
-      if( is.function(private$weight.by) ) {
-        cols <- colnames(self$adjacency.vectors)[
-                  grep("adjacency.code", colnames(self$adjacency.vectors))
-                ]
-        self$adjacency.vectors <- self$adjacency.vectors[,
-                                    lapply(
-                                      .SD,
-                                      private$weight.by
-                                    ),
-                                    .SDcols = cols,
-                                    by = 1:nrow(self$adjacency.vectors)
-                                  ]
-      }
+      # if( is.function(private$weight.by) ) {
+      #   cols <- colnames(self$adjacency.vectors)[
+      #             grep("adjacency.code", colnames(self$adjacency.vectors))
+      #           ]
+      #   self$adjacency.vectors <- self$adjacency.vectors[,
+      #                               lapply(
+      #                                 .SD,
+      #                                 private$weight.by
+      #                               ),
+      #                               .SDcols = cols,
+      #                               by = 1:nrow(self$adjacency.vectors)
+      #                             ]
+      # }
 
       if( self$function.params$include.meta == T) {
         self$metadata <- self$add.metadata(merge = F);

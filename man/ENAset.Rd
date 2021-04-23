@@ -46,8 +46,9 @@ ENAset R6class
 
 \item{\code{line.weights.non.zero}}{TBD}
 
-\item{\code{correlations}}{A data frame of spearman and pearson correlations for each dimension specified
+\item{\code{correlations}}{A data frame of spearman and pearson correlations for each dimension specified}
 
+\item{\code{center.align.to.origin}}{- align point and centroid centers to origin
 Create ENAset}
 }
 \if{html}{\out{</div>}}
@@ -74,7 +75,8 @@ Create ENAset}
   rotation.params = NULL,
   rotation.set = NULL,
   node.position.method = lws.positions.sq.R6,
-  endpoints.only = T,
+  endpoints.only = TRUE,
+  center.align.to.origin = FALSE,
   ...
 )}\if{html}{\out{</div>}}
 }

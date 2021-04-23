@@ -24,7 +24,7 @@
 #' @field line.weights.unrotated TBD
 #' @field line.weights.non.zero TBD
 #' @field correlations A data frame of spearman and pearson correlations for each dimension specified
-#'
+#' @field center.align.to.origin - align point and centroid centers to origin
 ####
 ENAset = R6::R6Class("ENAset",
   public = list(
@@ -56,7 +56,8 @@ ENAset = R6::R6Class("ENAset",
 
         #center.data = center_data_c,    ### made local to run
         node.position.method = lws.positions.sq.R6,
-        endpoints.only = T,
+        endpoints.only = TRUE,
+        center.align.to.origin = FALSE,
         ...
     ) {
        self$enadata <- enadata;
@@ -74,7 +75,7 @@ ENAset = R6::R6Class("ENAset",
        self$function.params$rotation.params <- rotation.params;
        self$function.params$rotation.set <- rotation.set;
        self$function.params$endpoints.only <- endpoints.only;
-
+       self$function.params$center.align.to.origin <- center.align.to.origin;
        private$args <- list(...);
      },
 
@@ -111,13 +112,15 @@ ENAset = R6::R6Class("ENAset",
     correlations = NULL,   #not formerly listed, comes from optimized node positions in egr.positions
     variance = NULL,     #was self$data$centered$latent
     centroids = NULL,
+    center.align.to.origin = FALSE,
     function.call = NULL,     #new - string reping function call
     function.params = list(   #list containing parameters function was called with
       norm.by = NULL,
       node.position.method = NULL,
       rotation.by = NULL,
       rotation.params = NULL,
-      endpoints.only = NULL
+      endpoints.only = NULL,
+      center.align.to.origin = FALSE
     )
   ),
 
@@ -139,6 +142,8 @@ ENAset = R6::R6Class("ENAset",
        #private$data.original = df[,grep("adjacency.code", colnames(df)), with=F];
        private$data.original = df;
 
+       # carry this out for node positioning
+       self$function.params$center.align.to.origin = self$center.align.to.origin;
 
        # Copy of the original data, this is used for all
        # further operations. Unlike, `data.original`, this
@@ -170,8 +175,16 @@ ENAset = R6::R6Class("ENAset",
        # FIX - store as $data$centered
        ###
        #### ISSUE
-       self$points.normed.centered = center_data_c(self$line.weights);
+       if (self$center.align.to.origin) {
+         # only centers non-zero networks
+         self$points.normed.centered = self$line.weights;
 
+         non_zero_rows <- rowSums(as.matrix(self$line.weights)) != 0;
+         self$points.normed.centered[non_zero_rows,] = center_data_c(self$line.weights[non_zero_rows,]);
+       }
+       else {
+        self$points.normed.centered = center_data_c(self$line.weights);
+       }
        colnames(self$points.normed.centered) = codeNames_tri;
        rownames(self$points.normed.centered) = rownames(df);
        attr(self$points.normed.centered, opts$UNIT_NAMES) = attr(self$enadata$adjacency.vectors.raw, opts$UNIT_NAMES)

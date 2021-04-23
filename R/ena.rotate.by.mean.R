@@ -25,7 +25,13 @@ ena.rotate.by.mean <- function(enaset, groups) {
     groups <- list(groups);
   }
 
-  data <- as.matrix(enaset$line.weights)
+  # data <- as.matrix(enaset$line.weights)
+  if (is.null(enaset$points.normed.centered)) {
+    data <- as.matrix(enaset$model$points.for.projection)
+  }
+  else {
+    data <- as.matrix(enaset$points.normed.centered)
+  }
   data <- scale(data, scale = F, center = T);
 
   col <- NULL

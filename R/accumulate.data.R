@@ -150,13 +150,30 @@ accumulate.data <- function(enadata) {
       ];
     # }
   }
+  # browser()
+
+  if( is.function(enadata$get("weight.by")) ) {
+    cols <- colnames(dfDT.co.occurrences)[
+              grep("adjacency.code", colnames(dfDT.co.occurrences))
+            ]
+    dfDT.co.occurrences <- dfDT.co.occurrences[,
+                                (cols) := lapply(
+                                  .SD,
+                                  enadata$get("weight.by")
+                                ),
+                                .SDcols = cols,
+                                by = 1:nrow(dfDT.co.occurrences)
+                           ]
+  }
+
 
   ###
   # Convert the generic `V` names to corresponding `adjacency.vector` names
   ###
-    colnames(dfDT.co.occurrences)[
-      grep("V\\d+", colnames(dfDT.co.occurrences))
-    ] <- codedTriNames
+    vCols <- grep("V\\d+", colnames(dfDT.co.occurrences))
+    if(length(vCols) == length(codedTriNames)) {
+      colnames(dfDT.co.occurrences)[vCols] <- codedTriNames
+    }
 
   ##
   # If units aren't supplied, use all available
