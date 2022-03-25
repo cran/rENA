@@ -76,7 +76,7 @@ Create ENAset}
   rotation.set = NULL,
   node.position.method = lws.positions.sq.R6,
   endpoints.only = TRUE,
-  center.align.to.origin = FALSE,
+  center.align.to.origin = TRUE,
   ...
 )}\if{html}{\out{</div>}}
 }
@@ -99,6 +99,8 @@ Create ENAset}
 \item{\code{node.position.method}}{TBD}
 
 \item{\code{endpoints.only}}{TBD}
+
+\item{\code{center.align.to.origin}}{TBD}
 
 \item{\code{...}}{TBD}
 }

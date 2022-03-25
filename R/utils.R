@@ -83,6 +83,19 @@ remove_meta_data <- function(x) {
 
    vals
 }
+
+#' Extract from ena.matrix easily using metadata
+#'
+#' @param x [TBD]
+#' @param i [TBD]
+#'
+#' @return [TBD]
+#' @export
+"$.ena.matrix" <- function (x, i) {
+   vals <- x[[which(colnames(x) == i)]]
+
+   vals
+}
 # "$.ena.plot" <- function(x, i) {
 #  browser()
 # }
@@ -251,7 +264,13 @@ means_rotate <- function(x, on = NULL) {
                .SDcols = c(x$`_function.params`$units)
             ])
       groupVar = x$`_function.params`$units[order(col_counts) == 1]
-      groups = levels(unique(x$model$raw.input[[groupVar]]))[1:2]
+      group_vars = unique(x$model$raw.input[[groupVar]])
+      if(!is.null(levels(group_vars))) {
+        groups = levels(group_vars)[1:2]
+      }
+      else {
+        groups = group_vars[1:2]
+      }
       # on_grps = list()
       # on_grps[[on]] = sapply(on_vals, function(v) {
       #    x$meta.data[[on]] == v
@@ -286,3 +305,32 @@ means_rotate <- function(x, on = NULL) {
       return(x)
    }
 }
+
+
+#' Extract points easily
+#'
+# @param x [TBD]
+# @param i [TBD]
+# @param j [TBD]
+# @param ... Passed to `[.data.table`
+# @param with.meta logical, currently defaults to TRUE, which includes the metadata columns.
+#
+# @return [TBD]
+# @export
+# "[.ena.matrix" <- function (x, i, j, by, keyby, ..., with.meta = TRUE) {
+#   orig.class <- class(x)
+#   x.unclass <- data.table::as.data.table(unclass(x))
+#
+#   if(with.meta == FALSE) {
+#     x.nometa <- x.unclass[, !find_meta_cols(x.unclass), with = F]
+#     x_ <- x.nometa[i, ..j, ...]
+#   }
+#   else {
+#     x_ <- x.unclass[i, j, by = by, keyby = keyby, ...]
+#     # if (!is.null(j)) {
+#     #   x_ <- x_[, ..j]
+#     # }
+#   }
+#   class(x_) <- orig.class
+#   x_
+# }

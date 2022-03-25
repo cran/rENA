@@ -12,7 +12,7 @@ ena.make.set(
   rotation.params = NULL,
   rotation.set = NULL,
   endpoints.only = TRUE,
-  center.align.to.origin = FALSE,
+  center.align.to.origin = TRUE,
   node.position.method = lws.positions.sq,
   as.list = TRUE,
   ...

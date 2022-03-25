@@ -41,6 +41,7 @@ ENAset = R6::R6Class("ENAset",
     #' @param rotation.set TBD
     #' @param node.position.method TBD
     #' @param endpoints.only TBD
+    #' @param center.align.to.origin TBD
     #' @param ... TBD
     #'
     #' @return ENAset
@@ -57,7 +58,7 @@ ENAset = R6::R6Class("ENAset",
         #center.data = center_data_c,    ### made local to run
         node.position.method = lws.positions.sq.R6,
         endpoints.only = TRUE,
-        center.align.to.origin = FALSE,
+        center.align.to.origin = TRUE,
         ...
     ) {
        self$enadata <- enadata;
@@ -112,7 +113,7 @@ ENAset = R6::R6Class("ENAset",
     correlations = NULL,   #not formerly listed, comes from optimized node positions in egr.positions
     variance = NULL,     #was self$data$centered$latent
     centroids = NULL,
-    center.align.to.origin = FALSE,
+    center.align.to.origin = TRUE,
     function.call = NULL,     #new - string reping function call
     function.params = list(   #list containing parameters function was called with
       norm.by = NULL,
@@ -120,7 +121,7 @@ ENAset = R6::R6Class("ENAset",
       rotation.by = NULL,
       rotation.params = NULL,
       endpoints.only = NULL,
-      center.align.to.origin = FALSE
+      center.align.to.origin = TRUE
     )
   ),
 

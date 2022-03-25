@@ -25,6 +25,10 @@ ENAplot = R6::R6Class("ENAplot",
       #' @param font.color TBD
       #' @param font.family TBD
       #' @param scale.to TBD
+      #' @param showticklabels TBD
+      #' @param autosize TBD
+      #' @param automargin TBD
+      #' @param axispadding TBD
       #' @param ... TBD
       #'
       #' @return ENAplot
@@ -58,6 +62,18 @@ ENAplot = R6::R6Class("ENAplot",
         if(!is.null(args$point.size)) {
           self$point$size = args$point.size
         }
+        if(!is.null(args$showticklabels)) {
+          self$showticklabels = args$showticklabels
+        }
+        if(!is.null(args$axispadding)) {
+          self$axispadding = args$axispadding
+        }
+        if(!is.null(args$autosize)) {
+          self$autosize = args$autosize
+        }
+        if(!is.null(args$automargin)) {
+          self$automargin = args$automargin
+        }
         self$enaset <- enaset;
 
         private$title <- title;
@@ -75,8 +91,10 @@ ENAplot = R6::R6Class("ENAplot",
           type ="scatter"
         );
 
+        self$plot <- plotly::config(p = self$plot, displayModeBar = args$displayModeBar);
+
         if (is.list(scale.to)) {
-          max.axis = max(abs(as.matrix(enaset$points)))*1.2
+          max.axis = max(abs(as.matrix(enaset$points)))*self$axispadding
           if(is.null(scale.to$x)) {
             axis.range.x = c(-max.axis, max.axis)
           }
@@ -92,13 +110,13 @@ ENAplot = R6::R6Class("ENAplot",
         }
         else {
           if(is.character(scale.to) && scale.to == "points") {
-            max.axis = max(abs(as.matrix(enaset$points)))*1.2
+            max.axis = max(abs(as.matrix(enaset$points)))*self$axispadding
           }
           else if (is.numeric(scale.to)) {
             max.axis = tail(scale.to, 1)
           }
           else {
-            max.axis = max(abs(as.matrix(enaset$rotation$nodes)))*1.2;
+            max.axis = max(abs(as.matrix(enaset$rotation$nodes)))*self$axispadding;
           }
           axis.range.x = axis.range.y = c(-max.axis, max.axis)
         }
@@ -107,7 +125,7 @@ ENAplot = R6::R6Class("ENAplot",
           titlefont = private$font,
           showgrid = F,
           zeroline = T,
-          showticklabels = T,
+          showticklabels = self$showticklabels,
           showgrid = T
           # range=c(-max.axis,max.axis)
         );
@@ -129,6 +147,7 @@ ENAplot = R6::R6Class("ENAplot",
           title =  title,
           xaxis = self$axes$x,
           yaxis = self$axes$y,
+          autosize = self$autosize,
           font = list (
             size = 12,
             color = private$font.color,
@@ -161,6 +180,10 @@ ENAplot = R6::R6Class("ENAplot",
       point = list(
         size = 5
       ),
+      showticklabels = F,
+      autosize = F,
+      automargin = T,
+      axispadding = 1.2,
       palette = c("#386CB0", "#F0027F", "#7FC97F", "#BEAED4",
                   "#FDC086","#FFFF99", "#BF5B17"),
       plotted = list(

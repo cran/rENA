@@ -1,3 +1,16 @@
+## rENA 0.2.4
+
+#### Features
+
+  * `center.align.to.origin` defaults to TRUE
+  * Layering in ena.plot.networks controlled by parameter `layers`, defaults to nodes on top with `c("edges", "nodes")`
+  * Position nodes on a unit circle (either on line from origin or equally spaced) or optimized (still the default)
+  * Added export of Microsoft Word document from `ena.writeup()` => `ena.writeup(set, type = 'file')`
+  
+#### Bugs
+  
+  * Fixed typos in `ena.writeup()`
+
 ## rENA 0.2.3
 
 #### Bugs

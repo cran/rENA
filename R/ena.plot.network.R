@@ -1,3 +1,68 @@
+plot_nodes <- function(...) {
+  enaplot$plot <- plotly::add_trace(
+    enaplot$plot,
+    type = "scatter",
+    data = nodes,
+    x = ~X1,
+    y = ~X2,
+    mode = mode,
+    textposition = label.offset[rows.to.keep],
+    marker = list(
+      color = "#000000",
+      size = abs(nodes$weight),
+      line = list(
+        width = 0
+      )
+      #,name = labels[i] #rownames(nodes)[i]
+    ),
+    textfont = list (
+      family = label.font.family,
+      size = label.font.size,
+      color = label.font.color
+    ),
+    text = labels[rows.to.keep], #rownames(nodes),
+    legendgroup = legend.name,
+    name = legend.name,
+    showlegend = show.legend,
+    hoverinfo = 'none'
+  );
+
+  return(enaplot$plot);
+}
+
+plot_edges <- function(...) {
+  if (length(network.edges.shapes) > 0 ) {
+    enaplot$plotted$networks[[length(enaplot$plotted$networks) + 1]] <- network.edges.shapes
+
+    for (n in 1:length(network.edges.shapes)) {
+      e = network.edges.shapes[[n]];
+
+      name = NULL;
+      show.legend = F;
+      this.name = paste(e$nodes[1],e$nodes[2], sep=".")
+      if(legend.include.edges) {
+        name = this.name;
+        show.legend = T;
+      }
+
+      enaplot$plot = plotly::add_trace(
+        enaplot$plot,
+        type = "scatter",
+        mode = "lines",
+        data = data.frame(X1=c(e$x0,e$x1), X2=c(e$y0,e$y1)),
+        x = ~X1, y = ~X2,
+        line = e$line,
+        opacity = e$opacity,
+        legendgroup = if(legend.include.edges == T) this.name else legend.name,
+        showlegend = show.legend,
+        name = name
+      )
+    }
+  }
+
+  return(enaplot$plot);
+}
+
 ##
 #' @title Plot an ENA network
 #'
@@ -16,6 +81,7 @@
 #' @param show.all.nodes A Logical variable, default: true
 #' @param threshold A vector of numeric min/max values, default: c(0,Inf) plotting . Edge weights below the min value will not be displayed; edge weights above the max value will be shown at the max value.
 #' @param thin.lines.in.front A logical, default: true
+#' @param layers ordering of layers, default: c("nodes", "edges")
 #' @param thickness A vector of numeric min/max values for thickness, default:  c(min(abs(network)), max(abs(network)))
 #' @param opacity A vector of numeric min/max values for opacity, default: thickness
 #' @param saturation A vector of numeric min/max values for saturation, default: thickness
@@ -94,6 +160,7 @@ ena.plot.network = function(
   show.all.nodes = T,
   threshold = c(0),
   thin.lines.in.front = T,
+  layers = c("nodes", "edges"),
 
   thickness = c(min(abs(network)), max(abs(network))),
   opacity = thickness,
@@ -109,7 +176,7 @@ ena.plot.network = function(
   label.font.family = enaplot$get("font.family"),
   legend.name = NULL,
   legend.include.edges = F,
-  scale.weights = T,
+  scale.weights = F,
   ...
 ) {
   if(choose(nrow(node.positions), 2) != length(network)) {
@@ -125,7 +192,8 @@ ena.plot.network = function(
     if(is.null(labels)) {
       labels <- node.positions$code
     }
-  } else {
+  }
+  else {
     if(is.matrix(node.positions)) {
       node.positions <- as.data.frame(node.positions)
     }
@@ -162,7 +230,8 @@ ena.plot.network = function(
     multiplier.mask = ((network.scaled >= 0) * 1) - ((network.scaled < 0) * 1)
     if(length(threshold) == 1) {
       threshold[2] = Inf;
-    } else if(threshold[2] < threshold[1]) {
+    }
+    else if(threshold[2] < threshold[1]) {
       stop("Minimum threshold value must be less than the maximum value.");
     }
 
@@ -181,9 +250,8 @@ ena.plot.network = function(
   network.opacity = abs(network.scaled);
 
   network.to.keep = (network != 0) * 1
-  if(!is.null(args$scale.weights) && args$scale.weights == T) {
+  if(scale.weights == T) {
     network.scaled = network * (1 / max(abs(network)));
-
     network.thickness = scales::rescale(x = abs(network.scaled), to = scale.range, from = thickness);
   }
   network.scaled = network.scaled * network.to.keep
@@ -245,7 +313,8 @@ ena.plot.network = function(
 
   if(thin.lines.in.front) {
     network.edges.shapes = network.edges.shapes[rev(order(sapply(network.edges.shapes, "[[", "size")))]
-  } else {
+  }
+  else {
     network.edges.shapes = network.edges.shapes[order(sapply(network.edges.shapes, "[[", "size"))]
   }
 
@@ -259,7 +328,12 @@ ena.plot.network = function(
   if(!is.null(args$labels.hide) && args$labels.hide == T) {
     mode="markers"
   }
-  nodes$weight = scales::rescale((nodes$weight * (1 / max(abs(nodes$weight)))), node.size) # * enaplot$get("multiplier"));
+  if( any(nodes$weight > 0)) {
+    nodes$weight = scales::rescale((nodes$weight * (1 / max(abs(nodes$weight)))), node.size) # * enaplot$get("multiplier"));
+  }
+  else {
+    nodes$weight = node.size[2]
+  }
 
   show.legend = !is.null(legend.name);
   if(legend.include.edges) {
@@ -269,61 +343,12 @@ ena.plot.network = function(
     show.legend = T;
   }
 
-  enaplot$plot = plotly::add_trace(
-    enaplot$plot,
-    type = "scatter",
-    data = nodes,
-    x = ~X1,
-    y = ~X2,
-    mode = mode,
-    textposition = label.offset[rows.to.keep],
-    marker = list(
-      color = "#000000",
-      size = abs(nodes$weight),
-      line = list(
-        width = 0
-      )
-      #,name = labels[i] #rownames(nodes)[i]
-    ),
-    textfont = list (
-      family = label.font.family,
-      size = label.font.size,
-      color = label.font.color
-    ),
-    text = labels[rows.to.keep], #rownames(nodes),
-    legendgroup = legend.name,
-    name = legend.name,
-    showlegend = show.legend,
-    hoverinfo = 'none'
-  );
+  # browser()
+  environment(plot_nodes) <- environment()
+  environment(plot_edges) <- environment()
 
-  if (length(network.edges.shapes) > 0 ) {
-    enaplot$plotted$networks[[length(enaplot$plotted$networks) + 1]] <- network.edges.shapes
-
-    for (n in 1:length(network.edges.shapes)) {
-      e = network.edges.shapes[[n]];
-
-      name = NULL;
-      show.legend = F;
-      this.name = paste(e$nodes[1],e$nodes[2], sep=".")
-      if(legend.include.edges) {
-        name = this.name;
-        show.legend = T;
-      }
-
-      enaplot$plot = plotly::add_trace(
-        enaplot$plot,
-        type = "scatter",
-        mode = "lines",
-        data = data.frame(X1=c(e$x0,e$x1), X2=c(e$y0,e$y1)),
-        x = ~X1, y = ~X2,
-        line = e$line,
-        opacity = e$opacity,
-        legendgroup = if(legend.include.edges == T) this.name else legend.name,
-        showlegend = show.legend,
-        name = name
-      )
-    }
+  for(layer in layers) {
+    enaplot$plot <- do.call(what = paste0("plot_", layer), args = list())
   }
 
   enaplot

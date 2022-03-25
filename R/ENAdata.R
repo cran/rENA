@@ -140,6 +140,7 @@ ENAdata <- R6::R6Class("ENAdata", public = list(
         meta_avail <- colnames(self$raw)[
           -which(colnames(self$raw) %in%
                   c(self$codes, private$units.by, private$conversations.by))]
+                  # c(self$codes, private$units.by))] # private$conversations.by))]
 
         meta_avail <- meta_avail[which(meta_avail != "ENA_UNIT")]
         meta_cols_to_use <- meta_avail[apply(self$raw[, lapply(.SD, uniqueN),

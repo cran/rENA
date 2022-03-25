@@ -8,10 +8,25 @@
 #include <cmath>
 #include <RcppArmadillo.h>
 
+#ifdef __GNUC__
+#undef __GNUC__
+#endif
+#ifdef __clang__
+#undef __clang__
+#endif
+#define RCPP_DEMANGLER_ENABLED 0
+
 using namespace Rcpp;
 using namespace arma;
 using namespace std;
 
+//' Fast combn choose 2
+//'
+//' @param n TBD
+//' @description faster combn alternative
+//'
+//' @export
+// [[Rcpp::export]]
 arma::umat combn_c2(double n) {
   double n_combos = ( n * ( n - 1 ) ) / 2;
   arma::umat out = zeros<arma::umat>(2, n_combos);
@@ -32,23 +47,45 @@ arma::umat combn_c2(double n) {
 //'
 //' @param points TBD
 //' @param centroids TBD
+//' @param conf_level TBD
 //' @description Calculate both Pearson correlations for the
 //' provided points and centorids
 //' @export
 // [[Rcpp::export]]
-arma::umat ena_correlation(arma::umat points, arma::umat centroids) {
+arma::mat ena_correlation(arma::mat points, arma::mat centroids, double conf_level = 0.95) {
   arma::umat pComb = combn_c2(points.n_rows);
   arma::umat point1 = pComb.row(0);
   arma::umat point2 = pComb.row(1);
 
-  arma::umat pts_diff = points.rows(point1) - points.rows(point2);
-  arma::umat cts_diff = centroids.rows(point1) - centroids.rows(point2);
+  arma::mat pts_diff = points.rows(point1) - points.rows(point2);
+  arma::mat cts_diff = centroids.rows(point1) - centroids.rows(point2);
+  arma::mat cor_result = arma::cor(pts_diff, cts_diff);
 
-  arma::umat out(2, 1);
-  out.row(0) = cor(pts_diff.col(0), cts_diff.col(0));
-  out.row(1) = cor(pts_diff.col(1), cts_diff.col(1));
+  NumericVector v = { (1 + conf_level) / 2 };
+  NumericVector q = Rcpp::qnorm(v, 0.0, 1.0);
+  double qq = q(0);
 
-  return out;
+  arma::mat out(points.n_cols, 3);
+
+  int n = point1.n_cols;
+  double r, z, sigma, cint_lower, cint_upper;
+  for(uword i = 0; i < points.n_cols; i++) {
+    r = cor_result(i,i);
+    out(i, 0) = r;
+
+    z = atanh(r);
+    sigma = 1 / sqrt(n - 3);
+
+    cint_lower = z - sigma * qq;
+    cint_lower = tanh(cint_lower);
+    out(i, 1) = cint_lower;
+
+    cint_upper = z + sigma * qq;
+    cint_upper = tanh(cint_upper);
+    out(i, 2) = cint_upper;
+  }
+
+  return(out);
 }
 
 //' Merge data frame columns
@@ -476,36 +513,36 @@ Rcpp::List lws_lsq_positions(arma::mat adjMats, arma::mat t, int numDims) { // =
 
 
 /*** R
-fake_codes_len <- 10;
-fake.codes <- function(x) sample(0:1, fake_codes_len, replace = T)
-codes <- paste("Codes", LETTERS[1:fake_codes_len], sep = "-")
-
-df.units <- data.frame(
-  Name = rep(c("J", "Z"), 6)
-);
-df.conversation <- data.frame(
-  Day = c(1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2)
-)
-df.codes <- data.frame(
-  c1 = c(1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1),
-  c2 = c(1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0),
-  c3 = c(0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0)
-);
-df <- cbind(df.units, df.conversation);
-df <- cbind(df, df.codes);
-dfDT_codes <- data.table::data.table(df);
-
-
-units.by <- colnames(units);
-convesration.by <- colnames(df.conversation);
-codes <- colnames(df.codes);
-
-initial_cols <- c(units.by, codes)
-just_codes <- c(codes)
-
-vL <- length(codes);
-adjacency.length <- ( (vL * (vL + 1)) / 2) - vL ;
-codedTriNames <- paste("adjacency.code",rep(1:adjacency.length), sep=".");
+# fake_codes_len <- 10;
+# fake.codes <- function(x) sample(0:1, fake_codes_len, replace = T)
+# codes <- paste("Codes", LETTERS[1:fake_codes_len], sep = "-")
+#
+# df.units <- data.frame(
+#   Name = rep(c("J", "Z"), 6)
+# );
+# df.conversation <- data.frame(
+#   Day = c(1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2)
+# )
+# df.codes <- data.frame(
+#   c1 = c(1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1),
+#   c2 = c(1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0),
+#   c3 = c(0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0)
+# );
+# df <- cbind(df.units, df.conversation);
+# df <- cbind(df, df.codes);
+# dfDT_codes <- data.table::data.table(df);
+#
+#
+# units.by <- colnames(units);
+# convesration.by <- colnames(df.conversation);
+# codes <- colnames(df.codes);
+#
+# initial_cols <- c(units.by, codes)
+# just_codes <- c(codes)
+#
+# vL <- length(codes);
+# adjacency.length <- ( (vL * (vL + 1)) / 2) - vL ;
+# codedTriNames <- paste("adjacency.code",rep(1:adjacency.length), sep=".");
 
 # df.accum.sep  <- ena.accumulate.data(
 #     units = df.units, conversation = df.conversation, codes = df.codes)
@@ -528,18 +565,18 @@ codedTriNames <- paste("adjacency.code",rep(1:adjacency.length), sep=".");
 # ]
 # print(accums)
 
-accums2 <- dfDT_codes[,
-  (codedTriNames) := ref_window_df(
-    .SD[, .SD, .SDcols = just_codes],
-    windowSize = 5,
-    windowForward = 5,
-    binary = TRUE
-  ),
-  by = convesration.by,
-  .SDcols = initial_cols,
-  with = T
-]
-print(accums2)
+# accums2 <- dfDT_codes[,
+#   (codedTriNames) := ref_window_df(
+#     .SD[, .SD, .SDcols = just_codes],
+#     windowSize = 5,
+#     windowForward = 5,
+#     binary = TRUE
+#   ),
+#   by = convesration.by,
+#   .SDcols = initial_cols,
+#   with = T
+# ]
+# print(accums2)
 
 # accums3 <- dfDT_codes[,
 #   (codedTriNames) := ref_window_df(
@@ -553,4 +590,6 @@ print(accums2)
 #   with = T
 # ]
 # print(accums3)
+
+# ena_correlation(as.matrix(set$points)[,1:2], as.matrix(set$model$centroids)[,1:2])
 */

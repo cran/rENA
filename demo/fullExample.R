@@ -2,15 +2,16 @@ codeNames = c("Data","Technical.Constraints","Performance.Parameters","Client.an
 accum = ena.accumulate.data(
   units = RS.data[,c("Condition","UserName")],
   conversation = RS.data[,c("Condition","GroupName")],
-  metadata = RS.data[,c("CONFIDENCE.Change","CONFIDENCE.Pre","CONFIDENCE.Post","C.Change")],
+  metadata = RS.data[,c("CONFIDENCE.Change","CONFIDENCE.Pre","CONFIDENCE.Post","C.Change","GroupName")],
   codes = RS.data[,codeNames],
   model = "EndPoint",
-  window.size.back = 4
+  window.size.back = 4,
+  as.list = FALSE
 );
 set = ena.make.set(
-  enadata = accum,
-  rotation.by = ena.rotate.by.mean,
-  rotation.params = list(FirstGame=accum$meta.data$Condition=="FirstGame", SecondGame=accum$meta.data$Condition=="SecondGame")
+  enadata = accum
+  # ,rotation.by = ena.rotate.by.mean,
+  # rotation.params = list(FirstGame=accum$meta.data$Condition=="FirstGame", SecondGame=accum$meta.data$Condition=="SecondGame")
 );
 
 ### Subset rotated points and plot Condition 1 Group Mean

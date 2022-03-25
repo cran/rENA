@@ -71,6 +71,14 @@ Create ENApolot}
 \item{\code{scale.to}}{TBD}
 
 \item{\code{...}}{TBD}
+
+\item{\code{showticklabels}}{TBD}
+
+\item{\code{autosize}}{TBD}
+
+\item{\code{automargin}}{TBD}
+
+\item{\code{axispadding}}{TBD}
 }
 \if{html}{\out{</div>}}
 }

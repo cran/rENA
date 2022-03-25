@@ -9,22 +9,62 @@
 
 using namespace Rcpp;
 
-// ena_correlation
-arma::umat ena_correlation(arma::umat points, arma::umat centroids);
-static SEXP _rENA_ena_correlation_try(SEXP pointsSEXP, SEXP centroidsSEXP) {
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
+// combn_c2
+arma::umat combn_c2(double n);
+static SEXP _rENA_combn_c2_try(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< arma::umat >::type points(pointsSEXP);
-    Rcpp::traits::input_parameter< arma::umat >::type centroids(centroidsSEXP);
-    rcpp_result_gen = Rcpp::wrap(ena_correlation(points, centroids));
+    Rcpp::traits::input_parameter< double >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(combn_c2(n));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _rENA_ena_correlation(SEXP pointsSEXP, SEXP centroidsSEXP) {
+RcppExport SEXP _rENA_combn_c2(SEXP nSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_rENA_ena_correlation_try(pointsSEXP, centroidsSEXP));
+        rcpp_result_gen = PROTECT(_rENA_combn_c2_try(nSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
+// ena_correlation
+arma::mat ena_correlation(arma::mat points, arma::mat centroids, double conf_level);
+static SEXP _rENA_ena_correlation_try(SEXP pointsSEXP, SEXP centroidsSEXP, SEXP conf_levelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type points(pointsSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type centroids(centroidsSEXP);
+    Rcpp::traits::input_parameter< double >::type conf_level(conf_levelSEXP);
+    rcpp_result_gen = Rcpp::wrap(ena_correlation(points, centroids, conf_level));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _rENA_ena_correlation(SEXP pointsSEXP, SEXP centroidsSEXP, SEXP conf_levelSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_rENA_ena_correlation_try(pointsSEXP, centroidsSEXP, conf_levelSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -434,7 +474,8 @@ RcppExport SEXP _rENA_lws_lsq_positions(SEXP adjMatsSEXP, SEXP tSEXP, SEXP numDi
 static int _rENA_RcppExport_validate(const char* sig) { 
     static std::set<std::string> signatures;
     if (signatures.empty()) {
-        signatures.insert("arma::umat(*ena_correlation)(arma::umat,arma::umat)");
+        signatures.insert("arma::umat(*combn_c2)(double)");
+        signatures.insert("arma::mat(*ena_correlation)(arma::mat,arma::mat,double)");
         signatures.insert("std::vector<std::string>(*merge_columns_c)(DataFrame,CharacterVector,std::string)");
         signatures.insert("arma::rowvec(*vector_to_ut)(arma::mat)");
         signatures.insert("std::vector<std::string>(*svector_to_ut)(std::vector<std::string>)");
@@ -452,6 +493,7 @@ static int _rENA_RcppExport_validate(const char* sig) {
 
 // registerCCallable (register entry points for exported C++ functions)
 RcppExport SEXP _rENA_RcppExport_registerCCallable() { 
+    R_RegisterCCallable("rENA", "_rENA_combn_c2", (DL_FUNC)_rENA_combn_c2_try);
     R_RegisterCCallable("rENA", "_rENA_ena_correlation", (DL_FUNC)_rENA_ena_correlation_try);
     R_RegisterCCallable("rENA", "_rENA_merge_columns_c", (DL_FUNC)_rENA_merge_columns_c_try);
     R_RegisterCCallable("rENA", "_rENA_vector_to_ut", (DL_FUNC)_rENA_vector_to_ut_try);
@@ -469,7 +511,8 @@ RcppExport SEXP _rENA_RcppExport_registerCCallable() {
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rENA_ena_correlation", (DL_FUNC) &_rENA_ena_correlation, 2},
+    {"_rENA_combn_c2", (DL_FUNC) &_rENA_combn_c2, 1},
+    {"_rENA_ena_correlation", (DL_FUNC) &_rENA_ena_correlation, 3},
     {"_rENA_merge_columns_c", (DL_FUNC) &_rENA_merge_columns_c, 3},
     {"_rENA_vector_to_ut", (DL_FUNC) &_rENA_vector_to_ut, 1},
     {"_rENA_svector_to_ut", (DL_FUNC) &_rENA_svector_to_ut, 1},

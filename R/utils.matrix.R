@@ -12,8 +12,9 @@ as.matrix.ena.line.weights <- function(x, ..., square = FALSE) {
   # if(!is.null(args$square))
   #   square = args$square
 
-  class(x) = class(x)[-1]
-  rows = x[, !find_meta_cols(x), with = F]
+  # class(x) = class(x)[-1]
+  x.unclass <- data.table::as.data.table(unclass(x))
+  rows = x.unclass[, !find_meta_cols(x.unclass), with = F]
 
   if(square) {
     upperTriSize = ncol(rows)

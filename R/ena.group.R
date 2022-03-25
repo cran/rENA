@@ -44,16 +44,16 @@ ena.group <- function(
     points.dt = pts;
 
     if(is.logical(by)) {
-      points.dt.means = points.dt[by, lapply(.SD, m), .SDcols = find_dimension_cols(points.dt) | find_code_cols(points.dt)];
+      points.dt.means = points.dt[by, { lapply(.SD, m) }, .SDcols = find_dimension_cols(points.dt) | find_code_cols(points.dt)];
       if(length(names) == 1) {
         points.dt.means[['ENA_GROUP_NAME']] <- as.ena.metadata(names)
       }
     }
     else if(all(by %in% colnames(pts))) {
       points.dt.means <- points.dt[,
-                          lapply(.SD, function(x) {
+                          {lapply(.SD, function(x) {
                             get(paste0("as.", class(x)[1]))(m(x))
-                          }),
+                          })},
                           by = by,
                           .SDcols = find_dimension_cols(points.dt) | find_code_cols(points.dt)
                         ];

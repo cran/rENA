@@ -14,6 +14,7 @@ ena.plot.network(
   show.all.nodes = T,
   threshold = c(0),
   thin.lines.in.front = T,
+  layers = c("nodes", "edges"),
   thickness = c(min(abs(network)), max(abs(network))),
   opacity = thickness,
   saturation = thickness,
@@ -26,7 +27,7 @@ ena.plot.network(
   label.font.family = enaplot$get("font.family"),
   legend.name = NULL,
   legend.include.edges = F,
-  scale.weights = T,
+  scale.weights = F,
   ...
 )
 }
@@ -48,6 +49,8 @@ ena.plot.network(
 \item{threshold}{A vector of numeric min/max values, default: c(0,Inf) plotting . Edge weights below the min value will not be displayed; edge weights above the max value will be shown at the max value.}
 
 \item{thin.lines.in.front}{A logical, default: true}
+
+\item{layers}{ordering of layers, default: c("nodes", "edges")}
 
 \item{thickness}{A vector of numeric min/max values for thickness, default:  c(min(abs(network)), max(abs(network)))}
 

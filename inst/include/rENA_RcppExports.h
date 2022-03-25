@@ -25,17 +25,17 @@ namespace rENA {
         }
     }
 
-    inline arma::umat ena_correlation(arma::umat points, arma::umat centroids) {
-        typedef SEXP(*Ptr_ena_correlation)(SEXP,SEXP);
-        static Ptr_ena_correlation p_ena_correlation = NULL;
-        if (p_ena_correlation == NULL) {
-            validateSignature("arma::umat(*ena_correlation)(arma::umat,arma::umat)");
-            p_ena_correlation = (Ptr_ena_correlation)R_GetCCallable("rENA", "_rENA_ena_correlation");
+    inline arma::umat combn_c2(double n) {
+        typedef SEXP(*Ptr_combn_c2)(SEXP);
+        static Ptr_combn_c2 p_combn_c2 = NULL;
+        if (p_combn_c2 == NULL) {
+            validateSignature("arma::umat(*combn_c2)(double)");
+            p_combn_c2 = (Ptr_combn_c2)R_GetCCallable("rENA", "_rENA_combn_c2");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_ena_correlation(Shield<SEXP>(Rcpp::wrap(points)), Shield<SEXP>(Rcpp::wrap(centroids)));
+            rcpp_result_gen = p_combn_c2(Shield<SEXP>(Rcpp::wrap(n)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -44,6 +44,27 @@ namespace rENA {
         if (rcpp_result_gen.inherits("try-error"))
             throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
         return Rcpp::as<arma::umat >(rcpp_result_gen);
+    }
+
+    inline arma::mat ena_correlation(arma::mat points, arma::mat centroids, double conf_level = 0.95) {
+        typedef SEXP(*Ptr_ena_correlation)(SEXP,SEXP,SEXP);
+        static Ptr_ena_correlation p_ena_correlation = NULL;
+        if (p_ena_correlation == NULL) {
+            validateSignature("arma::mat(*ena_correlation)(arma::mat,arma::mat,double)");
+            p_ena_correlation = (Ptr_ena_correlation)R_GetCCallable("rENA", "_rENA_ena_correlation");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_ena_correlation(Shield<SEXP>(Rcpp::wrap(points)), Shield<SEXP>(Rcpp::wrap(centroids)), Shield<SEXP>(Rcpp::wrap(conf_level)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<arma::mat >(rcpp_result_gen);
     }
 
     inline std::vector<std::string> merge_columns_c(DataFrame df, CharacterVector cols, std::string sep = ".") {

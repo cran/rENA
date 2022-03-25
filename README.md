@@ -2,8 +2,8 @@
 
 [![cran status](https://www.r-pkg.org/badges/version-ago/rENA)](https://cran.r-project.org/package=rENA) 
 [![cran downloads](https://cranlogs.r-pkg.org/badges/grand-total/rENA)](https://cranlogs.r-pkg.org/badges/grand-total/rENA) 
-[![pipeline status](https://gitlab.com/epistemic-analytics/qe-packages/rENA/badges/master/pipeline.svg)](https://gitlab.com/epistemic-analytics/qe-packages/rENA/-/commits/master)
-[![coverage report](https://gitlab.com/epistemic-analytics/qe-packages/rENA/badges/master/coverage.svg)](https://gitlab.com/epistemic-analytics/qe-packages/rENA/-/commits/master)
+[![pipeline status](https://gitlab.com/epistemic-analytics/qe-packages/rENA/badges/main/pipeline.svg)](https://gitlab.com/epistemic-analytics/qe-packages/rENA/-/commits/main)
+[![coverage report](https://gitlab.com/epistemic-analytics/qe-packages/rENA/badges/main/coverage.svg)](https://gitlab.com/epistemic-analytics/qe-packages/rENA/-/commits/main)
 
 ## What is ENA
 
@@ -26,11 +26,11 @@ install.packages("rENA")
 
 ### Development Version
 
-[![pipeline status](https://gitlab.com/epistemic-analytics/qe-packages/rENA/badges/master/pipeline.svg)](https://gitlab.com/epistemic-analytics/qe-packages/rENA/-/commits/master)
-[![coverage report](https://gitlab.com/epistemic-analytics/qe-packages/rENA/badges/master/coverage.svg)](https://gitlab.com/epistemic-analytics/qe-packages/rENA/-/commits/master)
+[![pipeline status](https://gitlab.com/epistemic-analytics/qe-packages/rENA/badges/main/pipeline.svg)](https://gitlab.com/epistemic-analytics/qe-packages/rENA/-/commits/main)
+[![coverage report](https://gitlab.com/epistemic-analytics/qe-packages/rENA/badges/main/coverage.svg)](https://gitlab.com/epistemic-analytics/qe-packages/rENA/-/commits/main)
 
 ```
-install.packages("rENA", repos = "https://cran.qe-libs.org")
+install.packages("rENA", repos = c("https://cran.qe-libs.org", "https://cran.rstudio.org"))
 ```
 
 ---

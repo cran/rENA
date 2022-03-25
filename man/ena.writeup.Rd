@@ -16,7 +16,8 @@ ena.writeup(
   theory = T,
   methods = T,
   params = NULL,
-  output_file = NULL
+  output_file = NULL,
+  output_format = NULL
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ ena.writeup(
 \item{params}{additional parameters for rmarkdown::render}
 
 \item{output_file}{character}
+
+\item{output_format}{character}
 }
 \value{
 String representing the methods used to generate the model

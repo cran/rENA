@@ -63,7 +63,7 @@ ena.make.set <- function(
   rotation.params = NULL,
   rotation.set = NULL,
   endpoints.only = TRUE,
-  center.align.to.origin = FALSE,
+  center.align.to.origin = TRUE,
   node.position.method = lws.positions.sq,
   as.list = TRUE,
   ...
@@ -108,6 +108,10 @@ ena.make.set <- function(
       enadata <- ena.set(enadata)
     }
 
+    enadata$`_function.params`$center.align.to.origin <- center.align.to.origin;
+    enadata$`_function.params`$rotation.by <- rotation.by;
+    enadata$`_function.params`$rotation.params <- rotation.params;
+
     ###
     # Convert the string vector of code names to their corresponding
     # co-occurence names
@@ -127,7 +131,7 @@ ena.make.set <- function(
           value = as.ena.co.occurrence(line.weights.dt[[i]]))
 
     enadata$line.weights <- cbind(enadata$meta.data, line.weights.dt)
-    class(enadata$line.weights) <- c("ena.line.weights",
+    class(enadata$line.weights) <- c("ena.line.weights", "ena.matrix",
                                      class(enadata$line.weights))
     #####
 
@@ -321,7 +325,6 @@ ena.make.set <- function(
     # class(enadata$model$plot) <- c("ena.plot", class(enadata$model$plot))
 
     enadata$`_function.params`$norm.by <- norm.by
-
     return(enadata)
   }
 }

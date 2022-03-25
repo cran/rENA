@@ -30,3 +30,4 @@ ena.correlations <- function(enaset, dims = c(1:2)) {
 
   return(correlations);
 }
+
