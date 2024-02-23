@@ -56,15 +56,15 @@ Create ENAset}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{ENAset$new()}}
-\item \href{#method-process}{\code{ENAset$process()}}
-\item \href{#method-get}{\code{ENAset$get()}}
-\item \href{#method-clone}{\code{ENAset$clone()}}
+\item \href{#method-ENAset-new}{\code{ENAset$new()}}
+\item \href{#method-ENAset-process}{\code{ENAset$process()}}
+\item \href{#method-ENAset-get}{\code{ENAset$get()}}
+\item \href{#method-ENAset-clone}{\code{ENAset$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-ENAset-new"></a>}}
+\if{latex}{\out{\hypertarget{method-ENAset-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ENAset$new(
@@ -112,8 +112,8 @@ Process ENAset
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-process"></a>}}
-\if{latex}{\out{\hypertarget{method-process}{}}}
+\if{html}{\out{<a id="method-ENAset-process"></a>}}
+\if{latex}{\out{\hypertarget{method-ENAset-process}{}}}
 \subsection{Method \code{process()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ENAset$process()}\if{html}{\out{</div>}}
@@ -125,8 +125,8 @@ Get property from object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get"></a>}}
-\if{latex}{\out{\hypertarget{method-get}{}}}
+\if{html}{\out{<a id="method-ENAset-get"></a>}}
+\if{latex}{\out{\hypertarget{method-ENAset-get}{}}}
 \subsection{Method \code{get()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ENAset$get(x = "enadata")}\if{html}{\out{</div>}}
@@ -144,8 +144,8 @@ value from object at x
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-ENAset-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-ENAset-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

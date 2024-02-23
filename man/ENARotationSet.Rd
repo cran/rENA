@@ -26,13 +26,13 @@ Create ENARotationSet}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{ENARotationSet$new()}}
-\item \href{#method-clone}{\code{ENARotationSet$clone()}}
+\item \href{#method-ENARotationSet-new}{\code{ENARotationSet$new()}}
+\item \href{#method-ENARotationSet-clone}{\code{ENARotationSet$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-ENARotationSet-new"></a>}}
+\if{latex}{\out{\hypertarget{method-ENARotationSet-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ENARotationSet$new(rotation, codes, node.positions, eigenvalues = NULL)}\if{html}{\out{</div>}}
@@ -56,8 +56,8 @@ ENARotationsSet
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-ENARotationSet-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-ENARotationSet-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

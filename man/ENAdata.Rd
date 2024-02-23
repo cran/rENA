@@ -44,16 +44,16 @@ Construct ENAdata}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{ENAdata$new()}}
-\item \href{#method-process}{\code{ENAdata$process()}}
-\item \href{#method-get}{\code{ENAdata$get()}}
-\item \href{#method-add.metadata}{\code{ENAdata$add.metadata()}}
-\item \href{#method-clone}{\code{ENAdata$clone()}}
+\item \href{#method-ENAdata-new}{\code{ENAdata$new()}}
+\item \href{#method-ENAdata-process}{\code{ENAdata$process()}}
+\item \href{#method-ENAdata-get}{\code{ENAdata$get()}}
+\item \href{#method-ENAdata-add.metadata}{\code{ENAdata$add.metadata()}}
+\item \href{#method-ENAdata-clone}{\code{ENAdata$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-ENAdata-new"></a>}}
+\if{latex}{\out{\hypertarget{method-ENAdata-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ENAdata$new(
@@ -109,8 +109,8 @@ Process accumulation
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-process"></a>}}
-\if{latex}{\out{\hypertarget{method-process}{}}}
+\if{html}{\out{<a id="method-ENAdata-process"></a>}}
+\if{latex}{\out{\hypertarget{method-ENAdata-process}{}}}
 \subsection{Method \code{process()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ENAdata$process()}\if{html}{\out{</div>}}
@@ -122,8 +122,8 @@ Get property from object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get"></a>}}
-\if{latex}{\out{\hypertarget{method-get}{}}}
+\if{html}{\out{<a id="method-ENAdata-get"></a>}}
+\if{latex}{\out{\hypertarget{method-ENAdata-get}{}}}
 \subsection{Method \code{get()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ENAdata$get(x = "data")}\if{html}{\out{</div>}}
@@ -142,8 +142,8 @@ Add metadata
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add.metadata"></a>}}
-\if{latex}{\out{\hypertarget{method-add.metadata}{}}}
+\if{html}{\out{<a id="method-ENAdata-add.metadata"></a>}}
+\if{latex}{\out{\hypertarget{method-ENAdata-add.metadata}{}}}
 \subsection{Method \code{add.metadata()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ENAdata$add.metadata(merge = F)}\if{html}{\out{</div>}}
@@ -161,8 +161,8 @@ data.frame
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-ENAdata-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-ENAdata-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

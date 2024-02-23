@@ -21,9 +21,9 @@
 #' to the length of the supplied names (i.e a color for each trajectory being plotted)
 #' @param shape A character which determines the shape of markers, choices: square, triangle, diamond, circle, default: circle
 #' @param label.offset A numeric vector of an x and y value to offset labels from the coordinates of the points
-#' @param label.font.size An integer which determines the font size for labels, default: enaplot\$font.size
-#' @param label.font.color A character which determines the color of label font, default: enaplot\$font.color
-#' @param label.font.family A character which determines font type, choices: Arial, Courier New, Times New Roman, default: enaplot\$font.family
+#' @param label.font.size An integer which determines the font size for labels, default: enaplot$font.size
+#' @param label.font.color A character which determines the color of label font, default: enaplot$font.color
+#' @param label.font.family A character which determines font type, choices: Arial, Courier New, Times New Roman, default: enaplot$font.family
 #' @param default.hidden A logical indicating if the trajectories should start hidden (click on the legend to show them) Default: FALSE
 #'
 #' @seealso \code{\link{ena.plot}}
@@ -68,7 +68,7 @@
 #'   names = unique(set$model$unit.label),
 #'   by = set$trajectories$ENA_UNIT
 #' );
-#' print(plot)
+#' \dontrun{print(plot)}
 #'
 #' @return The \code{\link{ENAplot}} provided to the function, with its plot updated to include the trajectories
 #####

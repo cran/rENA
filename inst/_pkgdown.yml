@@ -61,6 +61,7 @@ reference:
     - ena.correlations
     - ena.group
     - ena.rotate.by.mean
+    - ena.rotation.h
     - ena.set.creator
     - ena.svd
     - ena.writeup

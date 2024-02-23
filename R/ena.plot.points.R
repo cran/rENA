@@ -57,7 +57,7 @@
 #' group2.points = set$points[set$meta.data$Condition == "SecondGame",]
 #' plot = ena.plot.points(plot, points = group1.points);
 #' plot = ena.plot.points(plot, points = group2.points);
-#' print(plot);
+#' \dontrun{print(plot);}
 #'
 #' @return \code{\link{ENAplot}} The ENAplot provided to the function, with its plot updated to include the new points.
 ##

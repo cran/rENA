@@ -193,7 +193,7 @@ ENAdata <- R6::R6Class("ENAdata", public = list(
       self$raw <- data.table::copy(df_DT)
       self$raw$ENA_UNIT <- merge_columns_c(self$raw, private$units.by)
 
-      self <- accumulate.data(self)
+      self <- accumulate_data(self)
       self$units <- self$adjacency.vectors[, private$units.by, with = F]
 
       if (!self$model %in% c("AccumulatedTrajectory", "SeparateTrajectory")) {

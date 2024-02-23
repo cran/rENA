@@ -20,7 +20,7 @@ test_that("Null data errors", {
             model = "EndPoint"
           )
 
-  testthat::expect_error(accumulate.data(enad))
+  testthat::expect_error(accumulate_data(enad))
   testthat::expect_null(enad$raw)
   tryCatch(suppressWarnings(enad$process()))
   testthat::expect_identical(class(enad$raw), c("data.table", "data.frame"))
@@ -28,26 +28,26 @@ test_that("Null data errors", {
   enad2 <- enad$clone(deep = T)
   enad2$raw <- as.data.frame(enad2$raw)
   enad2$adjacency.vectors <- NULL
-  enad2 <- rENA:::accumulate.data(enad2)
+  enad2 <- rENA:::accumulate_data(enad2)
   testthat::expect_identical(class(enad2$raw), c("data.frame"))
 
   enad3 <- enad$clone(deep = T)
   enad3$adjacency.vectors <- NULL
-  enad3 <- rENA:::accumulate.data(enad3)
+  enad3 <- rENA:::accumulate_data(enad3)
 
   testthat::expect_identical(enad2$adjacency.vectors, enad3$adjacency.vectors)
 
   enad4 <- enad$clone(deep = T)
   enad4$raw$ENA_UNIT <- NULL
   testthat::expect_false("ENA_UNIT" %in% colnames(enad4$raw))
-  enad4 <- rENA:::accumulate.data(enad4)
+  enad4 <- rENA:::accumulate_data(enad4)
   testthat::expect_true("ENA_UNIT" %in% colnames(enad4$raw))
 
   enad5 <- enad$clone(deep = T)
   enad5$adjacency.vectors <- NULL
   enad5$accumulated.adjacency.vectors <- NULL
   enad5$codes <- df.whole[, c("c1", "c2", "c3")]
-  enad5 <- rENA:::accumulate.data(enad5)
+  enad5 <- rENA:::accumulate_data(enad5)
   testthat::expect_identical(
     enad$accumulated.adjacency.vectors[, 1:3],
     enad5$accumulated.adjacency.vectors[, 1:3]
@@ -227,7 +227,7 @@ test_that("Test trajectories", {
   )
   catch <- tryCatch(suppressMessages(enadB$process()), error = paste)
 
-  testthat::expect_error(rENA:::accumulate.data(enadB))
+  testthat::expect_error(rENA:::accumulate_data(enadB))
 })
 
 test_that("Test accumulation with infinite windows", {

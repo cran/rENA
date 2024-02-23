@@ -135,7 +135,8 @@ second.game.mean = colMeans(second.game.lineweights)
 
 subtracted.network = first.game.mean - second.game.mean
 plot = ena.plot.network(plot, network = subtracted.network)
-print(plot)
+
+\dontrun{print(plot)}
 
 }
 \seealso{

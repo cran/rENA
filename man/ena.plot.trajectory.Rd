@@ -35,11 +35,11 @@ ena.plot.trajectory(
 
 \item{label.offset}{A numeric vector of an x and y value to offset labels from the coordinates of the points}
 
-\item{label.font.size}{An integer which determines the font size for labels, default: enaplot\$font.size}
+\item{label.font.size}{An integer which determines the font size for labels, default: enaplot$font.size}
 
-\item{label.font.color}{A character which determines the color of label font, default: enaplot\$font.color}
+\item{label.font.color}{A character which determines the color of label font, default: enaplot$font.color}
 
-\item{label.font.family}{A character which determines font type, choices: Arial, Courier New, Times New Roman, default: enaplot\$font.family}
+\item{label.font.family}{A character which determines font type, choices: Arial, Courier New, Times New Roman, default: enaplot$font.family}
 
 \item{shape}{A character which determines the shape of markers, choices: square, triangle, diamond, circle, default: circle}
 
@@ -96,7 +96,7 @@ plot = ena.plot.trajectory(
   names = unique(set$model$unit.label),
   by = set$trajectories$ENA_UNIT
 );
-print(plot)
+\dontrun{print(plot)}
 
 }
 \seealso{

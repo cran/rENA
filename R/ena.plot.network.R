@@ -146,7 +146,8 @@ plot_edges <- function(...) {
 #'
 #' subtracted.network = first.game.mean - second.game.mean
 #' plot = ena.plot.network(plot, network = subtracted.network)
-#' print(plot)
+#'
+#' \dontrun{print(plot)}
 #'
 #' @return The \code{\link{ENAplot}} provided to the function, with its plot updated to include the nodes and provided connecting lines.
 ##

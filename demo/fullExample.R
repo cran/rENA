@@ -46,7 +46,7 @@ subtracted.network = first.game.mean - second.game.mean
 
 #Plot subtracted network only
 plot1 = rENA::ena.plot(set)
-plot1 = rENA::ena.plot.network(plot1, network = subtracted.network)
+plot1 = rENA::ena.plot.network(plot1, network = subtracted.network * 10)
 
 #plot means only
 plot2 = rENA::ena.plot(set)

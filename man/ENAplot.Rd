@@ -30,15 +30,15 @@ Create ENApolot}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{ENAplot$new()}}
-\item \href{#method-print}{\code{ENAplot$print()}}
-\item \href{#method-get}{\code{ENAplot$get()}}
-\item \href{#method-clone}{\code{ENAplot$clone()}}
+\item \href{#method-ENAplot-new}{\code{ENAplot$new()}}
+\item \href{#method-ENAplot-print}{\code{ENAplot$print()}}
+\item \href{#method-ENAplot-get}{\code{ENAplot$get()}}
+\item \href{#method-ENAplot-clone}{\code{ENAplot$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-ENAplot-new"></a>}}
+\if{latex}{\out{\hypertarget{method-ENAplot-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ENAplot$new(
@@ -88,8 +88,8 @@ Print ENA plot
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-ENAplot-print"></a>}}
+\if{latex}{\out{\hypertarget{method-ENAplot-print}{}}}
 \subsection{Method \code{print()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ENAplot$print()}\if{html}{\out{</div>}}
@@ -100,8 +100,8 @@ Get property from object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get"></a>}}
-\if{latex}{\out{\hypertarget{method-get}{}}}
+\if{html}{\out{<a id="method-ENAplot-get"></a>}}
+\if{latex}{\out{\hypertarget{method-ENAplot-get}{}}}
 \subsection{Method \code{get()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ENAplot$get(x)}\if{html}{\out{</div>}}
@@ -119,8 +119,8 @@ value from object at x
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-ENAplot-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-ENAplot-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

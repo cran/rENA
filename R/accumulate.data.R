@@ -1,4 +1,4 @@
-accumulate.data <- function(enadata) {
+accumulate_data <- function(enadata) {
   dfDT <- enadata$raw;
 
   units.used <- enadata$get("units.used")

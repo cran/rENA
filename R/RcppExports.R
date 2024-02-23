@@ -93,5 +93,5 @@ lws_lsq_positions <- function(adjMats, t, numDims) {
 
 # Register entry points for exported C++ functions
 methods::setLoadAction(function(ns) {
-    .Call('_rENA_RcppExport_registerCCallable', PACKAGE = 'rENA')
+    .Call(`_rENA_RcppExport_registerCCallable`)
 })

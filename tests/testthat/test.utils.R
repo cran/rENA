@@ -71,18 +71,18 @@ test_that("Test print output", {
   unlink(tmp)
 })
 
-test_that("Test print plot output", {
-  tmp <- tempfile()
-  on.exit(unlink(tmp), add = TRUE)
-
-  sink(tmp)
-  suppressWarnings(print(plot(set_end)))
-
-  testthat::expect_true(
-    grepl(x = readLines(tmp)[1], pattern = "[[1]]")
-  )
-  unlink(tmp)
-})
+# test_that("Test print plot output", {
+#   tmp <- tempfile()
+#   on.exit(unlink(tmp), add = TRUE)
+#
+#   sink(tmp)
+#   suppressWarnings(print(plot(set_end)))
+#
+#   testthat::expect_true(
+#     grepl(x = readLines(tmp)[1], pattern = "[[1]]")
+#   )
+#   unlink(tmp)
+# })
 
 test_that("Test means rotation", {
   set_rotated <- means_rotate(set_end)

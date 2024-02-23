@@ -100,7 +100,7 @@ group1.points = set$points[set$meta.data$Condition == "FirstGame",]
 group2.points = set$points[set$meta.data$Condition == "SecondGame",]
 plot = ena.plot.points(plot, points = group1.points);
 plot = ena.plot.points(plot, points = group2.points);
-print(plot);
+\dontrun{print(plot);}
 
 }
 \seealso{

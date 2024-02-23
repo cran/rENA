@@ -8,13 +8,6 @@
 #include <cmath>
 #include <RcppArmadillo.h>
 
-#ifdef __GNUC__
-#undef __GNUC__
-#endif
-#ifdef __clang__
-#undef __clang__
-#endif
-#define RCPP_DEMANGLER_ENABLED 0
 
 using namespace Rcpp;
 using namespace arma;
