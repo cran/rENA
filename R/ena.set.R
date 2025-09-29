@@ -11,19 +11,16 @@ ena.set <- function(x) {
   newset$connection.counts <- x$enadata$adjacency.vectors;
   colnames(newset$connection.counts) <- code.columns
   for (i in seq(ncol(newset$connection.counts))) {
-    set(newset$connection.counts, j = i,
-        value = as.ena.co.occurrence(newset$connection.counts[[i]]))
+    set(newset$connection.counts, j = i, value = as.ena.co.occurrence(newset$connection.counts[[i]]))
   }
 
   if (grepl(x = x$enadata$model, pattern = "Traj", ignore.case = T)) {
     newset$meta.data <- data.table::copy(x$enadata$trajectories$units)
-    newset$meta.data[, ENA_UNIT := apply(x$enadata$trajectories$units, 1,
-                        paste, collapse = ".")]
+    newset$meta.data[, ENA_UNIT := apply(x$enadata$trajectories$units, 1, paste, collapse = "::")]
 
     newset$trajectories <- cbind(newset$meta.data, x$enadata$trajectories$step)
     for (i in seq(ncol(newset$trajectories))) {
-      set(newset$trajectories, j = i,
-          value = as.ena.metadata(newset$trajectories[[i]]))
+      set(newset$trajectories, j = i, value = as.ena.metadata(newset$trajectories[[i]]))
     }
   }
   else {
@@ -36,6 +33,7 @@ ena.set <- function(x) {
           value = as.ena.metadata(newset$meta.data[[i]]))
     }
   }
+  newset$meta.data <- as.ena.matrix(newset$meta.data);
 
   if (x.is.set) {
     newset$line.weights <- as.data.table(cbind(x$enadata$metadata, x$line.weights))

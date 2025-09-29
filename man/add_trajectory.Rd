@@ -2,22 +2,68 @@
 % Please edit documentation in R/utils.plot.R
 \name{add_trajectory}
 \alias{add_trajectory}
-\title{Plot a trajectory on an ena.plot}
+\title{Add a trajectory to an ENA plot}
 \usage{
 add_trajectory(x, wh = NULL, ..., name = "plot")
 }
 \arguments{
-\item{x}{ena.plot object to plot on}
+\item{x}{An `ENAplot` object or an ENA set containing plots.}
 
-\item{wh}{which points to plot as the trajectory}
+\item{wh}{Specifies the trajectory to plot. Can be an unevaluated expression or a language object.}
 
-\item{...}{additional parameters to pass along}
+\item{...}{Additional parameters passed to the plotting functions.}
 
-\item{name}{Name, as a character vector, to give the plot}
+\item{name}{A character string specifying the name of the plot. Default is "plot".}
 }
 \value{
-ena.plot.object
+Invisibly returns the modified ENA set.
 }
 \description{
-Plot a trajectory on an ena.plot
+This function adds a trajectory to an existing ENA plot or ENA set. It supports various input types for the `wh` parameter, including unevaluated expressions and language objects.
+}
+\details{
+The function determines the type of the `wh` parameter and processes it accordingly:
+- If `wh` is an unevaluated expression, it is captured and evaluated in the parent frame.
+- If `wh` is a language object, it is processed to extract the relevant trajectory information.
+
+The function updates the plot with the new trajectory and stores the updated plot back in the ENA set.
+}
+\examples{
+# Load test data
+data(RS.data);
+
+# Define codenames for the test
+codenames <- c("Data", "Technical.Constraints", "Performance.Parameters",
+  "Client.and.Consultant.Requests", "Design.Reasoning", "Collaboration");
+
+# Standard ENA accumulation
+accum <- rENA:::ena.accumulate.data.file(
+  RS.data, units.by = c("UserName", "Condition"),
+  conversations.by = c("ActivityNumber", "GroupName"),
+  codes = codenames
+);
+# Create a standard ENA set 
+newset <- ena.make.set(accum);
+
+# Simple plot for a set of points, and their mean
+newplot <- plot(newset) |> 
+  add_points(Condition$FirstGame, mean = TRUE, colors = "blue") |> 
+  add_network();
+
+# Plot a single unit's point and it's line.weights
+plot(newset) |> 
+  add_points(UserName$`steven z`) |> 
+  add_network();
+
+# Trajectory accumulation and plotting
+trajectory_accumulation <- rENA:::ena.accumulate.data.file(
+  RS.data, units.by = c("UserName", "Condition"),
+  conversations.by = c("ActivityNumber", "GroupName"),
+  codes = codenames,
+  model = "A"
+);
+trajectory_model <- ena.make.set(trajectory_accumulation);
+
+newplot3 <- plot(trajectory_model) |> 
+  add_trajectory(Condition$FirstGame);
 }

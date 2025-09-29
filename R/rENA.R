@@ -8,16 +8,10 @@
 #' @importFrom methods is
 #' @import stats
 #' @import data.table
-#' @import foreach
-# @import plotly
 #' @import utils
 #' @import doParallel
 #' @import parallel
-# @import RcppRoll
-# @import scales
-#' @import concatenate
-# @import
-# @import igraph
+#' @import tma
 #' @useDynLib rENA, .registration = TRUE
 NULL
 

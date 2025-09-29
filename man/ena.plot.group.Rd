@@ -63,7 +63,6 @@ Plot a point based on a summary statistic computed from a given method (typicall
 Plots a point based on a summary statistic for a group (typically, mean)
 }
 \examples{
-
 data(RS.data)
 
 codeNames = c('Data','Technical.Constraints','Performance.Parameters',
@@ -98,7 +97,7 @@ plot = ena.plot.group(plot, as.matrix(set$points$Condition$FirstGame), labels = 
 plot = ena.plot.group(plot, as.matrix(set$points$Condition$SecondGame), labels = "SecondGame",
     colors  = "blue", confidence.interval = "box")
 
-\dontrun{print(plot)}
+print(plot);
 
 }
 \seealso{

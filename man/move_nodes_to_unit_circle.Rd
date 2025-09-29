@@ -4,7 +4,11 @@
 \alias{move_nodes_to_unit_circle}
 \title{Title}
 \usage{
-move_nodes_to_unit_circle(set, dimension_name_1, dimension_name_2)
+move_nodes_to_unit_circle(
+  set,
+  dimension_name_1 = colnames(as.matrix(set$rotation$nodes))[1],
+  dimension_name_2 = colnames(as.matrix(set$rotation$nodes))[2]
+)
 }
 \arguments{
 \item{set}{TBD}

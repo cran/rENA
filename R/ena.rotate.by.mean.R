@@ -71,7 +71,7 @@ ena.rotate.by.mean <- function(enaset, groups) {
   rotation_set <- ENARotationSet$new(
     node.positions = NULL,
     rotation = defalted_data_svd,
-    codes = enaset$codes
+    codes = enaset$rotation$codes
   )
   return(rotation_set)
 }

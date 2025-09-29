@@ -469,6 +469,78 @@ RcppExport SEXP _rENA_lws_lsq_positions(SEXP adjMatsSEXP, SEXP tSEXP, SEXP numDi
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// directed_node_positions
+Rcpp::List directed_node_positions(arma::mat line_weights, arma::mat points, int numDims);
+static SEXP _rENA_directed_node_positions_try(SEXP line_weightsSEXP, SEXP pointsSEXP, SEXP numDimsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type line_weights(line_weightsSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type points(pointsSEXP);
+    Rcpp::traits::input_parameter< int >::type numDims(numDimsSEXP);
+    rcpp_result_gen = Rcpp::wrap(directed_node_positions(line_weights, points, numDims));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _rENA_directed_node_positions(SEXP line_weightsSEXP, SEXP pointsSEXP, SEXP numDimsSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_rENA_directed_node_positions_try(line_weightsSEXP, pointsSEXP, numDimsSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
+// directed_node_positions_with_ground_response_added
+Rcpp::List directed_node_positions_with_ground_response_added(arma::mat line_weights, arma::mat points, int numDims);
+static SEXP _rENA_directed_node_positions_with_ground_response_added_try(SEXP line_weightsSEXP, SEXP pointsSEXP, SEXP numDimsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type line_weights(line_weightsSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type points(pointsSEXP);
+    Rcpp::traits::input_parameter< int >::type numDims(numDimsSEXP);
+    rcpp_result_gen = Rcpp::wrap(directed_node_positions_with_ground_response_added(line_weights, points, numDims));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _rENA_directed_node_positions_with_ground_response_added(SEXP line_weightsSEXP, SEXP pointsSEXP, SEXP numDimsSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_rENA_directed_node_positions_with_ground_response_added_try(line_weightsSEXP, pointsSEXP, numDimsSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
 
 // validate (ensure exported C++ functions exist before calling them)
 static int _rENA_RcppExport_validate(const char* sig) { 
@@ -487,6 +559,8 @@ static int _rENA_RcppExport_validate(const char* sig) {
         signatures.insert("Rcpp::NumericMatrix(*center_data_c)(arma::mat)");
         signatures.insert("arma::umat(*triIndices)(int,int)");
         signatures.insert("Rcpp::List(*lws_lsq_positions)(arma::mat,arma::mat,int)");
+        signatures.insert("Rcpp::List(*directed_node_positions)(arma::mat,arma::mat,int)");
+        signatures.insert("Rcpp::List(*directed_node_positions_with_ground_response_added)(arma::mat,arma::mat,int)");
     }
     return signatures.find(sig) != signatures.end();
 }
@@ -506,6 +580,8 @@ RcppExport SEXP _rENA_RcppExport_registerCCallable() {
     R_RegisterCCallable("rENA", "_rENA_center_data_c", (DL_FUNC)_rENA_center_data_c_try);
     R_RegisterCCallable("rENA", "_rENA_triIndices", (DL_FUNC)_rENA_triIndices_try);
     R_RegisterCCallable("rENA", "_rENA_lws_lsq_positions", (DL_FUNC)_rENA_lws_lsq_positions_try);
+    R_RegisterCCallable("rENA", "_rENA_directed_node_positions", (DL_FUNC)_rENA_directed_node_positions_try);
+    R_RegisterCCallable("rENA", "_rENA_directed_node_positions_with_ground_response_added", (DL_FUNC)_rENA_directed_node_positions_with_ground_response_added_try);
     R_RegisterCCallable("rENA", "_rENA_RcppExport_validate", (DL_FUNC)_rENA_RcppExport_validate);
     return R_NilValue;
 }
@@ -524,6 +600,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rENA_center_data_c", (DL_FUNC) &_rENA_center_data_c, 1},
     {"_rENA_triIndices", (DL_FUNC) &_rENA_triIndices, 2},
     {"_rENA_lws_lsq_positions", (DL_FUNC) &_rENA_lws_lsq_positions, 3},
+    {"_rENA_directed_node_positions", (DL_FUNC) &_rENA_directed_node_positions, 3},
+    {"_rENA_directed_node_positions_with_ground_response_added", (DL_FUNC) &_rENA_directed_node_positions_with_ground_response_added, 3},
     {"_rENA_RcppExport_registerCCallable", (DL_FUNC) &_rENA_RcppExport_registerCCallable, 0},
     {NULL, NULL, 0}
 };

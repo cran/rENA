@@ -146,8 +146,7 @@ plot_edges <- function(...) {
 #'
 #' subtracted.network = first.game.mean - second.game.mean
 #' plot = ena.plot.network(plot, network = subtracted.network)
-#'
-#' \dontrun{print(plot)}
+#' print(plot)
 #'
 #' @return The \code{\link{ENAplot}} provided to the function, with its plot updated to include the nodes and provided connecting lines.
 ##
@@ -180,8 +179,15 @@ ena.plot.network = function(
   scale.weights = F,
   ...
 ) {
-  if(choose(nrow(node.positions), 2) != length(network)) {
-    stop(paste0("Network vector needs to be of length ", choose(nrow(node.positions), 2)))
+  expected_codes <- choose(nrow(node.positions), 2)
+  if(expected_codes != length(network)) {
+    # browser()
+    if(is.data.frame(network) && ncol(as.matrix(network)) == expected_codes) {
+      network = as.vector(as.matrix(network))
+    }
+    else {
+      stop(paste0("Network vector needs to be of length ", choose(nrow(node.positions), 2)))
+    }
   }
   node.rows <- NULL
   if(is(node.positions, "ena.nodes")) {

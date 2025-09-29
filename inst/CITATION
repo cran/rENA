@@ -1,6 +1,6 @@
 ## Citation Prep
 pkgDesc = list (
-  Version = "0.2.7",
+  Version = "0.3.0",
   Package = "rENA",
   Title = "Epistemic Network Analysis",
   "Authors@R" = c(person("Cody L","Marquart", role = c("aut", "cre"), email="cody.marquart@wisc.edu"), person("Zachari","Swiecki", role = c("aut"), email="swiecki@wisc.edu"), person("Wesley","Collier", role = c("aut"), email="wcollier@wisc.edu"), person("Brendan","Eagan", role = c("aut"), email="beagan@wisc.edu"), person("Roman", "Woodward", role = c("aut"), email="rwoodward3@wisc.edu"),person("David Williamson", "Shaffer", role = c("aut"), email = "dws@education.wisc.edu"))
@@ -22,7 +22,8 @@ bibentry(
   bibtype = "Manual",
   title        = paste0(pkgDesc$Package, ": ", pkgDesc$Title),
   author       = authorPeople,
-  note      = pkgDesc$Version,
-  url = "https://cran.r-project.org/package=rENA",
-  year = 2023
+  version      = pkgDesc$Version,
+
+  textVersion  =
+   paste0(authorStr, " (2018). ", pkgDesc$Package, ": ", pkgDesc$Title, " (", pkgDesc$Version, "). https://cran.rstudio.com/web/packages/", pkgDesc$Package, "/")
 )

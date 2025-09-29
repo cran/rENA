@@ -2,18 +2,66 @@
 % Please edit documentation in R/utils.plot.R
 \name{add_nodes}
 \alias{add_nodes}
-\title{Title}
+\title{Add nodes to an ENA plot}
 \usage{
-add_nodes(x, ...)
+add_nodes(x, ..., return_plot = FALSE)
 }
 \arguments{
-\item{x}{[TBD]}
+\item{x}{An \code{ENAplot} object or an ENA set containing plots.}
 
-\item{...}{[TBD]}
+\item{...}{Additional arguments passed to \code{ena.plot.points}, such as \code{nodes}, \code{size}, and other graphical parameters.}
+
+\item{return_plot}{Logical; if \code{TRUE}, returns the modified ENA set. If \code{FALSE} (default), returns the modified plot invisibly.}
 }
 \value{
-[TBD]
+Invisibly returns the modified plot or ENA set, depending on the value of \code{return_plot}.
 }
 \description{
-Title
+This function adds nodes to an existing ENA plot or ENA set. It can be used to customize the nodes displayed on the plot, including their size and other graphical parameters.
+}
+\details{
+If \code{x} is an \code{ENAplot}, the function extracts the associated ENA set and plot. Otherwise, it assumes \code{x} is an ENA set and uses the last plot in the set.
+The nodes to be added can be specified via the \code{nodes} argument; otherwise, the default nodes from the set's rotation are used.
+Node size can be customized via the \code{size} argument.
+
+The function updates the plot with the new nodes and stores the updated plot back in the ENA set.
+}
+\examples{
+# Load test data
+data(RS.data);
+
+# Define codenames for the test
+codenames <- c("Data", "Technical.Constraints", "Performance.Parameters",
+  "Client.and.Consultant.Requests", "Design.Reasoning", "Collaboration");
+
+# Standard ENA accumulation
+accum <- rENA:::ena.accumulate.data.file(
+  RS.data, units.by = c("UserName", "Condition"),
+  conversations.by = c("ActivityNumber", "GroupName"),
+  codes = codenames
+);
+# Create a standard ENA set 
+newset <- ena.make.set(accum);
+
+# Simple plot for a set of points, and their mean
+newplot <- plot(newset) |> 
+  add_points(Condition$FirstGame, mean = TRUE, colors = "blue") |> 
+  add_network();
+
+# Plot a single unit's point and it's line.weights
+plot(newset) |> 
+  add_points(UserName$`steven z`) |> 
+  add_network();
+
+# Trajectory accumulation and plotting
+trajectory_accumulation <- rENA:::ena.accumulate.data.file(
+  RS.data, units.by = c("UserName", "Condition"),
+  conversations.by = c("ActivityNumber", "GroupName"),
+  codes = codenames,
+  model = "A"
+);
+trajectory_model <- ena.make.set(trajectory_accumulation);
+
+newplot3 <- plot(trajectory_model) |> 
+  add_trajectory(Condition$FirstGame);
 }

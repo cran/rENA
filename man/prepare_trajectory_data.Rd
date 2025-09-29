@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.plot.R
 \name{prepare_trajectory_data}
 \alias{prepare_trajectory_data}
-\title{Title}
+\title{Prepares trajectory data for an ENA plot.}
 \usage{
 prepare_trajectory_data(
   x = NULL,
@@ -15,23 +15,23 @@ prepare_trajectory_data(
 )
 }
 \arguments{
-\item{x}{[TBD]}
+\item{x}{An ENA set object. If `NULL`, other parameters must be provided.}
 
-\item{by}{[TBD]}
+\item{by}{A character vector specifying the grouping variables for the trajectory. Default is the first conversation parameter in the ENA set.}
 
-\item{rotation_matrix}{[TBD]}
+\item{rotation_matrix}{A matrix used to rotate the points. Default is the rotation matrix from the ENA set.}
 
-\item{points}{[TBD]}
+\item{points}{A data table of points to be processed. Default is the points from the ENA set.}
 
-\item{units}{[TBD]}
+\item{units}{A data table of units corresponding to the points. Default is the trajectories or points from the ENA set.}
 
-\item{units_by}{[TBD]}
+\item{units_by}{A character vector specifying the unit grouping variables. Default is the unit parameters from the ENA set.}
 
-\item{steps}{[TBD]}
+\item{steps}{A data table specifying the steps for the trajectory. If `NULL`, steps are generated automatically.}
 }
 \value{
-[TBD]
+A data table containing the processed trajectory data, including dimensions and metadata.
 }
 \description{
-Title
+This function processes and prepares trajectory data for plotting in an ENA set. It handles rotation, grouping, and filling missing steps in the trajectory.
 }

@@ -23,12 +23,9 @@
 #' @param legend.name Character indicating the name to show above the plot legend
 #' @param ... Additional parameters
 #'
-#' @import magrittr
-#'
 #' @seealso \code{\link{ena.plot}}, \code{ena.plot.points}
 #'
 #' @examples
-#'
 #' data(RS.data)
 #'
 #' codeNames = c('Data','Technical.Constraints','Performance.Parameters',
@@ -63,7 +60,7 @@
 #' plot = ena.plot.group(plot, as.matrix(set$points$Condition$SecondGame), labels = "SecondGame",
 #'     colors  = "blue", confidence.interval = "box")
 #'
-#' \dontrun{print(plot)}
+#' print(plot);
 #'
 #' @return The  \code{\link{ENAplot}} provided to the function, with its plot updated to include the new group point.
 ##
@@ -138,7 +135,8 @@ ena.plot.group <- function(
     }
   }
 
-  enaplot %<>% ena.plot.points(
+  enaplot <- ena.plot.points(
+    enaplot,
     points = points,
     labels = labels,
     colors = colors,

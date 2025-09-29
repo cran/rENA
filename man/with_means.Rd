@@ -2,16 +2,18 @@
 % Please edit documentation in R/utils.plot.R
 \name{with_means}
 \alias{with_means}
-\title{Title}
+\title{Adds group means to the ENA plot.}
 \usage{
 with_means(x)
 }
 \arguments{
-\item{x}{[TBD]}
+\item{x}{An ENA set object containing the plots.}
 }
 \value{
-[TBD]
+Invisibly returns the modified ENA set object with updated plots.
 }
 \description{
-Title
+This function iterates over the plotted points in the ENA plot and calculates
+the mean for each group of points. The calculated means are then added to the
+plot as group means.
 }

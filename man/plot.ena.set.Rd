@@ -4,7 +4,7 @@
 \alias{plot.ena.set}
 \title{Plot an ena.set object}
 \usage{
-\method{plot}{ena.set}(x, y, ...)
+\method{plot}{ena.set}(x, y, ..., empty = TRUE, title = "ENA Plot")
 }
 \arguments{
 \item{x}{ena.set to plot}
@@ -12,6 +12,10 @@
 \item{y}{ignored.}
 
 \item{...}{Additional parameters passed along to ena.plot functions}
+
+\item{empty}{Logical; if TRUE, creates an empty plot without points. Default is TRUE.}
+
+\item{title}{Character; title for the plot. Default is "ENA Plot".}
 }
 \value{
 ena.plot.object
@@ -20,7 +24,6 @@ ena.plot.object
 Plot an ena.set object
 }
 \examples{
-library(magrittr)
 
 data(RS.data)
 
@@ -39,11 +42,57 @@ set = ena.make.set(
   enadata = accum
 )
 
-plot(set) \%>\%
-  add_points(Condition$FirstGame, colors = "blue", with.mean = TRUE) \%>\%
-  add_points(Condition$SecondGame, colors = "red", with.mean = TRUE)
+plot(set) |>
+  add_points(Condition$FirstGame, colors = "blue", with.mean = TRUE) |>
+  add_points(Condition$SecondGame, colors = "red", with.mean = TRUE) |>
+  with_means() |>
+  add_nodes()
 
-plot(set) \%>\%
+myENAplot <- plot(set) |>
   add_network(Condition$FirstGame - Condition$SecondGame)
 
+
+# Add a group mean to an existing ENA plot
+add_group(myENAplot, wh = Condition$FirstGame)
+
+# Add a trajectory to an existing ENA plot
+add_trajectory(myENAplot, wh = Condition$FirstGame)
+
+# Load test data
+data(RS.data);
+
+# Define codenames for the test
+codenames <- c("Data", "Technical.Constraints", "Performance.Parameters",
+  "Client.and.Consultant.Requests", "Design.Reasoning", "Collaboration");
+
+# Standard ENA accumulation
+accum <- rENA:::ena.accumulate.data.file(
+  RS.data, units.by = c("UserName", "Condition"),
+  conversations.by = c("ActivityNumber", "GroupName"),
+  codes = codenames
+);
+# Create a standard ENA set 
+newset <- ena.make.set(accum);
+
+# Simple plot for a set of points, and their mean
+newplot <- plot(newset) |> 
+  add_points(Condition$FirstGame, mean = TRUE, colors = "blue") |> 
+  add_network();
+
+# Plot a single unit's point and it's line.weights
+plot(newset) |> 
+  add_points(UserName$`steven z`) |> 
+  add_network();
+
+# Trajectory accumulation and plotting
+trajectory_accumulation <- rENA:::ena.accumulate.data.file(
+  RS.data, units.by = c("UserName", "Condition"),
+  conversations.by = c("ActivityNumber", "GroupName"),
+  codes = codenames,
+  model = "A"
+);
+trajectory_model <- ena.make.set(trajectory_accumulation);
+
+newplot3 <- plot(trajectory_model) |> 
+  add_trajectory(Condition$FirstGame);
 }

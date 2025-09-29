@@ -92,7 +92,7 @@ arma::mat ena_correlation(arma::mat points, arma::mat centroids, double conf_lev
 std::vector<std::string> merge_columns_c(
     DataFrame df,
     CharacterVector cols,
-    std::string sep = "."
+    std::string sep = "::"
 ) {
   int vRows = df.nrows();
 
@@ -350,10 +350,16 @@ DataFrame ref_window_lag(
   return wrap(df_LagSummed);
 }
 
-//' Sphere norm
-//' @title Sphere norm
-//' @description TBD
-//' @param dfM Dataframe
+//' Row-wise L2 (Sphere) Normalization
+//'
+//' @title Row-wise L2 (Sphere) Normalization
+//' @description Normalizes each row of a numeric dataframe or matrix to have unit L2 norm (Euclidean length). Each row is divided by its own length, projecting all rows onto the unit hypersphere. Useful for analyses where direction is important but magnitude should be removed.
+//' @param dfM A data.frame or matrix. Each row is treated as a vector to compute its L2 norm.
+//' @return A numeric matrix with the same dimensions as `dfM`, with each row normalized to unit length (L2 norm = 1), unless the row is all zeros (in which case it remains zeros).
+//' @details This function computes the L2 norm (Euclidean length) of each row and divides the row by this value. Rows with zero length are left unchanged.
+//' @examples
+//' df <- data.frame(a = c(3, 4), b = c(0, 0))
+//' fun_sphere_norm(df)
 //' @export
 // [[Rcpp::export]]
 NumericMatrix fun_sphere_norm(DataFrame dfM) {
@@ -378,11 +384,16 @@ NumericMatrix fun_sphere_norm(DataFrame dfM) {
   return output;
 }
 
-//' Non sphere norm
+//' Row-wise Max-Norm Scaling
 //'
-//' @title Non sphere norm
-//' @description TBD
-//' @param dfM Dataframe
+//' @title Row-wise Max-Norm Scaling
+//' @description Scales all rows of a numeric dataframe by dividing by the largest row vector length (L2 norm) found in the dataframe. This preserves the relative magnitudes between rows but does not normalize each row to unit length. Useful for analyses where relative scale is important but full normalization is not desired.
+//' @param dfM A data.frame or matrix. Each row is treated as a vector to compute its L2 norm.
+//' @return A numeric matrix with the same dimensions as `dfM`, with all values divided by the largest row L2 norm.
+//' @details This function finds the row with the largest L2 norm (Euclidean length) and divides all entries in the matrix by this value. It does not normalize each row individually.
+//' @examples
+//' df <- data.frame(a = c(3, 4), b = c(0, 0))
+//' fun_skip_sphere_norm(df)
 //' @export
 // [[Rcpp::export]]
 NumericMatrix fun_skip_sphere_norm(DataFrame dfM) {
@@ -501,6 +512,143 @@ Rcpp::List lws_lsq_positions(arma::mat adjMats, arma::mat t, int numDims) { // =
     _("centroids") = centroids,
     _("weights") = weights,
     _("points") = t
+  );
+}
+
+
+/***
+ * Ordered model optimizations
+ */
+
+//' Multiobjective, Component by Component, with Ellipsoidal Scaling, for directed ENA
+//'
+//' @title Multiobjective, Component by Component, with Ellipsoidal Scaling, for directed ENA
+//' @description TBD
+//' @param line_weights TBD
+//' @param points TBD
+//' @param numDims TBD
+//' @export
+// [[Rcpp::export]]
+Rcpp::List directed_node_positions(arma::mat line_weights, arma::mat points, int numDims) { //, bool by_column = true) { // = R_NilValue ) {
+  int numNodes = ceil(std::sqrt(static_cast<double>(line_weights.n_cols)));
+
+  arma::mat node_weights = arma::mat(line_weights.n_rows, numNodes, arma::fill::zeros); // zc: added an extra column
+
+  int row_count = line_weights.n_rows;
+  for (int k = 0; k < row_count; k++) {
+    arma::mat currAdj = line_weights.row(k);
+
+    int z = 0;
+    for(int x = 0; x < numNodes; x++) {
+      for(int y = 0; y < numNodes; y++) {
+        node_weights(k,x) = node_weights(k,x) + currAdj(z);
+        // added the following line, zc, 10.29.2021
+        node_weights(k,y) = node_weights(k,y) + currAdj(z);
+        z = z + 1;
+      }
+    }
+  }
+
+  for (int k = 0; k < row_count; k++) {
+    double length = 0;
+    for(int i = 0; i < numNodes; i++) {
+      length = length + std::abs(node_weights(k,i));
+    }
+    if(length < 0.0001) {
+      length = 0.0001;
+    }
+    for(int i = 0; i < numNodes; i++) {
+      node_weights(k,i) = node_weights(k,i) / length;
+    }
+  }
+
+  arma::mat ssX = arma::mat(numDims, numNodes, arma::fill::zeros);
+  arma::mat ssA = node_weights.t() * node_weights;
+  arma::mat ssb;
+  for(int i = 0; i < numDims; i++) {
+    ssb = node_weights.t() * points.col(i);
+    ssX.row(i) = arma::solve(ssA, ssb, arma::solve_opts::equilibrate  ).t();
+  }
+
+  arma::mat centroids = (ssX * node_weights.t()).t();
+
+  return Rcpp::List::create(
+    _("nodes") = ssX.t(),
+    //_("correlations") = compute_difference_correlations(centroids, t),
+    _("centroids") = centroids,
+    _("weights") = node_weights, // zc: remember that the last column is all 1
+    _("points") = points
+  );
+}
+
+//' Node position optimization with ground and response weights/points added
+//'
+//' @title Node position optimization with ground and response weights/points added
+//' @description TBD
+//' @param line_weights TBD
+//' @param points TBD
+//' @param numDims TBD
+//' @export
+// [[Rcpp::export]]
+Rcpp::List directed_node_positions_with_ground_response_added(arma::mat line_weights, arma::mat points, int numDims) { //, bool by_column = true) { // = R_NilValue ) {
+  int numNodes = ceil(std::sqrt(static_cast<double>(line_weights.n_cols)));
+
+  arma::mat node_weights = arma::mat(line_weights.n_rows, numNodes, arma::fill::zeros);
+
+  int row_count = line_weights.n_rows;
+  for (int k = 0; k < row_count; k++) {
+    arma::mat currAdj = line_weights.row(k);
+
+    int z = 0;
+    for(int x = 0; x < numNodes; x++) {
+      for(int y = 0; y < numNodes; y++) {
+        node_weights(k,x) = node_weights(k,x) + currAdj(z);
+        // added the following line, zc, 10.29.2021
+        node_weights(k,y) = node_weights(k,y) + currAdj(z);
+        z = z + 1;
+      }
+    }
+  }
+
+  for (int k = 0; k < row_count; k++) {
+    double length = 0;
+    for(int i = 0; i < numNodes; i++) {
+      length = length + std::abs(node_weights(k,i));
+    }
+    if(length < 0.0001) {
+      length = 0.0001;
+    }
+    for(int i = 0; i < numNodes; i++) {
+      node_weights(k,i) = node_weights(k,i) / length;
+    }
+  }
+  // the following block is to add ground and response node weights/points
+  arma::mat node_weights_added = arma::mat(line_weights.n_rows/2, numNodes, arma::fill::zeros);
+  arma::mat points_added = arma::mat(line_weights.n_rows/2, numDims, arma::fill::zeros);
+
+  for(int k=0;k<row_count;k+=2)
+  {
+    for(int i=0;i<numNodes;i++)
+      node_weights_added(k/2,i)=node_weights(k,i)+node_weights(k+1,i);
+    for(int i=0;i<numDims;i++)
+      points_added(k/2,i)=points(k,i)+points(k+1,i);
+  }
+  arma::mat ssX = arma::mat(numDims, numNodes, arma::fill::zeros);
+  arma::mat ssA = node_weights_added.t() * node_weights_added;
+  arma::mat ssb;
+  for(int i = 0; i < numDims; i++) {
+    ssb = node_weights_added.t() * points_added.col(i);
+    ssX.row(i) = arma::solve(ssA, ssb, arma::solve_opts::equilibrate  ).t();
+  }
+
+  arma::mat centroids = (ssX * node_weights.t()).t();
+
+  return Rcpp::List::create(
+    _("nodes") = ssX.t(),
+    //_("correlations") = compute_difference_correlations(centroids, t),
+    _("centroids") = centroids,
+    _("weights") = node_weights,
+    _("points") = points
   );
 }
 

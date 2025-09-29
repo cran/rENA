@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.plot.R
 \name{with_trajectory}
 \alias{with_trajectory}
-\title{Title}
+\title{Adds trajectories to an ENA plot.}
 \usage{
 with_trajectory(
   x,
@@ -15,23 +15,24 @@ with_trajectory(
 )
 }
 \arguments{
-\item{x}{[TBD]}
+\item{x}{An ENA set object containing the plots.}
 
-\item{...}{[TBD]}
+\item{...}{Additional arguments passed to the plotting functions.}
 
-\item{by}{[TBD]}
+\item{by}{A character vector specifying the grouping variables for the trajectories. Default is the first conversation parameter in the ENA set.}
 
-\item{add_jitter}{[TBD]}
+\item{add_jitter}{Logical; if `TRUE`, adds jitter to the trajectory points. Default is `TRUE`.}
 
-\item{frame}{[TBD]}
+\item{frame}{Numeric; the duration of each frame in the animation. Default is 1100.}
 
-\item{transition}{[TBD]}
+\item{transition}{Numeric; the duration of the transition between frames. Default is 1000.}
 
-\item{easing}{[TBD]}
+\item{easing}{A character string specifying the easing function for the animation. Default is "circle-in-out".}
 }
 \value{
-[TBD]
+Invisibly returns the modified ENA set object with updated plots.
 }
 \description{
-Title
+This function generates trajectories for the plotted points in the ENA plot based on the specified grouping variables.
+It supports options for jittering, animation, and scaling.
 }

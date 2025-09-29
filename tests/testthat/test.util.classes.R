@@ -1,7 +1,7 @@
 suppressMessages(library(rENA, quietly = T, verbose = F))
 context("Test util class methods");
 
-library(magrittr)
+
 
 data(RS.data)
 units <- c("UserName", "Condition")
@@ -10,7 +10,7 @@ codes <- c("Data", "Technical.Constraints", "Performance.Parameters",
             "Client.and.Consultant.Requests", "Design.Reasoning",
             "Collaboration")
 
-set_end <- RS.data %>%
+set_end <- RS.data |>
   ena(
     units = units,
     conversation = conversation,

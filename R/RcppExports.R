@@ -30,7 +30,7 @@ ena_correlation <- function(points, centroids, conf_level = 0.95) {
 #' @param cols Vector
 #' @param sep Character seperator
 #' @export
-merge_columns_c <- function(df, cols, sep = ".") {
+merge_columns_c <- function(df, cols, sep = "::") {
     .Call(`_rENA_merge_columns_c`, df, cols, sep)
 }
 
@@ -60,20 +60,31 @@ ref_window_lag <- function(df, windowSize = 0L, binary = TRUE) {
     .Call(`_rENA_ref_window_lag`, df, windowSize, binary)
 }
 
-#' Sphere norm
-#' @title Sphere norm
-#' @description TBD
-#' @param dfM Dataframe
+#' Row-wise L2 (Sphere) Normalization
+#'
+#' @title Row-wise L2 (Sphere) Normalization
+#' @description Normalizes each row of a numeric dataframe or matrix to have unit L2 norm (Euclidean length). Each row is divided by its own length, projecting all rows onto the unit hypersphere. Useful for analyses where direction is important but magnitude should be removed.
+#' @param dfM A data.frame or matrix. Each row is treated as a vector to compute its L2 norm.
+#' @return A numeric matrix with the same dimensions as `dfM`, with each row normalized to unit length (L2 norm = 1), unless the row is all zeros (in which case it remains zeros).
+#' @details This function computes the L2 norm (Euclidean length) of each row and divides the row by this value. Rows with zero length are left unchanged.
+#' @examples
+#' df <- data.frame(a = c(3, 4), b = c(0, 0))
+#' fun_sphere_norm(df)
 #' @export
 fun_sphere_norm <- function(dfM) {
     .Call(`_rENA_fun_sphere_norm`, dfM)
 }
 
-#' Non sphere norm
+#' Row-wise Max-Norm Scaling
 #'
-#' @title Non sphere norm
-#' @description TBD
-#' @param dfM Dataframe
+#' @title Row-wise Max-Norm Scaling
+#' @description Scales all rows of a numeric dataframe by dividing by the largest row vector length (L2 norm) found in the dataframe. This preserves the relative magnitudes between rows but does not normalize each row to unit length. Useful for analyses where relative scale is important but full normalization is not desired.
+#' @param dfM A data.frame or matrix. Each row is treated as a vector to compute its L2 norm.
+#' @return A numeric matrix with the same dimensions as `dfM`, with all values divided by the largest row L2 norm.
+#' @details This function finds the row with the largest L2 norm (Euclidean length) and divides all entries in the matrix by this value. It does not normalize each row individually.
+#' @examples
+#' df <- data.frame(a = c(3, 4), b = c(0, 0))
+#' fun_skip_sphere_norm(df)
 #' @export
 fun_skip_sphere_norm <- function(dfM) {
     .Call(`_rENA_fun_skip_sphere_norm`, dfM)
@@ -89,6 +100,30 @@ triIndices <- function(len, row = -1L) {
 
 lws_lsq_positions <- function(adjMats, t, numDims) {
     .Call(`_rENA_lws_lsq_positions`, adjMats, t, numDims)
+}
+
+#' Multiobjective, Component by Component, with Ellipsoidal Scaling, for directed ENA
+#'
+#' @title Multiobjective, Component by Component, with Ellipsoidal Scaling, for directed ENA
+#' @description TBD
+#' @param line_weights TBD
+#' @param points TBD
+#' @param numDims TBD
+#' @export
+directed_node_positions <- function(line_weights, points, numDims) {
+    .Call(`_rENA_directed_node_positions`, line_weights, points, numDims)
+}
+
+#' Node position optimization with ground and response weights/points added
+#'
+#' @title Node position optimization with ground and response weights/points added
+#' @description TBD
+#' @param line_weights TBD
+#' @param points TBD
+#' @param numDims TBD
+#' @export
+directed_node_positions_with_ground_response_added <- function(line_weights, points, numDims) {
+    .Call(`_rENA_directed_node_positions_with_ground_response_added`, line_weights, points, numDims)
 }
 
 # Register entry points for exported C++ functions

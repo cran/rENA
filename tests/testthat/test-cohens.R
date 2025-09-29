@@ -1,8 +1,6 @@
 suppressMessages(library(rENA, quietly = T, verbose = F))
 context("Test util methods");
 
-library(magrittr)
-
 codenames <- c("Data", "Technical.Constraints", "Performance.Parameters",
   "Client.and.Consultant.Requests", "Design.Reasoning", "Collaboration");
 

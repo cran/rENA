@@ -1,4 +1,3 @@
-
 #' Re-class matrix as ena.matrix
 #'
 #' @param x data.frame, data.table, or matrix to extend

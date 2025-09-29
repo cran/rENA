@@ -6,8 +6,8 @@
 \usage{
 move_nodes_to_unit_circle_with_equal_space(
   set,
-  dimension_name_1,
-  dimension_name_2
+  dimension_name_1 = colnames(as.matrix(set$rotation$nodes))[1],
+  dimension_name_2 = colnames(as.matrix(set$rotation$nodes))[2]
 )
 }
 \arguments{

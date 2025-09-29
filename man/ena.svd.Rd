@@ -4,13 +4,38 @@
 \alias{ena.svd}
 \title{ENA SVD}
 \usage{
-ena.svd(enaset, ...)
+ena.svd(enaset, params)
 }
 \arguments{
-\item{enaset}{An \code{\link{ENAset}}}
+\item{enaset}{An \code{ENAset} object containing the points to be reduced.}
 
-\item{...}{Unused, necessary for ena.make.set}
+\item{params}{A list of parameters. Use \code{params$as_object = TRUE} to return an ENARotationSet object, or \code{FALSE} (default) to return a list.}
+}
+\value{
+An ENARotationSet object or a list containing:
+  \item{rotation}{The rotation matrix from SVD}
+  \item{codes}{The code names used for the matrix}
+  \item{node.positions}{(Currently NULL) Node positions}
+  \item{eigenvalues}{The eigenvalues (squared singular values) from SVD}
 }
 \description{
-ENA method computing a dimensional reduction of points in an ENA set using SVD
+Computes a dimensional reduction of points in an ENA set using Singular Value Decomposition (SVD).
+}
+\details{
+This function computes the SVD of the points in the ENA set and returns either an ENARotationSet object or a list with the rotation matrix, codes, node positions, and eigenvalues, depending on \code{params$as_object}.
+}
+\examples{
+data(RS.data)
+codes <- c("Data", "Technical.Constraints", "Performance.Parameters",
+           "Client.and.Consultant.Requests", "Design.Reasoning",
+           "Collaboration")
+units <- c("Condition", "UserName")
+horizon <- c("Condition", "GroupName")
+enaset <- RS.data |>
+  accumulate(units, codes, horizon) |>
+  model()
+# SVD as list:
+svd_result <- ena.svd(enaset, list(as_object = FALSE))
+# SVD as ENARotationSet object:
+svd_obj <- ena.svd(enaset, list(as_object = TRUE))
 }

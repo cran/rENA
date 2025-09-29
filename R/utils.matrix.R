@@ -28,7 +28,7 @@ as.matrix.ena.line.weights <- function(x, ..., square = FALSE) {
     return(cm)
   }
   else {
-   as.matrix(remove_meta_data(rows), ...)
+    as.matrix(remove_meta_data(rows), ...)
   }
 }
 

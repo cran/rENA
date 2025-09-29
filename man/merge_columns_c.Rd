@@ -4,7 +4,7 @@
 \alias{merge_columns_c}
 \title{Merge data frame columns}
 \usage{
-merge_columns_c(df, cols, sep = ".")
+merge_columns_c(df, cols, sep = "::")
 }
 \arguments{
 \item{df}{Dataframe}

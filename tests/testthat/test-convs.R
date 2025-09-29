@@ -12,7 +12,7 @@ test_that("conv check", {
   cn <- "FirstGame"
   un <- "joseph k"
 
-  accum <- rENA:::ena.accumulate.data.file(
+  accum <- ena.accumulate.data.file(
     RS.data, units.by = c("Condition", "UserName"),
     conversations.by = c("ActivityNumber", "GroupName"),
     codes = codenames
@@ -22,7 +22,7 @@ test_that("conv check", {
   codes = c( "Technical.Constraints", "Performance.Parameters" )
   noExc = ena.conversations(
     set,
-    units=c(paste0(cn,".",un)),
+    units=c(paste0(cn,"::",un)),
     units.by=c('Condition','UserName'),
     conversation.by = c('ActivityNumber', 'GroupName'),
     codes = codes
@@ -34,7 +34,7 @@ test_that("conv check", {
 
   noExc2 = ena.conversations(
     set,
-    units=c(paste0(cn,".",un)),
+    units=c(paste0(cn,"::",un)),
     conversation.by = c('ActivityNumber', 'GroupName'),
     codes = codes
   )
@@ -46,7 +46,7 @@ test_that("conv check", {
 
   noExc3 = ena.conversations(
     set$model$raw.input,
-    units=c(paste0(cn,".",un)),
+    units=c(paste0(cn,"::",un)),
     units.by=c('Condition','UserName'),
     conversation.by = c('ActivityNumber', 'GroupName'),
     codes = codes
@@ -59,7 +59,7 @@ test_that("conv check", {
 
   noExc_err = testthat::expect_error(ena.conversations(
     set$model$raw.input,
-    units=c(paste0(cn,".",un)),
+    units=c(paste0(cn,"::",un)),
     conversation.by = c('ActivityNumber', 'GroupName'),
     codes = codes
   ))

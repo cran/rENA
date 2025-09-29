@@ -1,4 +1,22 @@
-#' ENAset R6class
+#' @title ENAplot Class
+#' 
+#' @description
+#' The ENAplot R6 class provides a structure for visualizing ENAset objects using plotly.
+#' It encapsulates the ENAset data, the plotly visualization, and related plotting parameters.
+#'
+#' @section Fields:
+#' \describe{
+#'   \item{enaset}{The \code{\link{ENAset}} object from which the ENAplot was constructed.}
+#'   \item{plot}{The plotly object used for data visualization.}
+#'   \item{axes}{Axes information for the plot (TBD).}
+#'   \item{point}{Point information for the plot (TBD).}
+#'   \item{palette}{Color palette used for plotting (TBD).}
+#'   \item{plotted}{Indicates whether the plot has been rendered (TBD).}
+#' }
+#'
+#' @examples
+#' # Example usage:
+#' # enaplot <- ENAplot$new(enaset = myENAset)
 #'
 #' @docType class
 #' @importFrom R6 R6Class
@@ -7,10 +25,14 @@
 #'
 #' @field enaset - The \code{\link{ENAset}} object from which the ENAplot was constructed
 #' @field plot - The plotly object used for data visualization
-#' @field axes - TBD
-#' @field point - TBD
-#' @field palette - TBD
-#' @field plotted - TBD
+#' @field axes A list or object specifying the axes configuration for the ENA plot, such as axis labels, limits, or scaling.
+#' @field point A structure representing the data points to be plotted, including coordinates and visual properties.
+#' @field palette A set of colors or a function defining the color scheme used for plotting elements in the ENA plot.
+#' @field plotted A logical or status indicator showing whether the plot has been rendered or updated.
+#' @field showticklabels Logical. Indicates whether to show tick labels on the axes.
+#' @field autosize Logical. Indicates whether the plot should automatically resize.
+#' @field automargin Logical. Indicates whether the plot should automatically adjust margins.
+#' @field axispadding Numeric. Padding factor for the axes.
 ENAplot = R6::R6Class("ENAplot",
 
   public = list(
@@ -18,18 +40,18 @@ ENAplot = R6::R6Class("ENAplot",
     ## Public Functions ----
       #' Create ENApolot
       #'
-      #' @param enaset TBD
-      #' @param title TBD
-      #' @param dimension.labels TBD
-      #' @param font.size TBD
-      #' @param font.color TBD
-      #' @param font.family TBD
-      #' @param scale.to TBD
-      #' @param showticklabels TBD
-      #' @param autosize TBD
-      #' @param automargin TBD
-      #' @param axispadding TBD
-      #' @param ... TBD
+      #' @param enaset An ENA set object containing the data to be plotted.
+      #' @param title The title of the plot.
+      #' @param dimension.labels Labels for the dimensions shown in the plot.
+      #' @param font.size Numeric value specifying the font size for plot text.
+      #' @param font.color Color value for the plot text.
+      #' @param font.family Font family to use for plot text.
+      #' @param scale.to Numeric value to scale the plot axes.
+      #' @param showticklabels Logical; whether to display axis tick labels.
+      #' @param autosize Logical; whether the plot should automatically size itself.
+      #' @param automargin Logical; whether the plot should automatically adjust margins.
+      #' @param axispadding Numeric value specifying padding around axes.
+      #' @param ... Additional arguments passed to the plotting function.      #' 
       #'
       #' @return ENAplot
       initialize = function(
@@ -45,7 +67,6 @@ ENAplot = R6::R6Class("ENAplot",
         scale.to = "network",
         ...
       ) {
-
         if (is(enaset, "ENAset")) {
           warning(paste0("Usage of ENAset objects will be deprecated ",
             "and potentially removed altogether in future versions."))
@@ -74,9 +95,31 @@ ENAplot = R6::R6Class("ENAplot",
         if(!is.null(args$automargin)) {
           self$automargin = args$automargin
         }
-        self$enaset <- enaset;
+        self$enaset <- list(
+          connection.counts = data.table::copy(enaset$connection.counts),
+          meta.data = data.table::copy(enaset$meta.data),
+          model = list(
+            model.type = enaset$model$model.type,
+            raw.input = data.table::copy(enaset$model$raw.input),
+            row.connection.counts = data.table::copy(enaset$model$row.connection.counts),
+            unit.labels = enaset$model$unit.labels,
+            points.for.projection = data.table::copy(enaset$model$points.for.projection),
+            centroids = data.table::copy(enaset$model$centroids),
+            variance = enaset$model$variance
+          ),
+          points = data.table::copy(enaset$points),
+          line.weights = data.table::copy(enaset$line.weights),
+          rotation = list(
+            adjacency.key = data.table::copy(enaset$rotation$adjacency.key),
+            codes = enaset$rotation$codes,
+            rotation.matrix = data.table::copy(enaset$rotation$rotation.matrix),
+            center.vec = enaset$rotation$center.vec,
+            nodes = data.table::copy(enaset$rotation$nodes)
+          ),
+          plots = list()
+        );
+        self$title <- title;
 
-        private$title <- title;
         private$dimension.labels <- dimension.labels;
         private$font.size <- font.size;
         private$font.color <- font.color;
@@ -173,6 +216,7 @@ ENAplot = R6::R6Class("ENAplot",
 
     ## Public Properties ----
       enaset = NULL,
+      title = "ENA Plot",
       plot = NULL,
       axes = list(
         x = NULL, y = NULL
@@ -196,8 +240,6 @@ ENAplot = R6::R6Class("ENAplot",
     ####
     ## Private Properties
     ####
-      title = "ENA Plot",
-
       dimension.labels = c("X","Y"),
 
       font = list(),

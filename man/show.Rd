@@ -2,18 +2,19 @@
 % Please edit documentation in R/utils.plot.R
 \name{show}
 \alias{show}
-\title{Title}
+\title{Display and update plot objects within a custom object}
 \usage{
 show(x, ...)
 }
 \arguments{
-\item{x}{[TBD]}
+\item{x}{An object containing a list of plots in the `plots` field.}
 
-\item{...}{[TBD]}
+\item{...}{Additional arguments passed to the `print` method.}
 }
 \value{
-[TBD]
+The updated object `x`, returned invisibly.
 }
 \description{
-Title
+This function updates the plots within the provided object by applying the `check_range` function to each plot.
+It then prints the updated object using custom print options and returns the object invisibly.
 }

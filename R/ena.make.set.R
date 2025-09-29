@@ -147,10 +147,17 @@ ena.make.set <- function(
       if( inherits(rotation.set, "ena.rotation.set") ) {
         if(center.align.to.origin) {
           points.for.projection <- line.weights
-          points.for.projection[rowSums(as.matrix(line.weights))!=0,] <- center.projection(lws = line.weights[rowSums(as.matrix(line.weights))!=0,], rotation = rotation.set);
+
+          non_zero_rows <- rowSums(as.matrix(line.weights)) != 0;
+          if(sum(non_zero_rows) > 0) {
+            points.for.projection[rowSums(as.matrix(line.weights))!=0,] <- center.projection(lws = line.weights[rowSums(as.matrix(line.weights))!=0,], rotation = rotation.set);
+          }
+          else {
+            stop("There were no co-occurrences of codes for any of the units within the model as defined.");
+          }
         }
         else {
-          points.for.projection <- center.projection(lws = line.weights, rotation = rotation.set)
+          points.for.projection <- center.projection(lws = line.weights, rotation = rotation.set);
         }
       }
       else {
@@ -160,7 +167,14 @@ ena.make.set <- function(
     else {
       if(center.align.to.origin) {
         points.for.projection <- line.weights
-        points.for.projection[rowSums(as.matrix(line.weights))!=0,] <- center_data_c(line.weights[rowSums(as.matrix(line.weights))!=0,])
+
+        non_zero_rows <- rowSums(as.matrix(line.weights))!=0;
+        if(sum(non_zero_rows) > 0) {
+          points.for.projection[rowSums(as.matrix(line.weights))!=0,] <- center_data_c(line.weights[rowSums(as.matrix(line.weights))!=0,])
+        }
+        else {
+          stop("There were no co-occurrences of codes for any of the units within the model as defined.");
+        }
       }
       else {
         points.for.projection <- center_data_c(line.weights)

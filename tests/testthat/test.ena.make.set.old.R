@@ -147,7 +147,7 @@ test_that("Old sets are the same as the new ones", {
           codes = RS.data[,code_names],
           model = "EndPoint",
           window.size.back = 4
-        ) %>%
+        ) |>
           rENA:::ena.make.set()
 
   testthat::expect_equivalent(df.set$points.rotated[1, ],

@@ -2,13 +2,13 @@
   globalVariables(c(
     ".","ENA_ROW_IDX","ENA_UNIT","V1","V2","V3",
     "ci.x","ci.y","e","handle","name","unit.groups",
-    "V","graph_from_data_frame","%>%","%<>%","X1","X2",
+    "V","graph_from_data_frame","|>","X1","X2",
     "dfDT.points","points.raw","lines","KEYCOL","ENA_CONV",
     "..groupCol","..units","..metadata", "..codes", "..conversation","ENA_GROUP_NAME",
     "label.font.color","label.font.family","label.font.size",
     "label.offset","legend.include.edges","legend.name",
     "network.edges.shapes","nodes","rows.to.keep","show.legend",
-    "..connection_name", "..dimension_names"
+    "..connection_name", "..dimension_names", "..first_meta"
   ))
 #   op <- options()
 #   op.rENA <- list(

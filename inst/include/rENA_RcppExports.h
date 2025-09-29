@@ -67,7 +67,7 @@ namespace rENA {
         return Rcpp::as<arma::mat >(rcpp_result_gen);
     }
 
-    inline std::vector<std::string> merge_columns_c(DataFrame df, CharacterVector cols, std::string sep = ".") {
+    inline std::vector<std::string> merge_columns_c(DataFrame df, CharacterVector cols, std::string sep = "::") {
         typedef SEXP(*Ptr_merge_columns_c)(SEXP,SEXP,SEXP);
         static Ptr_merge_columns_c p_merge_columns_c = NULL;
         if (p_merge_columns_c == NULL) {
@@ -288,6 +288,48 @@ namespace rENA {
         {
             RNGScope RCPP_rngScope_gen;
             rcpp_result_gen = p_lws_lsq_positions(Shield<SEXP>(Rcpp::wrap(adjMats)), Shield<SEXP>(Rcpp::wrap(t)), Shield<SEXP>(Rcpp::wrap(numDims)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<Rcpp::List >(rcpp_result_gen);
+    }
+
+    inline Rcpp::List directed_node_positions(arma::mat line_weights, arma::mat points, int numDims) {
+        typedef SEXP(*Ptr_directed_node_positions)(SEXP,SEXP,SEXP);
+        static Ptr_directed_node_positions p_directed_node_positions = NULL;
+        if (p_directed_node_positions == NULL) {
+            validateSignature("Rcpp::List(*directed_node_positions)(arma::mat,arma::mat,int)");
+            p_directed_node_positions = (Ptr_directed_node_positions)R_GetCCallable("rENA", "_rENA_directed_node_positions");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_directed_node_positions(Shield<SEXP>(Rcpp::wrap(line_weights)), Shield<SEXP>(Rcpp::wrap(points)), Shield<SEXP>(Rcpp::wrap(numDims)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<Rcpp::List >(rcpp_result_gen);
+    }
+
+    inline Rcpp::List directed_node_positions_with_ground_response_added(arma::mat line_weights, arma::mat points, int numDims) {
+        typedef SEXP(*Ptr_directed_node_positions_with_ground_response_added)(SEXP,SEXP,SEXP);
+        static Ptr_directed_node_positions_with_ground_response_added p_directed_node_positions_with_ground_response_added = NULL;
+        if (p_directed_node_positions_with_ground_response_added == NULL) {
+            validateSignature("Rcpp::List(*directed_node_positions_with_ground_response_added)(arma::mat,arma::mat,int)");
+            p_directed_node_positions_with_ground_response_added = (Ptr_directed_node_positions_with_ground_response_added)R_GetCCallable("rENA", "_rENA_directed_node_positions_with_ground_response_added");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_directed_node_positions_with_ground_response_added(Shield<SEXP>(Rcpp::wrap(line_weights)), Shield<SEXP>(Rcpp::wrap(points)), Shield<SEXP>(Rcpp::wrap(numDims)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

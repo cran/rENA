@@ -191,26 +191,24 @@ ENAdata <- R6::R6Class("ENAdata", public = list(
       }
 
       self$raw <- data.table::copy(df_DT)
-      self$raw$ENA_UNIT <- merge_columns_c(self$raw, private$units.by)
+      self$raw$ENA_UNIT <- merge_columns_c(self$raw, private$units.by, "::")
 
-      self <- accumulate_data(self)
+      self <- accumulate.data(self)
       self$units <- self$adjacency.vectors[, private$units.by, with = F]
 
       if (!self$model %in% c("AccumulatedTrajectory", "SeparateTrajectory")) {
         self$unit.names <- self$adjacency.vectors$ENA_UNIT
-      } else {
+      }
+      else {
         self$trajectories$units <- self$units
-        conversation <- self$adjacency.vectors[,
-                          private$conversations.by,
-                          with = F
-                        ]
+        conversation <- self$adjacency.vectors[, private$conversations.by, with = F];
 
         self$trajectories$step <- conversation
         self$units <- cbind(self$units, conversation)
         self$unit.names <- paste(
           self$adjacency.vectors$ENA_UNIT,
           self$adjacency.vectors$TRAJ_UNIT,
-          sep = "."
+          sep = "::"
         )
       }
 

@@ -4,20 +4,53 @@
 \alias{add_network}
 \title{Add a network to an ENA plot}
 \usage{
-add_network(x, wh = NULL, ..., with.mean = F)
+add_network(
+  x,
+  wh = NULL,
+  ...,
+  with.mean = F,
+  edge.multiplier = 1,
+  colors = NULL
+)
 }
 \arguments{
-\item{x}{ena.plot object to plot wtih}
+\item{x}{An `ENAplot` object or an ENA set containing plots.}
 
-\item{wh}{network to plot}
+\item{wh}{Specifies the network to plot. Can be:
+\itemize{
+  \item An unevaluated expression (e.g., `Condition$FirstGame - Condition$SecondGame`)
+  \item A numeric matrix or data.frame of edge weights
+  \item A language object
+  \item NULL (defaults to the mean network)
+}}
 
-\item{...}{Additional parametesr to pass along}
+\item{...}{Additional parameters passed to the plotting functions.}
 
-\item{with.mean}{Logical value, if TRUE plots the mean for the points in the network}
+\item{with.mean}{Logical; if `TRUE`, also plots the mean for the points in the network. Default is `FALSE`.}
+
+\item{edge.multiplier}{Numeric scalar to multiply the edge weights. Useful for scaling the network visualization. Default is 1.}
+
+\item{colors}{Optional vector of colors for the network. If not specified, colors are chosen from the plot palette.}
 }
 \value{
-ena.plot.object
+The modified ENAplot object with the new network added.
 }
 \description{
-Add a network to an ENA plot
+Adds a network (set of edges) to an existing ENA plot or ENA set. The network can be specified in several ways, including as an unevaluated expression, a numeric matrix, or a language object. This function is typically used to visualize group means, differences between groups, or custom networks on an ENA plot.
 }
+\details{
+The function determines the type of the `wh` parameter and processes it accordingly:
+\itemize{
+  \item If `wh` is an unevaluated expression, it is captured and evaluated in the parent frame. This allows for flexible specification of group means or differences.
+  \item If `wh` is a numeric matrix or data.frame, it is used directly as the network data.
+  \item If `wh` is a language object, it is processed to extract the relevant network information.
+  \item If `wh` is NULL, the mean network is plotted.
+}
+
+The function updates the plot with the new network and returns the modified plot object. The ENA set is not modified in-place.
+}
+\section{Examples}{
+
+  See `inst/examples/example-plot-piping.R` for usage examples.
+}
+

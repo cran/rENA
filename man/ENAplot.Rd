@@ -3,11 +3,27 @@
 \docType{class}
 \name{ENAplot}
 \alias{ENAplot}
-\title{ENAset R6class}
+\title{ENAplot Class}
 \description{
-ENAset R6class
+The ENAplot R6 class provides a structure for visualizing ENAset objects using plotly.
+It encapsulates the ENAset data, the plotly visualization, and related plotting parameters.
+}
+\section{Fields}{
 
-ENAset R6class
+\describe{
+  \item{enaset}{The \code{\link{ENAset}} object from which the ENAplot was constructed.}
+  \item{plot}{The plotly object used for data visualization.}
+  \item{axes}{Axes information for the plot (TBD).}
+  \item{point}{Point information for the plot (TBD).}
+  \item{palette}{Color palette used for plotting (TBD).}
+  \item{plotted}{Indicates whether the plot has been rendered (TBD).}
+}
+}
+
+\examples{
+# Example usage:
+# enaplot <- ENAplot$new(enaset = myENAset)
+
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -16,13 +32,21 @@ ENAset R6class
 
 \item{\code{plot}}{- The plotly object used for data visualization}
 
-\item{\code{axes}}{- TBD}
+\item{\code{axes}}{A list or object specifying the axes configuration for the ENA plot, such as axis labels, limits, or scaling.}
 
-\item{\code{point}}{- TBD}
+\item{\code{point}}{A structure representing the data points to be plotted, including coordinates and visual properties.}
 
-\item{\code{palette}}{- TBD}
+\item{\code{palette}}{A set of colors or a function defining the color scheme used for plotting elements in the ENA plot.}
 
-\item{\code{plotted}}{- TBD
+\item{\code{plotted}}{A logical or status indicator showing whether the plot has been rendered or updated.}
+
+\item{\code{showticklabels}}{Logical. Indicates whether to show tick labels on the axes.}
+
+\item{\code{autosize}}{Logical. Indicates whether the plot should automatically resize.}
+
+\item{\code{automargin}}{Logical. Indicates whether the plot should automatically adjust margins.}
+
+\item{\code{axispadding}}{Numeric. Padding factor for the axes.
 Create ENApolot}
 }
 \if{html}{\out{</div>}}
@@ -56,29 +80,29 @@ Create ENApolot}
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{enaset}}{TBD}
+\item{\code{enaset}}{An ENA set object containing the data to be plotted.}
 
-\item{\code{title}}{TBD}
+\item{\code{title}}{The title of the plot.}
 
-\item{\code{dimension.labels}}{TBD}
+\item{\code{dimension.labels}}{Labels for the dimensions shown in the plot.}
 
-\item{\code{font.size}}{TBD}
+\item{\code{font.size}}{Numeric value specifying the font size for plot text.}
 
-\item{\code{font.color}}{TBD}
+\item{\code{font.color}}{Color value for the plot text.}
 
-\item{\code{font.family}}{TBD}
+\item{\code{font.family}}{Font family to use for plot text.}
 
-\item{\code{scale.to}}{TBD}
+\item{\code{scale.to}}{Numeric value to scale the plot axes.}
 
-\item{\code{...}}{TBD}
+\item{\code{...}}{Additional arguments passed to the plotting function.      #'}
 
-\item{\code{showticklabels}}{TBD}
+\item{\code{showticklabels}}{Logical; whether to display axis tick labels.}
 
-\item{\code{autosize}}{TBD}
+\item{\code{autosize}}{Logical; whether the plot should automatically size itself.}
 
-\item{\code{automargin}}{TBD}
+\item{\code{automargin}}{Logical; whether the plot should automatically adjust margins.}
 
-\item{\code{axispadding}}{TBD}
+\item{\code{axispadding}}{Numeric value specifying padding around axes.}
 }
 \if{html}{\out{</div>}}
 }

@@ -1,4 +1,4 @@
-accumulate_data <- function(enadata) {
+accumulate.data <- function(enadata) {
   dfDT <- enadata$raw;
 
   units.used <- enadata$get("units.used")
@@ -23,7 +23,8 @@ accumulate_data <- function(enadata) {
   binary <- T;
   if (!identical(enadata$get("weight.by"), "binary")) {
     binary <- F
-  } else {
+  }
+  else {
     binary <- T
   }
 
@@ -51,7 +52,7 @@ accumulate_data <- function(enadata) {
   if(!"ENA_UNIT" %in% colnames(dfDT_codes)) {
     dfDT_codes$ENA_UNIT <- enadata$raw$ENA_UNIT <- merge_columns_c(
       dfDT_codes,
-      cols = units.by, sep = "."
+      cols = units.by, sep = "::"
     )
   }
 
@@ -193,7 +194,7 @@ accumulate_data <- function(enadata) {
     # Sum each unit found in dfDT.co.occurrences
     ###
     dfDT.summed.units <- dfDT.co.occurrences[ENA_UNIT %in% units.used,lapply(.SD,sum),by=units.by,.SDcols=codedTriNames]
-    dfDT.summed.units$ENA_UNIT <- merge_columns_c(dfDT.summed.units, units.by, sep=".");
+    dfDT.summed.units$ENA_UNIT <- merge_columns_c(dfDT.summed.units, units.by, sep="::");
 
     enadata$unit.names <- dfDT.summed.units$ENA_UNIT;
   }
@@ -210,10 +211,10 @@ accumulate_data <- function(enadata) {
       .SDcols = (codedTriNames)
     ];
     dfDT.summed.traj.by$ENA_UNIT <- merge_columns_c(
-      dfDT.summed.traj.by, units.by, sep = "."
+      dfDT.summed.traj.by, units.by, sep = "::"
     )
     dfDT.summed.traj.by$TRAJ_UNIT <- merge_columns_c(
-      dfDT.summed.traj.by, trajectory.by, sep = "."
+      dfDT.summed.traj.by, trajectory.by, sep = "::"
     );
 
     enadata$trajectories$step <- dfDT.summed.traj.by$TRAJ_UNIT;
@@ -223,7 +224,7 @@ accumulate_data <- function(enadata) {
       dfDT.summed.units <- dfDT.summed.traj.by[
         ENA_UNIT %in% unique(units.used), {
           cols <- colnames(.SD)
-          ENA_UNIT <- paste(as.character(.BY), collapse = ".")
+          ENA_UNIT <- paste(as.character(.BY), collapse = "::")
           TRAJ_UNIT <- .SD[, c(trajectory.by), with = F]
           inc_cols <- cols[! cols %in% c(trajectory.by, "ENA_ROW_IDX")]
           lag <- ref_window_lag(.SD[, .SD, .SDcols = inc_cols], .N)
@@ -237,7 +238,7 @@ accumulate_data <- function(enadata) {
         .SDcols = c(codedTriNames, trajectory.by, "ENA_ROW_IDX")
       ]
       dfDT.summed.units$TRAJ_UNIT <- merge_columns_c(
-        dfDT.summed.units, trajectory.by, sep = "."
+        dfDT.summed.units, trajectory.by, sep = "::"
       )
     }
     # Non-accumulated
@@ -249,7 +250,7 @@ accumulate_data <- function(enadata) {
     }
 
     dfDT.summed.units$ENA_UNIT <- merge_columns_c(
-      dfDT.summed.units, units.by, sep = "."
+      dfDT.summed.units, units.by, sep = "::"
     )
   }
   ###

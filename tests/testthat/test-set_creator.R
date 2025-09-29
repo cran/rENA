@@ -1,7 +1,7 @@
 suppressMessages(library(rENA, quietly = T, verbose = F))
 context("Test wrapper methods");
 
-library(magrittr)
+
 
 data(RS.data)
 

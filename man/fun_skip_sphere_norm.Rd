@@ -2,16 +2,25 @@
 % Please edit documentation in R/RcppExports.R
 \name{fun_skip_sphere_norm}
 \alias{fun_skip_sphere_norm}
-\title{Non sphere norm}
+\title{Row-wise Max-Norm Scaling}
 \usage{
 fun_skip_sphere_norm(dfM)
 }
 \arguments{
-\item{dfM}{Dataframe}
+\item{dfM}{A data.frame or matrix. Each row is treated as a vector to compute its L2 norm.}
+}
+\value{
+A numeric matrix with the same dimensions as `dfM`, with all values divided by the largest row L2 norm.
 }
 \description{
-TBD
+Scales all rows of a numeric dataframe by dividing by the largest row vector length (L2 norm) found in the dataframe. This preserves the relative magnitudes between rows but does not normalize each row to unit length. Useful for analyses where relative scale is important but full normalization is not desired.
 }
 \details{
-Non sphere norm
+Row-wise Max-Norm Scaling
+
+This function finds the row with the largest L2 norm (Euclidean length) and divides all entries in the matrix by this value. It does not normalize each row individually.
+}
+\examples{
+df <- data.frame(a = c(3, 4), b = c(0, 0))
+fun_skip_sphere_norm(df)
 }

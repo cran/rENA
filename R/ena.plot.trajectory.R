@@ -68,7 +68,7 @@
 #'   names = unique(set$model$unit.label),
 #'   by = set$trajectories$ENA_UNIT
 #' );
-#' \dontrun{print(plot)}
+#' print(plot)
 #'
 #' @return The \code{\link{ENAplot}} provided to the function, with its plot updated to include the trajectories
 #####

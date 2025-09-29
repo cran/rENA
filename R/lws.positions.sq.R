@@ -5,8 +5,9 @@ lws.positions.sq <- function(enaset) {
   positions = lws_lsq_positions(weights, points, ncol(points));
 
   node.positions = positions$nodes;
-  rownames(node.positions) = enaset$enadata$codes;
-
+  rownames(node.positions) = enaset$rotation$codes
+  colnames(node.positions) = colnames(points)
+  
   return(list("node.positions" = node.positions, "centroids" = positions$centroids))
 }
 

@@ -1,5 +1,5 @@
 ####
-#' ENAset R6class
+#' @title ENAset R6class
 #'
 #' @docType class
 #' @importFrom R6 R6Class

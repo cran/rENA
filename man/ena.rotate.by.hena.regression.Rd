@@ -10,11 +10,9 @@ ena.rotate.by.hena.regression(enaset, params)
 \item{enaset}{An \code{\link{ENAset}}}
 
 \item{params}{list of parameters, may include:
-x_var: Regression formula for x direction, such as "lm(formula=V ~ Condition + GameHalf + Condition : GameHalf)".
-y_var: Regression formula for y direction (optional).
-points: A unit by connection weight matrix for rotation. If not provided, points in enaset are used.
-fullNames: If true, all independent variable names are included in the x and y names.
-   Otherwise, only first variable name is used.}
+x_var: Regression formula for x direction, such as "lm(formula=V ~ Condition + GameHalf + Condition : GameHalf)",
+ where V always stands for the ENA points.
+y_var: Regression formula, similar to x_var, for y direction (optional).}
 }
 \value{
 \code{\link{ENARotationSet}}
@@ -22,4 +20,6 @@ fullNames: If true, all independent variable names are included in the x and y n
 \description{
 This function allows user to provide a regression formula for rotation on x and optionally on y.
    If regression formula for y is not provide, svd is applied to the residual data deflated by x to get y coordinates.
+   The regression formula uses ENA dimensions are dependent variables.
+   The first predictor has to be two-group categorical, binary, or numerical.
 }

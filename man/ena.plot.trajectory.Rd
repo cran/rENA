@@ -96,7 +96,7 @@ plot = ena.plot.trajectory(
   names = unique(set$model$unit.label),
   by = set$trajectories$ENA_UNIT
 );
-\dontrun{print(plot)}
+print(plot)
 
 }
 \seealso{
