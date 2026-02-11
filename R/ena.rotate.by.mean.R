@@ -10,15 +10,22 @@
 #' @param groups A list containing two logical vectors of length \code{nrow(ENA.set$ena.data$units)},
 #' where each vector defines whether a unit is in one of the two groups whose means
 #' are used to determine the dimensional reduction
+#' @param params A list containing two vectors of length \code{nrow(ENA.set$ena.data$units)},
 #'
 #' @export
 #' @return \code{\link{ENARotationSet}}
 ###
-ena.rotate.by.mean <- function(enaset, groups) {
-  groups <- list(groups)
-  groups <- groups[[1]]
-  if (length(groups) < 1) {
-    stop("Unable to rotate without 2 groups.")
+ena.rotate.by.mean <- function(enaset, groups = NULL, params = groups) {
+  if(is.null(groups) && !is.null(params)) {
+    groups <- params;
+  }
+  else {
+    groups <- list(groups);
+    groups <- groups[[1]];
+
+    if (length(groups) < 1) {
+      stop("Unable to rotate without 2 groups.");
+    }
   }
 
   if (!is(groups[[1]], "list")) {
@@ -44,6 +51,12 @@ ena.rotate.by.mean <- function(enaset, groups) {
   for (group in 1:length(groups)) {
     col <- group
     vals <- groups[[group]]
+    if(!is.logical(vals[[1]])) {
+      vals[[1]] <- enaset$connection.counts$ENA_UNIT %in% vals[[1]];
+    }
+    if(!is.logical(vals[[2]])) {
+      vals[[2]] <- enaset$connection.counts$ENA_UNIT %in% vals[[2]];
+    }
 
     col_one_vals <- deflated.data[vals[[1]], ]
     col_two_vals <- deflated.data[vals[[2]], ]
@@ -60,6 +73,7 @@ ena.rotate.by.mean <- function(enaset, groups) {
     weights[, i] <- col_mean_diff_sq
     i <- i + 1;
   }
+
   defalted_data_svd <- orthogonal_svd(deflated.data, weights);
 
   colnames(defalted_data_svd) <- c(
@@ -68,7 +82,12 @@ ena.rotate.by.mean <- function(enaset, groups) {
   )
   rownames(defalted_data_svd) <- colnames(as.matrix(enaset$line.weights))
 
-  rotation_set <- ENARotationSet$new(
+  # rotation_set <- ENARotationSet$new(
+  #   node.positions = NULL,
+  #   rotation = defalted_data_svd,
+  #   codes = enaset$rotation$codes
+  # )
+  rotation_set <- list(
     node.positions = NULL,
     rotation = defalted_data_svd,
     codes = enaset$rotation$codes

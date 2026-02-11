@@ -4,7 +4,7 @@
 \alias{ena.rotate.by.mean}
 \title{ENA Rotate by mean}
 \usage{
-ena.rotate.by.mean(enaset, groups)
+ena.rotate.by.mean(enaset, groups = NULL, params = groups)
 }
 \arguments{
 \item{enaset}{An \code{\link{ENAset}}}
@@ -12,6 +12,8 @@ ena.rotate.by.mean(enaset, groups)
 \item{groups}{A list containing two logical vectors of length \code{nrow(ENA.set$ena.data$units)},
 where each vector defines whether a unit is in one of the two groups whose means
 are used to determine the dimensional reduction}
+
+\item{params}{A list containing two vectors of length \code{nrow(ENA.set$ena.data$units)},}
 }
 \value{
 \code{\link{ENARotationSet}}

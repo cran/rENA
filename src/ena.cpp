@@ -8,11 +8,6 @@
 #include <cmath>
 #include <RcppArmadillo.h>
 
-
-using namespace Rcpp;
-using namespace arma;
-using namespace std;
-
 //' Fast combn choose 2
 //'
 //' @param n TBD
@@ -22,7 +17,7 @@ using namespace std;
 // [[Rcpp::export]]
 arma::umat combn_c2(double n) {
   double n_combos = ( n * ( n - 1 ) ) / 2;
-  arma::umat out = zeros<arma::umat>(2, n_combos);
+  arma::umat out = arma::zeros<arma::umat>(2, n_combos);
 
   int col = 0;
   for(int i = 0; i < n_combos; i++) {
@@ -54,27 +49,27 @@ arma::mat ena_correlation(arma::mat points, arma::mat centroids, double conf_lev
   arma::mat cts_diff = centroids.rows(point1) - centroids.rows(point2);
   arma::mat cor_result = arma::cor(pts_diff, cts_diff);
 
-  NumericVector v = { (1 + conf_level) / 2 };
-  NumericVector q = Rcpp::qnorm(v, 0.0, 1.0);
+  Rcpp::NumericVector v = { (1 + conf_level) / 2 };
+  Rcpp::NumericVector q = Rcpp::qnorm(v, 0.0, 1.0);
   double qq = q(0);
 
   arma::mat out(points.n_cols, 3);
 
   int n = point1.n_cols;
   double r, z, sigma, cint_lower, cint_upper;
-  for(uword i = 0; i < points.n_cols; i++) {
+  for(arma::uword i = 0; i < points.n_cols; i++) {
     r = cor_result(i,i);
     out(i, 0) = r;
 
-    z = atanh(r);
-    sigma = 1 / sqrt(n - 3);
+    z = std::atanh(r);
+    sigma = 1 / std::sqrt(n - 3);
 
     cint_lower = z - sigma * qq;
-    cint_lower = tanh(cint_lower);
+    cint_lower = std::tanh(cint_lower);
     out(i, 1) = cint_lower;
 
     cint_upper = z + sigma * qq;
-    cint_upper = tanh(cint_upper);
+    cint_upper = std::tanh(cint_upper);
     out(i, 2) = cint_upper;
   }
 
@@ -90,15 +85,15 @@ arma::mat ena_correlation(arma::mat points, arma::mat centroids, double conf_lev
 //' @export
 // [[Rcpp::export]]
 std::vector<std::string> merge_columns_c(
-    DataFrame df,
-    CharacterVector cols,
+    Rcpp::DataFrame df,
+    Rcpp::CharacterVector cols,
     std::string sep = "::"
 ) {
   int vRows = df.nrows();
 
   std::vector<std::string> newCol( vRows );
 
-  List colList;
+  Rcpp::List colList;
   for (int j = 0; j < cols.length(); j++ ) {
     std::ostringstream oss;
     oss << cols[j];
@@ -107,14 +102,14 @@ std::vector<std::string> merge_columns_c(
     colList[col] = cv;
   }
 
-  CharacterVector colNames = colList.names();
+  Rcpp::CharacterVector colNames = colList.names();
   for (int i = 0; i < vRows; i++ ) {
     std::ostringstream ossCol;
     for (int j = 0; j < colNames.length(); j++ ) {
       std::ostringstream oss;
       oss << cols[j];
       std::string colName = oss.str();
-      CharacterVector colVec = colList[colName];
+      Rcpp::CharacterVector colVec = colList[colName];
 
       ossCol << colVec[i];
       if(j + 1 < colNames.length()) {
@@ -128,11 +123,11 @@ std::vector<std::string> merge_columns_c(
   return newCol;
 }
 
-NumericMatrix toNumericMatrix(DataFrame x) {
+Rcpp::NumericMatrix toNumericMatrix(Rcpp::DataFrame x) {
   int nRows=x.nrows();
-  NumericMatrix y(nRows,x.size());
+  Rcpp::NumericMatrix y(nRows,x.size());
   for (int i=0; i<x.size();i++) {
-    y(_,i)=NumericVector(x[i]);
+    y(Rcpp::_,i)=Rcpp::NumericVector(x[i]);
   }
   return y;
 }
@@ -148,7 +143,7 @@ arma::rowvec vector_to_ut(arma::mat v) {
   int vL = v.size();
   int vS = ( (vL * (vL + 1)) / 2) - vL;
 
-  arma::rowvec vR2( vS, fill::zeros );
+  arma::rowvec vR2( vS, arma::fill::zeros );
   int s = 0;
   for( int i = 2; i <= vL; i++ ) {
     for (int j = 0; j < i-1; j++ ) {
@@ -176,23 +171,23 @@ std::vector<std::string> svector_to_ut(std::vector<std::string> v) {
 }
 
 // [[Rcpp::export]]
-arma::mat rows_to_co_occurrences(DataFrame df, bool binary = true) {
+arma::mat rows_to_co_occurrences(Rcpp::DataFrame df, bool binary = true) {
   int dfRows = df.nrows();
   int dfCols = df.size();
   int numCoOccurences = ( (dfCols * (dfCols + 1)) / 2) - dfCols;
 
-  arma::mat df_AsMatrix2(dfRows, dfCols, fill::zeros);
+  arma::mat df_AsMatrix2(dfRows, dfCols, arma::fill::zeros);
   for (int i=0; i<dfCols;i++) {
     df_AsMatrix2.col(i) = Rcpp::as<arma::vec>(df[i]);
   }
 
-  arma::mat df_CoOccurred(dfRows, numCoOccurences, fill::zeros);
+  arma::mat df_CoOccurred(dfRows, numCoOccurences, arma::fill::zeros);
   for(int row = 0; row < dfRows; row++) {
     df_CoOccurred.row(row) = vector_to_ut(df_AsMatrix2.row(row));
   }
 
   if(binary == true) {
-    df_CoOccurred.elem( find(df_CoOccurred > 0) ).ones();
+    df_CoOccurred.elem( arma::find(df_CoOccurred > 0) ).ones();
   }
 
   return df_CoOccurred;
@@ -207,8 +202,8 @@ arma::mat rows_to_co_occurrences(DataFrame df, bool binary = true) {
 // @param binary Logical, treat codes as binary or leave as weighted
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
-DataFrame ref_window_df(
-    DataFrame df,
+Rcpp::DataFrame ref_window_df(
+    Rcpp::DataFrame df,
     float windowSize = 1,
     float windowForward = 0,
     bool binary = true
@@ -219,8 +214,8 @@ DataFrame ref_window_df(
   int dfCols = (int) df.size();
   int numCoOccurences = ( (dfCols * (dfCols + 1)) / 2) - dfCols;
 
-  arma::mat df_CoOccurred(dfRows, numCoOccurences, fill::zeros);
-  arma::mat df_AsMatrix2(dfRows, dfCols, fill::zeros);
+  arma::mat df_CoOccurred(dfRows, numCoOccurences, arma::fill::zeros);
+  arma::mat df_AsMatrix2(dfRows, dfCols, arma::fill::zeros);
   // NumericMatrix df_asNumericMatrix(dfRows, dfCols);
 
   for (int i=0; i<dfCols;i++) {
@@ -269,7 +264,7 @@ DataFrame ref_window_df(
       lastRow = row + window_forward;
     }
 
-    arma::mat currRows2 = df_AsMatrix2( span( earliestRow, lastRow ), span::all );
+    arma::mat currRows2 = df_AsMatrix2( arma::span( earliestRow, lastRow ), arma::span::all );
     arma::mat currRowsSummed = arma::sum(currRows2);
     arma::rowvec toUT = vector_to_ut(currRowsSummed);
 
@@ -282,7 +277,7 @@ DataFrame ref_window_df(
       }
       else {
         arma::mat currRows2_refs = currRows2.head_rows(headRows);
-        arma::mat currRow_refsSummed(1, currRows2_refs.n_cols, fill::zeros);
+        arma::mat currRow_refsSummed(1, currRows2_refs.n_cols, arma::fill::zeros);
         if(currRows2_refs.n_rows > 0) {
           currRow_refsSummed = arma::sum(currRows2_refs);
         }
@@ -309,10 +304,10 @@ DataFrame ref_window_df(
     df_CoOccurred.row(row) = toUT;
   }
   if(binary == true) {
-    df_CoOccurred.elem( find(df_CoOccurred > 0) ).ones();
+    df_CoOccurred.elem( arma::find(df_CoOccurred > 0) ).ones();
   }
 
-  return wrap(df_CoOccurred);
+  return Rcpp::wrap(df_CoOccurred);
 }
 
 
@@ -325,29 +320,29 @@ DataFrame ref_window_df(
 //
 // [[Rcpp::interfaces(r, cpp)]]
 // [[Rcpp::export]]
-DataFrame ref_window_lag(
-    DataFrame df,
+Rcpp::DataFrame ref_window_lag(
+    Rcpp::DataFrame df,
     int windowSize = 0,
     bool binary = true
 ) {
   int dfRows = df.nrows();
   int dfCols = df.size();
 
-  arma::mat df_LagSummed(dfRows, dfCols, fill::zeros);
+  arma::mat df_LagSummed(dfRows, dfCols, arma::fill::zeros);
 
-  arma::mat df_AsMatrix2(dfRows, dfCols, fill::zeros);
+  arma::mat df_AsMatrix2(dfRows, dfCols, arma::fill::zeros);
   for (int i=0; i<dfCols;i++) {
     df_AsMatrix2.col(i) = Rcpp::as<arma::vec>(df[i]);
   }
 
   for(int row = 0; row < dfRows; row++) {
-    arma::mat currRows2 = df_AsMatrix2( span( (row-(windowSize-1)>=0)?(row-(windowSize-1)):0,row ), span::all );
+    arma::mat currRows2 = df_AsMatrix2( arma::span( (row-(windowSize-1)>=0)?(row-(windowSize-1)):0,row ), arma::span::all );
     arma::mat currRowsSummed = arma::sum(currRows2);
 
     df_LagSummed.row(row) = currRowsSummed;
   }
 
-  return wrap(df_LagSummed);
+  return Rcpp::wrap(df_LagSummed);
 }
 
 //' Row-wise L2 (Sphere) Normalization
@@ -362,17 +357,17 @@ DataFrame ref_window_lag(
 //' fun_sphere_norm(df)
 //' @export
 // [[Rcpp::export]]
-NumericMatrix fun_sphere_norm(DataFrame dfM) {
-  NumericMatrix m = toNumericMatrix(dfM);
+Rcpp::NumericMatrix fun_sphere_norm(Rcpp::DataFrame dfM) {
+  Rcpp::NumericMatrix m = toNumericMatrix(dfM);
 
   int rows = m.nrow();
   int cols = m.ncol();
-  NumericMatrix output(rows, cols);
+  Rcpp::NumericMatrix output(rows, cols);
   std::fill(output.begin(), output.end(), 0);
 
   for (int p = 0; p < rows; p++) {
     // Calculate the length of the vector ro  w
-    NumericVector squared = Rcpp::pow(m.row(p),2);
+    Rcpp::NumericVector squared = Rcpp::pow(m.row(p),2);
     double squaredSum = Rcpp::sum(squared);
     double root = std::sqrt(squaredSum);
 
@@ -396,14 +391,14 @@ NumericMatrix fun_sphere_norm(DataFrame dfM) {
 //' fun_skip_sphere_norm(df)
 //' @export
 // [[Rcpp::export]]
-NumericMatrix fun_skip_sphere_norm(DataFrame dfM) {
-  NumericMatrix m = toNumericMatrix(dfM);
+Rcpp::NumericMatrix fun_skip_sphere_norm(Rcpp::DataFrame dfM) {
+  Rcpp::NumericMatrix m = toNumericMatrix(dfM);
 
   int nrows = m.nrow();
   double largestRowVectorLength = 0;
 
   for(int rowNum=0; rowNum < nrows; rowNum++) {
-    NumericVector squared = Rcpp::pow(m.row(rowNum),2);
+    Rcpp::NumericVector squared = Rcpp::pow(m.row(rowNum),2);
     double squaredSum = Rcpp::sum( squared );
     double root = std::sqrt( squaredSum );
 
@@ -416,7 +411,7 @@ NumericMatrix fun_skip_sphere_norm(DataFrame dfM) {
 
 // [[Rcpp::export]]
 Rcpp::NumericMatrix center_data_c(arma::mat values) {
-  arma::mat centered = values.each_row() - mean(values);
+  arma::mat centered = values.each_row() - arma::mean(values);
   return Rcpp::wrap(centered);
 }
 
@@ -435,8 +430,8 @@ arma::umat triIndices(int len, int row = -1) {
   int vS = ( (vL * (vL + 1)) / 2) - vL ;
   int s = 0;
 
-  arma::umat vR = arma::umat(2, vS, fill::zeros);
-  arma::umat vRone = arma::umat(1, vS, fill::zeros);
+  arma::umat vR = arma::umat(2, vS, arma::fill::zeros);
+  arma::umat vRone = arma::umat(1, vS, arma::fill::zeros);
   for( int i = 2; i <= vL; i++ ) {
     for (int j = 0; j < i-1; j++ ) {
       vR(0, s) = j;
@@ -465,11 +460,11 @@ arma::umat triIndices(int len, int row = -1) {
 // [[Rcpp::export]]
 Rcpp::List lws_lsq_positions(arma::mat adjMats, arma::mat t, int numDims) { // = R_NilValue ) {
   int upperTriSize = adjMats.n_cols;
-  int numNodes = ( pow( ceil(std::sqrt(static_cast<double>(2*upperTriSize))),2) ) - (2*upperTriSize);
+  int numNodes = ( std::pow( std::ceil(std::sqrt(static_cast<double>(2*upperTriSize))), 2.0) ) - (2*upperTriSize);
 
   // Weighting matrix, putting half of each line.wieght onto the respective
   // nodes.
-  arma::mat weights = arma::mat(adjMats.n_rows, numNodes, fill::zeros);
+  arma::mat weights = arma::mat(adjMats.n_rows, numNodes, arma::fill::zeros);
   int row_count = adjMats.n_rows;
   for (int k = 0; k < row_count; k++) {
     arma::rowvec currAdj = adjMats.row(k);
@@ -497,21 +492,21 @@ Rcpp::List lws_lsq_positions(arma::mat adjMats, arma::mat t, int numDims) { // =
     }
   }
 
-  arma::mat ssX = arma::mat(numDims, numNodes, fill::zeros);
+  arma::mat ssX = arma::mat(numDims, numNodes, arma::fill::zeros);
   arma::mat ssA = weights.t() * weights;
   for(int i = 0; i < numDims; i++) {
     arma::mat ssb = weights.t() * t.col(i);
-    ssX.row(i) = arma::solve(ssA, ssb, solve_opts::equilibrate	).t();
+    ssX.row(i) = arma::solve(ssA, ssb, arma::solve_opts::equilibrate).t();
   }
 
   arma::mat centroids = (ssX * weights.t()).t();
 
   return Rcpp::List::create(
-    _("nodes") = ssX.t(), //X.transpose(),
-    //_("correlations") = compute_difference_correlations(centroids, t),
-    _("centroids") = centroids,
-    _("weights") = weights,
-    _("points") = t
+    Rcpp::_("nodes") = ssX.t(), //X.transpose(),
+    //Rcpp::_("correlations") = compute_difference_correlations(centroids, t),
+    Rcpp::_("centroids") = centroids,
+    Rcpp::_("weights") = weights,
+    Rcpp::_("points") = t
   );
 }
 
@@ -530,7 +525,7 @@ Rcpp::List lws_lsq_positions(arma::mat adjMats, arma::mat t, int numDims) { // =
 //' @export
 // [[Rcpp::export]]
 Rcpp::List directed_node_positions(arma::mat line_weights, arma::mat points, int numDims) { //, bool by_column = true) { // = R_NilValue ) {
-  int numNodes = ceil(std::sqrt(static_cast<double>(line_weights.n_cols)));
+  int numNodes = std::ceil(std::sqrt(static_cast<double>(line_weights.n_cols)));
 
   arma::mat node_weights = arma::mat(line_weights.n_rows, numNodes, arma::fill::zeros); // zc: added an extra column
 
@@ -573,11 +568,11 @@ Rcpp::List directed_node_positions(arma::mat line_weights, arma::mat points, int
   arma::mat centroids = (ssX * node_weights.t()).t();
 
   return Rcpp::List::create(
-    _("nodes") = ssX.t(),
-    //_("correlations") = compute_difference_correlations(centroids, t),
-    _("centroids") = centroids,
-    _("weights") = node_weights, // zc: remember that the last column is all 1
-    _("points") = points
+    Rcpp::_("nodes") = ssX.t(),
+    //Rcpp::_("correlations") = compute_difference_correlations(centroids, t),
+    Rcpp::_("centroids") = centroids,
+    Rcpp::_("weights") = node_weights, // zc: remember that the last column is all 1
+    Rcpp::_("points") = points
   );
 }
 
@@ -591,7 +586,7 @@ Rcpp::List directed_node_positions(arma::mat line_weights, arma::mat points, int
 //' @export
 // [[Rcpp::export]]
 Rcpp::List directed_node_positions_with_ground_response_added(arma::mat line_weights, arma::mat points, int numDims) { //, bool by_column = true) { // = R_NilValue ) {
-  int numNodes = ceil(std::sqrt(static_cast<double>(line_weights.n_cols)));
+  int numNodes = std::ceil(std::sqrt(static_cast<double>(line_weights.n_cols)));
 
   arma::mat node_weights = arma::mat(line_weights.n_rows, numNodes, arma::fill::zeros);
 
@@ -644,11 +639,11 @@ Rcpp::List directed_node_positions_with_ground_response_added(arma::mat line_wei
   arma::mat centroids = (ssX * node_weights.t()).t();
 
   return Rcpp::List::create(
-    _("nodes") = ssX.t(),
-    //_("correlations") = compute_difference_correlations(centroids, t),
-    _("centroids") = centroids,
-    _("weights") = node_weights,
-    _("points") = points
+    Rcpp::_("nodes") = ssX.t(),
+    //Rcpp::_("correlations") = compute_difference_correlations(centroids, t),
+    Rcpp::_("centroids") = centroids,
+    Rcpp::_("weights") = node_weights,
+    Rcpp::_("points") = points
   );
 }
 

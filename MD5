@@ -1,7 +1,7 @@
-1bc358dff018836a325f1a690886b8a5 *DESCRIPTION
+9bfb193a2f262c7233e5926196b486e9 *DESCRIPTION
 3a66c128e15db21fbc4f00d019125dee *LICENSE
 a341af622e8f9c604a7d4102c19668df *NAMESPACE
-73cd78b54c284dd048d19975a419532b *NEWS.md
+499a8d8e0d6ab1f7943b9d1b5f6003c9 *NEWS.md
 47758058e72ebf3e61602a13bc752d79 *R/ENAdata.R
 591959b2fba50cfe2f33cfd846009c12 *R/ENAplot.R
 9242b92880a5025b37f7af1ed18f1f5c *R/ENArotation.set.R
@@ -29,8 +29,8 @@ ffc59dbaaa0b8823637c3b9a9810bf5e *R/ena.plot.points.R
 5019e63360e6a352a748b1769a93266e *R/ena.plot.subtraction.R
 e25ace4188c751476aa53db006e00ba2 *R/ena.plot.trajectory.R
 3d3c7e1767634722ad7618a30649ce7c *R/ena.plotter.R
-a08fb3f6ce1bce56384c89e9c10ebf20 *R/ena.rotate.by.generalized.R
-042f02a846d1410c814ff07d28129095 *R/ena.rotate.by.mean.R
+711c52f562be20c782e0bbe046e9770d *R/ena.rotate.by.generalized.R
+01b346358097abd235c1e52fdceec336 *R/ena.rotate.by.mean.R
 6bb184ef1afc698b372bb7060738fc4e *R/ena.rotate.by.regression.2.R
 db39a0b32f899c9ffe607e95d2d250e3 *R/ena.rotate.by.regression.R
 584f15f67e760167a091dc67e3ab5794 *R/ena.rotation.h.R
@@ -45,7 +45,7 @@ f8b3b6a47211c9dc051a463eede2dff7 *R/ena.set.R
 056c2f90f4b3f2fc2bb0724b94b842f7 *R/move_nodes.R
 9d669949a787b2ffe3a46798d4ca428b *R/namesToAdjacencyKey.R
 4ef9ca620d2c376859265655f11d8d99 *R/ocpu.optimization.R
-995f68b63aa4a3e977ea69c89e044c0e *R/piped.R
+2c7d8e566cf376a27650ff699f866fb6 *R/piped.R
 1566392093d8f76c0bac9dd1e3a21144 *R/qedata_classes.R
 ea0b023ddfb9bf8e57aaaec843d0962e *R/qedata_define.R
 d45bff6cee80b1aa203544fa76e19082 *R/rENA.R
@@ -62,7 +62,7 @@ cb1528ae6b2c686f6887325ee82bf42f *demo/fullExample.R
 ec28bf0e9fa72361b5aa9242cf6703ef *inst/_pkgdown.yml
 86ab786798f07a4025dfc53ff817acd6 *inst/examples/example-plot-piping.R
 84b5973cc7fca82884ef59a81a7fd224 *inst/include/rENA.h
-9c30710bfdb5f42270c4ad45ed14553e *inst/include/rENA_RcppExports.h
+3db39f86d835a804dc185efe115d018e *inst/include/rENA_RcppExports.h
 5952c3672397f67d9d091d5f844f4864 *inst/rmd/methods.plain
 ffb8ad8e6b052bc6b741001fdc4bf47c *inst/rmd/methods.rmd
 bb59bccc46578bd852ffa001aba07270 *man/ENARotationSet.Rd
@@ -121,7 +121,7 @@ c5d494c486a434b14686bfeb02913542 *man/ena.plot.points.Rd
 b6f5bdd43bc8708fc056e5522b94f956 *man/ena.rotate.by.generalized.Rd
 104d0d24c5acbcd19d8212243881ed6d *man/ena.rotate.by.hena.regression.Rd
 bfb57bcc67c4c8d0da16f501752e57c8 *man/ena.rotate.by.hena.regression_2.Rd
-aa147bee8815c6cfc50294b85597b4ce *man/ena.rotate.by.mean.Rd
+301893f6abc48eee53712dedcd7f8683 *man/ena.rotate.by.mean.Rd
 42defc6351dbf71aeb3dbc83497d6db3 *man/ena.rotation.h.Rd
 1a1dad88a78dc2365fe26c457f446550 *man/ena.set.creator.Rd
 f227c9f3640b2ccbdfc6d5ebc9457c83 *man/ena.svd.Rd
@@ -174,15 +174,15 @@ ecfa788caea4194a1f54219bf5631ec6 *man/with_means.Rd
 573dffa844018eb31e7317f15998336c *man/with_trajectory.Rd
 61467ca42e42ffe321ddc3088cf2b1c4 *src/Makevars
 2283cf49a8f90f1019cd30d5a8ce86f0 *src/Makevars.win
-f6d8cf2e5898662f5be785c732e8b29f *src/RcppExports.cpp
-44225090a8b560ec442c43f7b87653fd *src/ena.cpp
+8cb3b466d4dfe864e9da738974998a9d *src/RcppExports.cpp
+d75bea934ea91c81543127437420acce *src/ena.cpp
 eef10bbd6786e332a71cb5e97c8e4cd2 *tests/testthat.R
 d291a2499033c6a38ad57cee89e52523 *tests/testthat/test-cohens.R
 2dddbe0525e15ecccf37173a190eef60 *tests/testthat/test-convs.R
 60e8cb8e970bf01001890b5c9431adca *tests/testthat/test-ena_group.R
 22f9dd5729377bc31666b9ea98a30b62 *tests/testthat/test-ena_wrapper.R
 1c619d10d18200e1903118de24992ff6 *tests/testthat/test-gmr.R
-8dbff7f8980b28196742627a56f3abe8 *tests/testthat/test-piping.R
+6e5b747c8efe31a4ac5ebeabcf594a5c *tests/testthat/test-piping.R
 1f121ea754a5c97512e0e22b296a7f83 *tests/testthat/test-regular-plots.R
 473c149dd9c6533823e069622dc867ae *tests/testthat/test-rotation_matrix.R
 7cb482f60660043385a85a9ddf90a74d *tests/testthat/test-set_creator.R

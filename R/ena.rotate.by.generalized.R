@@ -38,7 +38,7 @@ ena.rotate.by.generalized = function( enaset, params ) {
   target = attr(x_result,"target");
 
   R <- matrix(c(x_vector), ncol = 1);
-  colnames(R) <- c("GMR1");
+  colnames(R) <- c("RR1");
   # deflate matrix by x dimension
   A <- as.matrix(V);
   defA <- A - A %*% x_vector %*% t(x_vector);
@@ -86,7 +86,7 @@ ena.rotate.by.generalized = function( enaset, params ) {
     V <- defA;
     y_result <- gmr(V = defA, X = y);
     y_vector = y_result;
-    y_name = "GMR2";
+    y_name = "RR2";
 
   }else
   {
@@ -99,7 +99,7 @@ ena.rotate.by.generalized = function( enaset, params ) {
 
   R <- matrix(c(x_vector, y_vector), ncol = 2);
 
-  colnames(R) <- c("GMR1", y_name);
+  colnames(R) <- c("RR1", y_name);
 
   # now  deflation for x_vector and y_vector
   defA <- A - A %*% x_vector %*% t(x_vector) - A %*% y_vector %*% t(y_vector);

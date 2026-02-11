@@ -43,7 +43,7 @@ RcppExport SEXP _rENA_combn_c2(SEXP nSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -79,18 +79,18 @@ RcppExport SEXP _rENA_ena_correlation(SEXP pointsSEXP, SEXP centroidsSEXP, SEXP 
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
 }
 // merge_columns_c
-std::vector<std::string> merge_columns_c(DataFrame df, CharacterVector cols, std::string sep);
+std::vector<std::string> merge_columns_c(Rcpp::DataFrame df, Rcpp::CharacterVector cols, std::string sep);
 static SEXP _rENA_merge_columns_c_try(SEXP dfSEXP, SEXP colsSEXP, SEXP sepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type df(dfSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type cols(colsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type df(dfSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type cols(colsSEXP);
     Rcpp::traits::input_parameter< std::string >::type sep(sepSEXP);
     rcpp_result_gen = Rcpp::wrap(merge_columns_c(df, cols, sep));
     return rcpp_result_gen;
@@ -115,7 +115,7 @@ RcppExport SEXP _rENA_merge_columns_c(SEXP dfSEXP, SEXP colsSEXP, SEXP sepSEXP) 
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -149,7 +149,7 @@ RcppExport SEXP _rENA_vector_to_ut(SEXP vSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -183,17 +183,17 @@ RcppExport SEXP _rENA_svector_to_ut(SEXP vSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
 }
 // rows_to_co_occurrences
-arma::mat rows_to_co_occurrences(DataFrame df, bool binary);
+arma::mat rows_to_co_occurrences(Rcpp::DataFrame df, bool binary);
 static SEXP _rENA_rows_to_co_occurrences_try(SEXP dfSEXP, SEXP binarySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type df(dfSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type df(dfSEXP);
     Rcpp::traits::input_parameter< bool >::type binary(binarySEXP);
     rcpp_result_gen = Rcpp::wrap(rows_to_co_occurrences(df, binary));
     return rcpp_result_gen;
@@ -218,17 +218,17 @@ RcppExport SEXP _rENA_rows_to_co_occurrences(SEXP dfSEXP, SEXP binarySEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
 }
 // ref_window_df
-DataFrame ref_window_df(DataFrame df, float windowSize, float windowForward, bool binary);
+Rcpp::DataFrame ref_window_df(Rcpp::DataFrame df, float windowSize, float windowForward, bool binary);
 static SEXP _rENA_ref_window_df_try(SEXP dfSEXP, SEXP windowSizeSEXP, SEXP windowForwardSEXP, SEXP binarySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type df(dfSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type df(dfSEXP);
     Rcpp::traits::input_parameter< float >::type windowSize(windowSizeSEXP);
     Rcpp::traits::input_parameter< float >::type windowForward(windowForwardSEXP);
     Rcpp::traits::input_parameter< bool >::type binary(binarySEXP);
@@ -255,17 +255,17 @@ RcppExport SEXP _rENA_ref_window_df(SEXP dfSEXP, SEXP windowSizeSEXP, SEXP windo
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
 }
 // ref_window_lag
-DataFrame ref_window_lag(DataFrame df, int windowSize, bool binary);
+Rcpp::DataFrame ref_window_lag(Rcpp::DataFrame df, int windowSize, bool binary);
 static SEXP _rENA_ref_window_lag_try(SEXP dfSEXP, SEXP windowSizeSEXP, SEXP binarySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type df(dfSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type df(dfSEXP);
     Rcpp::traits::input_parameter< int >::type windowSize(windowSizeSEXP);
     Rcpp::traits::input_parameter< bool >::type binary(binarySEXP);
     rcpp_result_gen = Rcpp::wrap(ref_window_lag(df, windowSize, binary));
@@ -291,17 +291,17 @@ RcppExport SEXP _rENA_ref_window_lag(SEXP dfSEXP, SEXP windowSizeSEXP, SEXP bina
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
 }
 // fun_sphere_norm
-NumericMatrix fun_sphere_norm(DataFrame dfM);
+Rcpp::NumericMatrix fun_sphere_norm(Rcpp::DataFrame dfM);
 static SEXP _rENA_fun_sphere_norm_try(SEXP dfMSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type dfM(dfMSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type dfM(dfMSEXP);
     rcpp_result_gen = Rcpp::wrap(fun_sphere_norm(dfM));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
@@ -325,17 +325,17 @@ RcppExport SEXP _rENA_fun_sphere_norm(SEXP dfMSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
 }
 // fun_skip_sphere_norm
-NumericMatrix fun_skip_sphere_norm(DataFrame dfM);
+Rcpp::NumericMatrix fun_skip_sphere_norm(Rcpp::DataFrame dfM);
 static SEXP _rENA_fun_skip_sphere_norm_try(SEXP dfMSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type dfM(dfMSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type dfM(dfMSEXP);
     rcpp_result_gen = Rcpp::wrap(fun_skip_sphere_norm(dfM));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
@@ -359,7 +359,7 @@ RcppExport SEXP _rENA_fun_skip_sphere_norm(SEXP dfMSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -393,7 +393,7 @@ RcppExport SEXP _rENA_center_data_c(SEXP valuesSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -428,7 +428,7 @@ RcppExport SEXP _rENA_triIndices(SEXP lenSEXP, SEXP rowSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -464,7 +464,7 @@ RcppExport SEXP _rENA_lws_lsq_positions(SEXP adjMatsSEXP, SEXP tSEXP, SEXP numDi
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -500,7 +500,7 @@ RcppExport SEXP _rENA_directed_node_positions(SEXP line_weightsSEXP, SEXP points
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -536,7 +536,7 @@ RcppExport SEXP _rENA_directed_node_positions_with_ground_response_added(SEXP li
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -548,14 +548,14 @@ static int _rENA_RcppExport_validate(const char* sig) {
     if (signatures.empty()) {
         signatures.insert("arma::umat(*combn_c2)(double)");
         signatures.insert("arma::mat(*ena_correlation)(arma::mat,arma::mat,double)");
-        signatures.insert("std::vector<std::string>(*merge_columns_c)(DataFrame,CharacterVector,std::string)");
+        signatures.insert("std::vector<std::string>(*merge_columns_c)(Rcpp::DataFrame,Rcpp::CharacterVector,std::string)");
         signatures.insert("arma::rowvec(*vector_to_ut)(arma::mat)");
         signatures.insert("std::vector<std::string>(*svector_to_ut)(std::vector<std::string>)");
-        signatures.insert("arma::mat(*rows_to_co_occurrences)(DataFrame,bool)");
-        signatures.insert("DataFrame(*ref_window_df)(DataFrame,float,float,bool)");
-        signatures.insert("DataFrame(*ref_window_lag)(DataFrame,int,bool)");
-        signatures.insert("NumericMatrix(*fun_sphere_norm)(DataFrame)");
-        signatures.insert("NumericMatrix(*fun_skip_sphere_norm)(DataFrame)");
+        signatures.insert("arma::mat(*rows_to_co_occurrences)(Rcpp::DataFrame,bool)");
+        signatures.insert("Rcpp::DataFrame(*ref_window_df)(Rcpp::DataFrame,float,float,bool)");
+        signatures.insert("Rcpp::DataFrame(*ref_window_lag)(Rcpp::DataFrame,int,bool)");
+        signatures.insert("Rcpp::NumericMatrix(*fun_sphere_norm)(Rcpp::DataFrame)");
+        signatures.insert("Rcpp::NumericMatrix(*fun_skip_sphere_norm)(Rcpp::DataFrame)");
         signatures.insert("Rcpp::NumericMatrix(*center_data_c)(arma::mat)");
         signatures.insert("arma::umat(*triIndices)(int,int)");
         signatures.insert("Rcpp::List(*lws_lsq_positions)(arma::mat,arma::mat,int)");

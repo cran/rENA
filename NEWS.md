@@ -1,5 +1,17 @@
-## rENA 0.2.5 (In development)
+## rENA 0.3.1
 
+#### Patch
+
+  * Update to C++ source to handle notes here: https://www.stats.ox.ac.uk/pub/bdr/C++20/README.txt
+
+## rENA 0.3.0
+
+#### Features
+
+  * Generalized means rotations, see ?ena.rotate.by.generalized (R/ena.rotate.by.generalized.R)
+
+
+## rENA 0.2.5 
 
 ## rENA 0.2.4
 

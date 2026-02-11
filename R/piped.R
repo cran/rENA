@@ -57,18 +57,24 @@ accumulate <- function(
     }
   )
 
-  args$default_window <- if (is.null(args$default_window)) 1 else args$default_window
-  args$default_weight <- if (is.null(args$default_weight)) 1 else args$default_weight
-  win_wgts <- tma::context_tensor(
-    df = x,
-    sender_cols = args$tma_ground_cols,
-    receiver_cols = args$tma_response_cols,
-    mode_column = ifelse(is.null(args$mode_column), tma::ATTR_NAMES$CONTEXT_ID, args$mode_column),
-    default_window = args$default_window,
-    default_weight = args$default_weight
-  )
+  win_wgts <- if(is.null(args$tensor)) {
+    args$default_window <- if (is.null(args$default_window)) 1 else args$default_window;
+    args$default_weight <- if (is.null(args$default_weight)) 1 else args$default_weight;
+    tma::context_tensor(
+      df = x,
+      sender_cols = args$tma_ground_cols,
+      receiver_cols = args$tma_response_cols,
+      mode_column = ifelse(is.null(args$mode_column), tma::ATTR_NAMES$CONTEXT_ID, args$mode_column),
+      default_window = args$default_window,
+      default_weight = args$default_weight
+    )
+  }
+  else {
+    args$tensor
+  }
 
   # args$ordered <- if (is.null(args$ordered)) TRUE else FALSE
+  # browser()
   set <- tma::accumulate(
     context_model = contexts,
     # multidim_arr = multidim_arr,
@@ -127,7 +133,7 @@ model <- function(
   project_with = project,
   optimize_with = optimize,
   # Rotation specific parameters
-  rotate_fun = ena.rotate.by.generalized, 
+  rotate_fun = ena.rotate.by.generalized,
   rotate_params = list()
 ) {
   # if(is(data, "ena.ordered.set")) {
@@ -141,9 +147,10 @@ model <- function(
     x <- normalize(data)
     x <- center_with(x)
 
-    if (length(rotate_params) > 0) {
+    if (length(rotate_params) > 1) {
       x <- do.call(rotate_with, list(x, wh = rotate_fun, by = unlist(rotate_params)))
-    } else {
+    }
+    else {
       x <- rotate_with(x, wh = rotate_fun, by = rotate_params)
     }
 
@@ -151,7 +158,7 @@ model <- function(
 
     if (!is.null(optimize_with) && !isFALSE(optimize_with)) {
       x <- optimize_with(x)
-    } 
+    }
   # }
 
   return(x)
@@ -201,7 +208,7 @@ sphere_norm <- function(x, add.meta = TRUE) {
 
     x$line.weights <- as_line_weights_matrix(x$line.weights, meta_)
     x$rotation$centervec <- colMeans(x$line.weights)
-  } 
+  }
   else {
     x_ <- as.matrix(x);
     names_ <- colnames(x_);
@@ -337,7 +344,7 @@ center <- function(x, add.meta = TRUE) {
     colnames(x) <- names_;
   }
 
-  
+
   return(x)
 }
 
@@ -367,7 +374,7 @@ center <- function(x, add.meta = TRUE) {
 #'   center() |>
 #'   rotate()
 rotate <- function(
-  x, 
+  x,
   ...,
   wh = ena.rotate.by.generalized
 ) {
@@ -386,7 +393,7 @@ rotate <- function(
     if (!is.null(dot_args$add.meta) && isTRUE(dot_args$add.meta)) {
       meta_ <- x$meta.data
     }
-  } 
+  }
   else {
     # Construct ENAset-like list from provided matrix
     x_ <- as.matrix(x);
@@ -407,7 +414,7 @@ rotate <- function(
 
   # if (length(dot_args) == 0) {
   #   wh <- ena.svd
-  # } 
+  # }
   # else {
     dot_formulas <- sapply(dot_args, function(d) {
       d2 <- tryCatch(
@@ -424,16 +431,19 @@ rotate <- function(
         wh <- ena.rotate.by.hena.regression_2
         by_vals <- list(params = dot_args)
         names(by_vals$params) <- c("x_var", "y_var")[seq_along(by_vals)]
-      } 
+      }
       else {
         stop("If rotating using a formula, all must be formulas")
       }
-    } 
+    }
     else {
       # Means rotation?
       by_vals <- list();
       if (!is.null(dot_args$params)) {
         by_vals <- dot_args$params
+      }
+      else if (!is.null(dot_args$by$params)) {
+        by_vals <- dot_args$by$params
       }
       else {
         by_vals <- list(
@@ -454,7 +464,7 @@ rotate <- function(
   if (!is.list(x$rotation)) {
     stop("Rotation function did not return a list as expected.")
   }
-  
+
   # Only extract elements that exist in the returned list
   rotation_elements <- c("eigenvalues", "codes", "node.positions", "rotation")
   x$rotation <- x$rotation[intersect(rotation_elements, names(x$rotation))]
@@ -514,13 +524,18 @@ project <- function(x, rotation = NULL, add.meta = TRUE) {
     }
     x$points <- as_points_matrix(points, meta_);
 
+    var_rot_data <- var(points)
+    diagonal_variance <- as.vector(diag(var_rot_data))
+    x$model$variance <- diagonal_variance / sum(diagonal_variance)
+    names(x$model$variance) <- colnames(x$rotation$rotation.matrix)[-1]
+
     return(x)
   }
   else {
     if(is.null(rotation)) {
       stop("When providing a matrix, a rotation matrix must also be provided")
     }
-    
+
     points <- as.matrix(x) %*% as.matrix(rotation);
     return(points);
   }
@@ -559,7 +574,7 @@ optimize <- function(x, weights = NULL) {
     if(is.null(weights)) {
       stop("When providing a matrix, weights must also be provided")
     }
-    
+
     x_ <- x;
     x <- list(
       points = x_,
@@ -569,7 +584,7 @@ optimize <- function(x, weights = NULL) {
       )
     )
   }
-  
+
   points = as.matrix(x$points);
   weights = as.matrix(x$line.weights);
   if(is(x, "ena.ordered.set")) {

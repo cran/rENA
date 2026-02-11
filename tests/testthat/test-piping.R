@@ -38,3 +38,18 @@ testthat::test_that("Test basic model accumulation", {
 
 # set5 <- data |> accumulate(default_window = 5) |>
 #   model()
+
+
+# data(RS.data)
+
+# RS.data <- data.table::as.data.table(RS.data)
+
+# profvis::profvis({
+#   accumulate(
+#     x = RS.data, 
+#     units = c("Condition", "UserName"), 
+#     horizon = c("Condition", "GroupName"), 
+#     codes = c("Data", "Technical.Constraints", "Performance.Parameters", "Client.and.Consultant.Requests", "Design.Reasoning", "Collaboration"), 
+#     default_window = 5
+#   )
+# })
